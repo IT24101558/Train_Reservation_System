@@ -1,0 +1,552 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #1a73e8;
+    --secondary-color: #34a853;
+    --accent-color: #fbbc05;
+    --text-color: #333;
+    --light-text: #666;
+    --bg-color: #f8f9fa;
+    --white: #ffffff;
+    --border-color: #ddd;
+    --on-time: #34a853;
+    --delayed: #fbbc05;
+    --canceled: #ea4335;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+}
+
+/* Header styles */
+.header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    animation: slideInDown 0.6s ease-out;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.train-icon {
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%231a73e8"><path d="M12 2C8 2 5 5 5 8v8c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2h4v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2V8c0-3-3-6-7-6zm-1 12H9v-2h2v2zm4 0h-2v-2h2v2zm-6-4H7V8h2v2zm4 0h-2V8h2v2z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.header h1 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.navigation ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transition);
+}
+
+.navigation a:hover {
+    color: var(--primary-color);
+}
+
+.navigation a.active {
+    color: var(--primary-color);
+}
+
+.navigation a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    animation: growLine 0.3s ease-out;
+}
+
+/* Main content */
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 5%;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-out;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--light-text);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Search container */
+.search-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+.search-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    align-items: end;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.input-group select,
+.input-group input {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.input-group select:focus,
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+}
+
+.search-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: end;
+    min-width: 140px;
+}
+
+.search-btn:hover {
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2);
+}
+
+/* Schedule container */
+.schedule-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.tab-btn.active {
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-btn:hover {
+    background-color: rgba(26, 115, 232, 0.1);
+}
+
+.schedule-table-container {
+    overflow-x: auto;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table thead {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.schedule-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+.schedule-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInRow 0.5s ease-out var(--delay) both;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.schedule-table td {
+    padding: 1rem;
+}
+
+.schedule-table .train-name {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-on-time {
+    background-color: rgba(52, 168, 83, 0.15);
+    color: var(--on-time);
+}
+
+.status-delayed {
+    background-color: rgba(251, 188, 5, 0.15);
+    color: var(--delayed);
+}
+
+.status-canceled {
+    background-color: rgba(234, 67, 53, 0.15);
+    color: var(--canceled);
+}
+
+.book-btn {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.book-btn:hover:not(:disabled) {
+    background-color: #2d924a;
+    transform: scale(1.05);
+}
+
+.book-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Info cards */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition);
+    animation: floatCard 6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.5s);
+}
+
+.card:nth-child(1) { --i: 1; }
+.card:nth-child(2) { --i: 2; }
+.card:nth-child(3) { --i: 3; }
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.card h3 {
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
+}
+
+.card p {
+    color: var(--light-text);
+    line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--white);
+    border-top: 1px solid var(--border-color);
+    padding: 3rem 5% 1.5rem;
+    margin-top: 2rem;
+    animation: slideInUp 0.6s ease-out 0.8s both;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.footer-logo .train-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.footer-logo h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+}
+
+.link-column h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.link-column ul {
+    list-style: none;
+}
+
+.link-column li {
+    margin-bottom: 0.5rem;
+}
+
+.link-column a {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.link-column a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--light-text);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes growLine {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes slideInRow {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatCard {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .logo-container {
+        margin-bottom: 1rem;
+    }
+
+    .navigation ul {
+        gap: 1rem;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .search-box {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .search-btn {
+        align-self: stretch;
+    }
+
+    .schedule-table {
+        font-size: 0.9rem;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+        padding: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        text-align: center;
+    }
+}
