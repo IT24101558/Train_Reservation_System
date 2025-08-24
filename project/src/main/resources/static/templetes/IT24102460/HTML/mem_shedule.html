@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Schedule - CityRail Express</title>
+    <link rel="stylesheet" href="../CSS/mem_shedule.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="member-schedule-dark.html" class="active">My Schedule</a></li>
+            <li><a href="booking-history.html">Booking History</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+
+
+    <section class="search-container">
+        <h2 style="text-align: center;">Find Your Train Here!</h2>
+        <div class="search-form">
+            <div class="form-row">
+                <div class="input-group">
+                    <label for="from">From</label>
+                    <select id="from" name="from">
+                        <option value="">Select departure station</option>
+                        <option value="central" selected>Central Station</option>
+                        <option value="north">North Terminal</option>
+                        <option value="south">South Junction</option>
+                        <option value="east">East Point</option>
+                        <option value="west">West Hub</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="to">To</label>
+                    <select id="to" name="to">
+                        <option value="">Select destination station</option>
+                        <option value="central">Central Station</option>
+                        <option value="north">North Terminal</option>
+                        <option value="south" selected>South Junction</option>
+                        <option value="east">East Point</option>
+                        <option value="west">West Hub</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" value="2023-12-15">
+                </div>
+                <div class="input-group">
+                    <label for="time">Time</label>
+                    <select id="time" name="time">
+                        <option value="any">Any Time</option>
+                        <option value="morning">Morning (6AM-12PM)</option>
+                        <option value="afternoon" selected>Afternoon (12PM-6PM)</option>
+                        <option value="evening">Evening (6PM-12AM)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="class">Class</label>
+                    <select id="class" name="class">
+                        <option value="economy">Economy</option>
+                        <option value="business" selected>Business</option>
+                        <option value="first">First Class</option>
+                    </select>
+                </div>
+            </div>
+            <button class="search-btn">Search Trains</button>
+        </div>
+    </section>
+
+    <section class="results-container">
+        <div class="results-header">
+            <h2>Famous Train Rides</h2>
+            <div class="sort-container">
+                <label for="sort">Sort by:</label>
+                <select id="sort" name="sort">
+                    <option value="departure">Departure Time</option>
+                    <option value="duration" selected>Duration</option>
+                    <option value="price">Price</option>
+                    <option value="rating">Customer Rating</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="train-results">
+            <!-- Train 1 -->
+            <div class="train-card" data-train-id="101">
+                <div class="train-header">
+                    <div class="train-info">
+                        <div class="train-number">Mountain Route</div>
+                        <div class="train-type">Scenic journey through the highlands</div>
+                    </div>
+                    <div class="train-pricing">
+                        <div class="price">From Rs.400.00</div>
+                        <div class="save-tag">Save 15% as Member</div>
+                    </div>
+                </div>
+
+                <div class="train-schedule">
+                    <div class="departure">
+                        <div class="time">05:30AM</div>
+                        <div class="station">Colombo</div>
+                        <div class="platform">Platform 3</div>
+                    </div>
+                    <div class="duration">
+                        <div class="line"></div>
+                        <div class="time">3h 10m</div>
+                        <div class="direct">Direct</div>
+                    </div>
+                    <div class="arrival">
+                        <div class="time">08:40AM</div>
+                        <div class="station">Kandy</div>
+                        <div class="platform">Platform 2</div>
+                    </div>
+                </div>
+
+                <div class="class-options">
+                    <div class="class-option selected" data-class="economy">
+                        <div class="class-name">Economy</div>
+                        <div class="class-price">Rs.400.00</div>
+                        <div class="class-features">
+                            <span>Standard seating</span>
+                            <span>Basic amenities</span>
+                        </div>
+                    </div>
+                    <div class="class-option" data-class="business">
+                        <div class="class-name">Business</div>
+                        <div class="class-price">Rs.800.00</div>
+                        <div class="class-features">
+                            <span>Spacious seating</span>
+                            <span>Work tables</span>
+                            <span>Complimentary snacks</span>
+                        </div>
+                        <div class="popular-tag">Most Popular</div>
+                    </div>
+                    <div class="class-option" data-class="first">
+                        <div class="class-name">First Class</div>
+                        <div class="class-price">Rs.1200.00</div>
+                        <div class="class-features">
+                            <span>Luxury seating</span>
+                            <span>Personal attendant</span>
+                            <span>Gourmet meals</span>
+                            <span>Priority boarding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="train-actions">
+                    <button class="select-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Train 2 -->
+            <div class="train-card" data-train-id="205">
+                <div class="train-header">
+                    <div class="train-info">
+                        <div class="train-number">Heritage Route</div>
+                        <div class="train-type">SCENIC JOURNEY THROUGH THE HILLS & TEA PLANTATIONS</div>
+                    </div>
+                    <div class="train-pricing">
+                        <div class="price">From Rs.500.00</div>
+                        <div class="save-tag">Save 15% as Member</div>
+                    </div>
+                </div>
+
+                <div class="train-schedule">
+                    <div class="departure">
+                        <div class="time">12:10PM</div>
+                        <div class="station">Kandy</div>
+                        <div class="platform">Platform 5</div>
+                    </div>
+                    <div class="duration">
+                        <div class="line"></div>
+                        <div class="time">7h 50m</div>
+                        <div class="direct">Direct</div>
+                    </div>
+                    <div class="arrival">
+                        <div class="time">20:00PM</div>
+                        <div class="station">Ella</div>
+                        <div class="platform">Platform 4</div>
+                    </div>
+                </div>
+
+                <div class="class-options">
+                    <div class="class-option selected" data-class="economy">
+                        <div class="class-name">Economy</div>
+                        <div class="class-price">Rs.500.00</div>
+                        <div class="class-features">
+                            <span>Standard seating</span>
+                            <span>Basic amenities</span>
+                        </div>
+                    </div>
+                    <div class="class-option" data-class="business">
+                        <div class="class-name">Business</div>
+                        <div class="class-price">Rs.1400.00</div>
+                        <div class="class-features">
+                            <span>Spacious seating</span>
+                            <span>Work tables</span>
+                            <span>Complimentary snacks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="train-actions">
+                    <button class="select-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Train 3 -->
+            <div class="train-card" data-train-id="103">
+                <div class="train-header">
+                    <div class="train-info">
+                        <div class="train-number">Northern Route</div>
+                        <div class="train-type">CENIC RIDE ACROSS VAST PLAINS & TAMIL HEARTLAND</div>
+                    </div>
+                    <div class="train-pricing">
+                        <div class="price">From Rs.450.00</div>
+                        <div class="save-tag">Save 15% as Member</div>
+                    </div>
+                </div>
+
+                <div class="train-schedule">
+                    <div class="departure">
+                        <div class="time">14:15PM</div>
+                        <div class="station">Anuradapura</div>
+                        <div class="platform">Platform 2</div>
+                    </div>
+                    <div class="duration">
+                        <div class="line"></div>
+                        <div class="time">3h 45m</div>
+                        <div class="direct">Direct</div>
+                    </div>
+                    <div class="arrival">
+                        <div class="time">18:00PM</div>
+                        <div class="station">Jaffna</div>
+                        <div class="platform">Platform 3</div>
+                    </div>
+                </div>
+
+                <div class="class-options">
+                    <div class="class-option" data-class="economy">
+                        <div class="class-name">Economy</div>
+                        <div class="class-price">Rs.450.00</div>
+                        <div class="class-features">
+                            <span>Standard seating</span>
+                            <span>Basic amenities</span>
+                        </div>
+                    </div>
+                    <div class="class-option selected" data-class="business">
+                        <div class="class-name">Business</div>
+                        <div class="class-price">Rs.1000.00</div>
+                        <div class="class-features">
+                            <span>Spacious seating</span>
+                            <span>Work tables</span>
+                            <span>Complimentary snacks</span>
+                        </div>
+                        <div class="popular-tag">Most Popular</div>
+                    </div>
+                    <div class="class-option" data-class="first">
+                        <div class="class-name">First Class</div>
+                        <div class="class-price">Rs.1200.00</div>
+                        <div class="class-features">
+                            <span>Luxury seating</span>
+                            <span>Personal attendant</span>
+                            <span>Gourmet meals</span>
+                            <span>Priority boarding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="train-actions">
+                    <button class="select-btn">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <div class="train-icon"></div>
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Tickets</a></li>
+                    <li><a href="#">Reservations</a></li>
+                    <li><a href="#">Luggage</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Store selected train and class
+    let selectedTrain = null;
+    let selectedClass = null;
+
+    // Train selection
+    document.querySelectorAll('.select-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const trainCard = this.closest('.train-card');
+            const trainId = trainCard.getAttribute('data-train-id');
+
+            // Find the selected class option
+            const selectedClassOption = trainCard.querySelector('.class-option.selected');
+            const className = selectedClassOption.querySelector('.class-name').textContent;
+            const price = selectedClassOption.querySelector('.class-price').textContent;
+
+            // Update the booking modal with train details
+            document.getElementById('booking-train').textContent = trainCard.querySelector('.train-number').textContent;
+
+            const departureStation = trainCard.querySelector('.departure .station').textContent;
+            const arrivalStation = trainCard.querySelector('.arrival .station').textContent;
+            document.getElementById('booking-route').textContent = `${departureStation} to ${arrivalStation}`;
+
+            const dateInput = document.getElementById('date');
+            const dateValue = dateInput.value;
+            const dateObj = new Date(dateValue);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('booking-date').textContent = dateObj.toLocaleDateString('en-US', options);
+
+            document.getElementById('booking-departure').textContent = trainCard.querySelector('.departure .time').textContent;
+            document.getElementById('booking-arrival').textContent = trainCard.querySelector('.arrival .time').textContent;
+            document.getElementById('booking-class').textContent = className;
+            document.getElementById('booking-total').textContent = price;
+
+            // Store selected values
+            selectedTrain = trainId;
+            selectedClass = className;
+
+            // Show booking modal
+            document.getElementById('booking-modal').style.display = 'flex';
+        });
+    });
+
+    // Class selection within a train
+    document.querySelectorAll('.class-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from siblings
+            const parent = this.parentNode;
+            parent.querySelectorAll('.class-option').forEach(sibling => {
+                sibling.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            this.classList.add('selected');
+        });
+    });
+
+    // Booking modal functionality
+    const bookingModal = document.getElementById('booking-modal');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const closeButtons = document.querySelectorAll('.close');
+
+    // Close modals when clicking the X
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
+        });
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === bookingModal) {
+            bookingModal.style.display = 'none';
+        }
+        if (event.target === confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    });
+
+    // Confirm booking
+    document.querySelector('.confirm-btn').addEventListener('click', function() {
+        bookingModal.style.display = 'none';
+        confirmationModal.style.display = 'flex';
+
+        // Animate confirmation
+        const confirmationContent = confirmationModal.querySelector('.modal-content');
+        confirmationContent.style.transform = 'scale(0.8)';
+        confirmationContent.style.opacity = '0';
+
+        setTimeout(() => {
+            confirmationContent.style.transform = 'scale(1)';
+            confirmationContent.style.opacity = '1';
+            confirmationContent.style.transition = 'all 0.3s ease';
+        }, 10);
+    });
+
+    // Done button in confirmation
+    document.querySelector('.done-btn').addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
+
+    // Download button
+    document.querySelector('.download-btn').addEventListener('click', function() {
+        // In a real app, this would trigger a PDF download
+        alert('Ticket downloaded successfully!');
+    });
+
+    // Email button
+    document.querySelector('.email-btn').addEventListener('click', function() {
+        // In a real app, this would send an email
+        alert('Ticket sent to your email!');
+        this.textContent = 'Sent!';
+        this.disabled = true;
+        setTimeout(() => {
+            this.textContent = 'Email Ticket';
+            this.disabled = false;
+        }, 2000);
+    });
+
+    // Cancel booking
+    document.querySelector('.cancel-btn').addEventListener('click', function() {
+        bookingModal.style.display = 'none';
+    });
+
+    // Quick action buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.querySelector('span').textContent;
+            alert(`${action} feature would open here.`);
+        });
+    });
+
+    // Add animation to elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate train cards
+        const trainCards = document.querySelectorAll('.train-card');
+        trainCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            }, 100 + index * 150);
+        });
+
+        // Animate quick actions
+        const quickActions = document.querySelectorAll('.quick-actions .action-btn');
+        quickActions.forEach((action, index) => {
+            action.style.opacity = '0';
+            action.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                action.style.opacity = '1';
+                action.style.transform = 'translateY(0)';
+                action.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            }, 300 + index * 100);
+        });
+    });
+</script>
+</body>
+</html>
