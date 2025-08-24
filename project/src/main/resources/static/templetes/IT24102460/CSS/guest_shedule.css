@@ -377,9 +377,11 @@ body {
     margin-bottom: 1rem;
 }
 
-.footer-logo .train-icon {
-    width: 30px;
-    height: 30px;
+.footer-logo {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: flex-start; /* align left */
+    gap: 5px; /* spacing between h3 and p */
 }
 
 .footer-logo h3 {
