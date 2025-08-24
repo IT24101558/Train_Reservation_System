@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Schedule Management - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/admin_shedule.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="admin-schedule.html" class="active">Schedule</a></li>
+            <li><a href="admin-users.html">Users</a></li>
+            <li><a href="admin-reports.html">Reports</a></li>
+            <li><a href="admin-reports.html">My Profile</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+    <section class="hero">
+        <h1>Train Schedule Management</h1>
+        <p class="subtitle">Manage train schedules, routes, and pricing</p>
+    </section>
+
+    <section class="controls-container">
+        <div class="search-filter">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search by train, route, or station...">
+                <button id="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="filters">
+                <select id="route-filter">
+                    <option value="">All Routes</option>
+                    <option value="central-north">Central to North</option>
+                    <option value="central-south">Central to South</option>
+                    <option value="central-east">Central to East</option>
+                    <option value="central-west">Central to West</option>
+                </select>
+                <select id="status-filter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="canceled">Canceled</option>
+                    <option value="maintenance">Maintenance</option>
+                </select>
+                <select id="date-filter">
+                    <option value="">All Dates</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="this-week">This Week</option>
+                    <option value="next-week">Next Week</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="add-schedule-btn" class="primary-btn">
+            <span>➕</span> Add New Schedule
+        </button>
+    </section>
+
+    <section class="schedule-container">
+        <div class="schedule-header">
+            <h2>Current Schedules</h2>
+            <div class="schedule-stats">
+                <div class="stat">
+                    <span class="value">24</span>
+                    <span class="label">Active Trains</span>
+                </div>
+                <div class="stat">
+                    <span class="value">3</span>
+                    <span class="label">Delayed</span>
+                </div>
+                <div class="stat">
+                    <span class="value">1</span>
+                    <span class="label">Canceled</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule-table-container">
+            <table class="schedule-table">
+                <thead>
+                <tr>
+                    <th>Train</th>
+                    <th>Route</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Duration</th>
+                    <th>Platform</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="schedule-body">
+                <!-- Schedule rows will be populated by JavaScript -->
+                <tr data-schedule-id="1">
+                    <td class="train-name">Express 101</td>
+                    <td class="route">Central - South</td>
+                    <td class="departure">06:30</td>
+                    <td class="arrival">08:15</td>
+                    <td class="duration">1h 45m</td>
+                    <td class="platform">3</td>
+                    <td class="status status-active">Active</td>
+                    <td class="price">$45 / $75 / $120</td>
+                    <td class="actions">
+                        <button class="edit-btn" data-action="edit" title="Edit Schedule">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button class="delete-btn" data-action="delete" title="Delete Schedule">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1v1zM4.5 3V2h7v1h-7z"/>
+                            </svg>
+                        </button>
+                        <button class="duplicate-btn" data-action="duplicate" title="Duplicate Schedule">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.616l-6.718 3.12a2.5 2.5 0 0 1 0 3.268l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.268l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                <tr data-schedule-id="2">
+                    <td class="train-name">Regional 205</td>
+                    <td class="route">Central - North</td>
+                    <td class="departure">07:15</td>
+                    <td class="arrival">09:30</td>
+                    <td class="duration">2h 15m</td>
+                    <td class="platform">5</td>
+                    <td class="status status-delayed">Delayed</td>
+                    <td class="price">$32 / $58 / $95</td>
+                    <td class="actions">
+                        <button class="edit-btn" data-action="edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button class="delete-btn" data-action="delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1v1zM4.5 3V2h7v1h-7z"/>
+                            </svg>
+                        </button>
+                        <button class="duplicate-btn" data-action="duplicate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.616l-6.718 3.12a2.5 2.5 0 0 1 0 3.268l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.268l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                <tr data-schedule-id="3">
+                    <td class="train-name">Express 103</td>
+                    <td class="route">Central - South</td>
+                    <td class="departure">08:45</td>
+                    <td class="arrival">10:30</td>
+                    <td class="duration">1h 45m</td>
+                    <td class="platform">2</td>
+                    <td class="status status-active">Active</td>
+                    <td class="price">$48 / $80 / $125</td>
+                    <td class="actions">
+                        <button class="edit-btn" data-action="edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button class="delete-btn" data-action="delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1v1zM4.5 3V2h7v1h-7z"/>
+                            </svg>
+                        </button>
+                        <button class="duplicate-btn" data-action="duplicate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.616l-6.718 3.12a2.5 2.5 0 0 1 0 3.268l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.268l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                <tr data-schedule-id="4">
+                    <td class="train-name">Commuter 301</td>
+                    <td class="route">Central - East</td>
+                    <td class="departure">09:20</td>
+                    <td class="arrival">11:05</td>
+                    <td class="duration">1h 45m</td>
+                    <td class="platform">4</td>
+                    <td class="status status-active">Active</td>
+                    <td class="price">$38 / $65 / $100</td>
+                    <td class="actions">
+                        <button class="edit-btn" data-action="edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button class="delete-btn" data-action="delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1v1zM4.5 3V2h7v1h-7z"/>
+                            </svg>
+                        </button>
+                        <button class="duplicate-btn" data-action="duplicate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.616l-6.718 3.12a2.5 2.5 0 0 1 0 3.268l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.268l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Add/Edit Schedule Modal -->
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Add New Schedule</h2>
+
+            <form id="schedule-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="train-name">Train Name *</label>
+                        <input type="text" id="train-name" name="train-name" required>
+                        <span class="error-message">Please enter a train name</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="train-type">Train Type *</label>
+                        <select id="train-type" name="train-type" required>
+                            <option value="">Select train type</option>
+                            <option value="express">Express</option>
+                            <option value="regional">Regional</option>
+                            <option value="commuter">Commuter</option>
+                            <option value="high-speed">High-Speed</option>
+                        </select>
+                        <span class="error-message">Please select a train type</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="route-from">Route From *</label>
+                        <input type="text" id="route-from" placeholder="Enter departure station" required>
+                        <span class="error-message">Please enter departure station</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="route-to">Route To *</label>
+                        <input type="text" id="route-to" placeholder="Enter destination station" required>
+                        <span class="error-message">Please enter destination station</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="departure-time">Departure Time *</label>
+                        <input type="time" id="departure-time" name="departure-time" required>
+                        <span class="error-message">Please enter departure time</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrival-time">Arrival Time *</label>
+                        <input type="time" id="arrival-time" name="arrival-time" required>
+                        <span class="error-message">Please enter arrival time</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="platform">Platform *</label>
+                        <input type="number" id="platform" name="platform" min="1" max="15" required>
+                        <span class="error-message">Please enter platform number (1-15)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="status" name="status" required>
+                            <option value="active">Active</option>
+                            <option value="delayed">Delayed</option>
+                            <option value="canceled">Canceled</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pricing-section">
+                    <h3>Pricing</h3>
+                    <div class="pricing-container">
+                        <div class="pricing-container">
+                            <div class="form-group">
+                                <label for="economy-price">Economy Class Price *</label>
+                                <input type="number" id="economy-price" class="pricing-input" placeholder="Rs.0.00" step="0.01" required>
+                                <span class="error-message">Enter a valid price</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="business-price">Business Class Price *</label>
+                                <input type="number" id="business-price" class="pricing-input" placeholder="Rs.0.00" step="0.01" required>
+                                <span class="error-message">Enter a valid price</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="first-price">First Class Price *</label>
+                                <input type="number" id="first-price" class="pricing-input" placeholder="Rs.0.00" step="0.01" required>
+                                <span class="error-message">Enter a valid price</span>
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Additional Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Any special instructions or notes..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="warning-icon">⚠️</div>
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this train schedule? This action cannot be undone.</p>
+            <p class="delete-warning">Train: <span id="delete-train-name">Express 101</span></p>
+            <p class="delete-warning">Route: <span id="delete-route">Central - South</span></p>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" class="danger-btn confirm-delete-btn">Delete Permanently</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <div class="train-icon"></div>
+            <h3>SLRailE</h3>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Admin Tools</h4>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Users</a></li>
+                    <li><a href="#">Reports</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // DOM elements
+    const scheduleBody = document.getElementById('schedule-body');
+    const addScheduleBtn = document.getElementById('add-schedule-btn');
+    const scheduleModal = document.getElementById('schedule-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    const successNotification = document.getElementById('success-notification');
+    const errorNotification = document.getElementById('error-notification');
+    const closeModal = document.querySelector('#schedule-modal .close');
+    const closeDeleteModal = document.querySelector('#delete-modal .close');
+    const scheduleForm = document.getElementById('schedule-form');
+    const modalTitle = document.getElementById('modal-title');
+    const cancelBtns = document.querySelectorAll('.cancel-btn');
+    const saveBtn = document.querySelector('.save-btn');
+    const confirmDeleteBtn = document.querySelector('.confirm-delete-btn');
+
+    // Current schedule being edited
+    let currentScheduleId = null;
+    let currentAction = null; // 'add' or 'edit'
+
+    // Open Add Schedule modal
+    addScheduleBtn.addEventListener('click', function() {
+        currentAction = 'add';
+        currentScheduleId = null;
+        modalTitle.textContent = 'Add New Schedule';
+        scheduleForm.reset();
+        scheduleModal.style.display = 'flex';
+    });
+
+    // Open Edit Schedule modal
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            currentAction = 'edit';
+            currentScheduleId = row.dataset.scheduleId;
+            modalTitle.textContent = 'Edit Schedule';
+
+            // Populate form with current values
+            document.getElementById('train-name').value = row.querySelector('.train-name').textContent;
+            document.getElementById('route-from').value = getFromStation(row.querySelector('.route').textContent);
+            document.getElementById('route-to').value = getToStation(row.querySelector('.route').textContent);
+            document.getElementById('departure-time').value = timeTo24Hour(row.querySelector('.departure').textContent);
+            document.getElementById('arrival-time').value = timeTo24Hour(row.querySelector('.arrival').textContent);
+            document.getElementById('platform').value = row.querySelector('.platform').textContent;
+            document.getElementById('status').value = getStatusValue(row.querySelector('.status').classList);
+
+            // Extract prices from the price cell
+            const priceText = row.querySelector('.price').textContent;
+            const prices = priceText.split(' / ');
+            document.getElementById('economy-price').value = prices[0].replace('$', '');
+            document.getElementById('business-price').value = prices[1].replace('$', '');
+            document.getElementById('first-price').value = prices[2].replace('$', '');
+
+            // Set train type based on train name
+            const trainName = row.querySelector('.train-name').textContent;
+            if (trainName.includes('Express')) {
+                document.getElementById('train-type').value = 'express';
+            } else if (trainName.includes('Regional')) {
+                document.getElementById('train-type').value = 'regional';
+            } else if (trainName.includes('Commuter')) {
+                document.getElementById('train-type').value = 'commuter';
+            } else {
+                document.getElementById('train-type').value = 'high-speed';
+            }
+
+            scheduleModal.style.display = 'flex';
+        });
+    });
+
+    // Helper functions
+    function getFromStation(route) {
+        return route.split(' - ')[0].toLowerCase().replace(/\s+/g, '');
+    }
+
+    function getToStation(route) {
+        return route.split(' - ')[1].toLowerCase().replace(/\s+/g, '');
+    }
+
+    function timeTo24Hour(time) {
+        // Convert time like "06:30" to 24-hour format for input
+        return time;
+    }
+
+    function getStatusValue(classList) {
+        if (classList.contains('status-active')) return 'active';
+        if (classList.contains('status-delayed')) return 'delayed';
+        if (classList.contains('status-canceled')) return 'canceled';
+        return 'maintenance';
+    }
+
+    // Open Delete modal
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            currentScheduleId = row.dataset.scheduleId;
+
+            document.getElementById('delete-train-name').textContent = row.querySelector('.train-name').textContent;
+            document.getElementById('delete-route').textContent = row.querySelector('.route').textContent;
+
+            deleteModal.style.display = 'flex';
+        });
+    });
+
+    // Close modals
+    closeModal.addEventListener('click', () => {
+        scheduleModal.style.display = 'none';
+    });
+
+    closeDeleteModal.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            scheduleModal.style.display = 'none';
+            deleteModal.style.display = 'none';
+        });
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === scheduleModal) {
+            scheduleModal.style.display = 'none';
+        }
+        if (event.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+
+    // Form validation
+    scheduleForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Reset previous error states
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach(group => {
+            group.classList.remove('error');
+        });
+
+        // Validate required fields
+        let isValid = true;
+        const requiredFields = [
+            'train-name', 'train-type', 'route-from', 'route-to',
+            'departure-time', 'arrival-time', 'platform', 'status',
+            'economy-price', 'business-price', 'first-price'
+        ];
+
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            const value = field.value.trim();
+
+            if (!value) {
+                field.parentElement.classList.add('error');
+                isValid = false;
+            } else if (fieldId.includes('price') && (isNaN(value) || parseFloat(value) <= 0)) {
+                field.parentElement.classList.add('error');
+                isValid = false;
+            } else if (fieldId === 'platform' && (parseInt(value) < 1 || parseInt(value) > 15)) {
+                field.parentElement.classList.add('error');
+                isValid = false;
+            }
+        });
+
+        if (isValid) {
+            // In a real app, we would save to a database
+            // For demo, we'll just update the UI
+
+            if (currentAction === 'add') {
+                // Add new schedule
+                const newId = Date.now(); // In real app, this would come from server
+                const newRow = createScheduleRow(newId);
+                scheduleBody.prepend(newRow);
+
+                showNotification('success', 'New schedule added successfully!');
+            } else {
+                // Update existing schedule
+                const row = document.querySelector(`tr[data-schedule-id="${currentScheduleId}"]`);
+                updateScheduleRow(row);
+
+                showNotification('success', 'Schedule updated successfully!');
+            }
+
+            // Close modal
+            scheduleModal.style.display = 'none';
+        }
+    });
+
+    // Create a new schedule row
+    function createScheduleRow(id) {
+        const trainName = document.getElementById('train-name').value;
+        const from = document.getElementById('route-from').value;
+        const to = document.getElementById('route-to').value;
+        const departure = document.getElementById('departure-time').value;
+        const arrival = document.getElementById('arrival-time').value;
+        const platform = document.getElementById('platform').value;
+        const status = document.getElementById('status').value;
+        const economyPrice = document.getElementById('economy-price').value;
+        const businessPrice = document.getElementById('business-price').value;
+        const firstPrice = document.getElementById('first-price').value;
+
+        const route = `${formatStation(from)} - ${formatStation(to)}`;
+        const duration = calculateDuration(departure, arrival);
+        const statusClass = getStatusClass(status);
+
+        const row = document.createElement('tr');
+        row.setAttribute('data-schedule-id', id);
+        row.innerHTML = `
+            <td class="train-name">${trainName}</td>
+            <td class="route">${route}</td>
+            <td class="departure">${formatTime(departure)}</td>
+            <td class="arrival">${formatTime(arrival)}</td>
+            <td class="duration">${duration}</td>
+            <td class="platform">${platform}</td>
+            <td class="status ${statusClass}">${capitalizeFirst(status)}</td>
+            <td class="price">$${economyPrice} / $${businessPrice} / $${firstPrice}</td>
+            <td class="actions">
+                <button class="edit-btn" data-action="edit" title="Edit Schedule">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                    </svg>
+                </button>
+                <button class="delete-btn" data-action="delete" title="Delete Schedule">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1v1zM4.5 3V2h7v1h-7z"/>
+                    </svg>
+                </button>
+                <button class="duplicate-btn" data-action="duplicate" title="Duplicate Schedule">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.616l-6.718 3.12a2.5 2.5 0 0 1 0 3.268l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.268l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                    </svg>
+                </button>
+            </td>
+        `;
+
+        // Add event listeners to new buttons
+        addEventListenersToRow(row);
+
+        return row;
+    }
+
+    // Update existing schedule row
+    function updateScheduleRow(row) {
+        const trainName = document.getElementById('train-name').value;
+        const from = document.getElementById('route-from').value;
+        const to = document.getElementById('route-to').value;
+        const departure = document.getElementById('departure-time').value;
+        const arrival = document.getElementById('arrival-time').value;
+        const platform = document.getElementById('platform').value;
+        const status = document.getElementById('status').value;
+        const economyPrice = document.getElementById('economy-price').value;
+        const businessPrice = document.getElementById('business-price').value;
+        const firstPrice = document.getElementById('first-price').value;
+
+        const route = `${formatStation(from)} - ${formatStation(to)}`;
+        const duration = calculateDuration(departure, arrival);
+        const statusClass = getStatusClass(status);
+
+        row.querySelector('.train-name').textContent = trainName;
+        row.querySelector('.route').textContent = route;
+        row.querySelector('.departure').textContent = formatTime(departure);
+        row.querySelector('.arrival').textContent = formatTime(arrival);
+        row.querySelector('.duration').textContent = duration;
+        row.querySelector('.platform').textContent = platform;
+        row.querySelector('.status').textContent = capitalizeFirst(status);
+        row.querySelector('.status').className = `status ${statusClass}`;
+        row.querySelector('.price').textContent = `$${economyPrice} / $${businessPrice} / $${firstPrice}`;
+    }
+
+    // Add event listeners to a row
+    function addEventListenersToRow(row) {
+        const editBtn = row.querySelector('.edit-btn');
+        const deleteBtn = row.querySelector('.delete-btn');
+        const duplicateBtn = row.querySelector('.duplicate-btn');
+
+        editBtn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            currentAction = 'edit';
+            currentScheduleId = row.dataset.scheduleId;
+            modalTitle.textContent = 'Edit Schedule';
+
+            // Populate form with current values
+            document.getElementById('train-name').value = row.querySelector('.train-name').textContent;
+            document.getElementById('route-from').value = getFromStation(row.querySelector('.route').textContent);
+            document.getElementById('route-to').value = getToStation(row.querySelector('.route').textContent);
+            document.getElementById('departure-time').value = timeTo24Hour(row.querySelector('.departure').textContent);
+            document.getElementById('arrival-time').value = timeTo24Hour(row.querySelector('.arrival').textContent);
+            document.getElementById('platform').value = row.querySelector('.platform').textContent;
+            document.getElementById('status').value = getStatusValue(row.querySelector('.status').classList);
+
+            // Extract prices from the price cell
+            const priceText = row.querySelector('.price').textContent;
+            const prices = priceText.split(' / ');
+            document.getElementById('economy-price').value = prices[0].replace('$', '');
+            document.getElementById('business-price').value = prices[1].replace('$', '');
+            document.getElementById('first-price').value = prices[2].replace('$', '');
+
+            // Set train type based on train name
+            const trainName = row.querySelector('.train-name').textContent;
+            if (trainName.includes('Express')) {
+                document.getElementById('train-type').value = 'express';
+            } else if (trainName.includes('Regional')) {
+                document.getElementById('train-type').value = 'regional';
+            } else if (trainName.includes('Commuter')) {
+                document.getElementById('train-type').value = 'commuter';
+            } else {
+                document.getElementById('train-type').value = 'high-speed';
+            }
+
+            scheduleModal.style.display = 'flex';
+        });
+
+        deleteBtn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            currentScheduleId = row.dataset.scheduleId;
+
+            document.getElementById('delete-train-name').textContent = row.querySelector('.train-name').textContent;
+            document.getElementById('delete-route').textContent = row.querySelector('.route').textContent;
+
+            deleteModal.style.display = 'flex';
+        });
+
+        duplicateBtn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const newId = Date.now();
+            const newRow = row.cloneNode(true);
+            newRow.setAttribute('data-schedule-id', newId);
+
+            // Add event listeners to new buttons
+            addEventListenersToRow(newRow);
+
+            scheduleBody.prepend(newRow);
+            showNotification('success', 'Schedule duplicated successfully!');
+        });
+    }
+
+    // Confirm delete
+    confirmDeleteBtn.addEventListener('click', function() {
+        const row = document.querySelector(`tr[data-schedule-id="${currentScheduleId}"]`);
+        if (row) {
+            row.remove();
+            showNotification('success', 'Schedule deleted successfully!');
+        }
+        deleteModal.style.display = 'none';
+    });
+
+    // Helper functions
+    function formatStation(station) {
+        const stationNames = {
+            'central': 'Central Station',
+            'north': 'North Terminal',
+            'south': 'South Junction',
+            'east': 'East Point',
+            'west': 'West Hub',
+            'airport': 'Airport Station',
+            'university': 'University Station',
+            'downtown': 'Downtown Station',
+            'industrial': 'Industrial Zone',
+            'residential': 'Residential Area'
+        };
+        return stationNames[station] || station.charAt(0).toUpperCase() + station.slice(1);
+    }
+
+    function formatTime(time24) {
+        // Convert 24-hour format to display format (e.g., "06:30")
+        return time24;
+    }
+
+    function calculateDuration(departure, arrival) {
+        // Convert time strings to minutes
+        const [depHours, depMinutes] = departure.split(':').map(Number);
+        const [arrHours, arrMinutes] = arrival.split(':').map(Number);
+
+        // Convert to total minutes
+        const depTotal = depHours * 60 + depMinutes;
+        const arrTotal = arrHours * 60 + arrMinutes;
+
+        // Handle overnight trips
+        let durationMinutes = arrTotal - depTotal;
+        if (durationMinutes < 0) {
+            durationMinutes += 24 * 60; // Add 24 hours in minutes
+        }
+
+        // Convert back to hours and minutes
+        const hours = Math.floor(durationMinutes / 60);
+        const minutes = durationMinutes % 60;
+
+        return `${hours}h ${minutes}m`;
+    }
+
+    function getStatusClass(status) {
+        switch(status) {
+            case 'active': return 'status-active';
+            case 'delayed': return 'status-delayed';
+            case 'canceled': return 'status-canceled';
+            case 'maintenance': return 'status-maintenance';
+            default: return 'status-active';
+        }
+    }
+
+    function capitalizeFirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    // Show notification
+    function showNotification(type, message) {
+        const notification = type === 'success' ? successNotification : errorNotification;
+        const messageSpan = document.getElementById(type + '-message');
+
+        messageSpan.textContent = message;
+        notification.style.display = 'flex';
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000);
+    }
+
+    // Search functionality
+    document.getElementById('search-input').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = scheduleBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const trainName = row.querySelector('.train-name').textContent.toLowerCase();
+            const route = row.querySelector('.route').textContent.toLowerCase();
+
+            if (trainName.includes(searchTerm) || route.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Filter functionality
+    document.getElementById('route-filter').addEventListener('change', applyFilters);
+    document.getElementById('status-filter').addEventListener('change', applyFilters);
+    document.getElementById('date-filter').addEventListener('change', applyFilters);
+
+    function applyFilters() {
+        const routeFilter = document.getElementById('route-filter').value;
+        const statusFilter = document.getElementById('status-filter').value;
+        const dateFilter = document.getElementById('date-filter').value;
+        const rows = scheduleBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const route = row.querySelector('.route').textContent.toLowerCase();
+            const status = row.querySelector('.status').textContent.toLowerCase();
+
+            let showRow = true;
+
+            if (routeFilter && !route.includes(routeFilter.replace('-', ' '))) {
+                showRow = false;
+            }
+
+            if (statusFilter && !status.includes(statusFilter)) {
+                showRow = false;
+            }
+
+            // Date filtering would require actual date data in a real app
+            // For demo, we're not implementing date filtering
+
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+
+    // Add animation to elements when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats
+        const stats = document.querySelectorAll('.stat');
+        stats.forEach((stat, index) => {
+            stat.style.opacity = '0';
+            stat.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                stat.style.opacity = '1';
+                stat.style.transform = 'translateY(0)';
+                stat.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            }, 200 + index * 150);
+        });
+
+        // Animate table rows
+        const rows = scheduleBody.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+                row.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            }, 400 + index * 50);
+        });
+
+        // Add event listeners to all existing buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                currentAction = 'edit';
+                currentScheduleId = row.dataset.scheduleId;
+                modalTitle.textContent = 'Edit Schedule';
+
+                // Populate form with current values
+                document.getElementById('train-name').value = row.querySelector('.train-name').textContent;
+                document.getElementById('route-from').value = getFromStation(row.querySelector('.route').textContent);
+                document.getElementById('route-to').value = getToStation(row.querySelector('.route').textContent);
+                document.getElementById('departure-time').value = timeTo24Hour(row.querySelector('.departure').textContent);
+                document.getElementById('arrival-time').value = timeTo24Hour(row.querySelector('.arrival').textContent);
+                document.getElementById('platform').value = row.querySelector('.platform').textContent;
+                document.getElementById('status').value = getStatusValue(row.querySelector('.status').classList);
+
+                // Extract prices from the price cell
+                const priceText = row.querySelector('.price').textContent;
+                const prices = priceText.split(' / ');
+                document.getElementById('economy-price').value = prices[0].replace('$', '');
+                document.getElementById('business-price').value = prices[1].replace('$', '');
+                document.getElementById('first-price').value = prices[2].replace('$', '');
+
+                // Set train type based on train name
+                const trainName = row.querySelector('.train-name').textContent;
+                if (trainName.includes('Express')) {
+                    document.getElementById('train-type').value = 'express';
+                } else if (trainName.includes('Regional')) {
+                    document.getElementById('train-type').value = 'regional';
+                } else if (trainName.includes('Commuter')) {
+                    document.getElementById('train-type').value = 'commuter';
+                } else {
+                    document.getElementById('train-type').value = 'high-speed';
+                }
+
+                scheduleModal.style.display = 'flex';
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                currentScheduleId = row.dataset.scheduleId;
+
+                document.getElementById('delete-train-name').textContent = row.querySelector('.train-name').textContent;
+                document.getElementById('delete-route').textContent = row.querySelector('.route').textContent;
+
+                deleteModal.style.display = 'flex';
+            });
+        });
+
+        document.querySelectorAll('.duplicate-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const newId = Date.now();
+                const newRow = row.cloneNode(true);
+                newRow.setAttribute('data-schedule-id', newId);
+
+                // Add event listeners to new buttons
+                addEventListenersToRow(newRow);
+
+                scheduleBody.prepend(newRow);
+                showNotification('success', 'Schedule duplicated successfully!');
+            });
+        });
+    });
+</script>
+</body>
+</html>
