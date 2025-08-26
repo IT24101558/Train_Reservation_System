@@ -1,0 +1,181 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0066cc;
+}
+
+.nav-links a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.nav-links a.active {
+    color: #0066cc;
+    border-bottom: 2px solid #0066cc;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Main Layout */
+.main-content {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    background-color: #f0f2f5;
+    padding: 1.5rem 0;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s;
+}
+
+.sidebar li a:hover {
+    background-color: #e0e7ed;
+}
+
+.sidebar li a.active {
+    background-color: #0066cc;
+    color: white;
+}
+
+/* Content Area */
+.content-area {
+    flex: 1;
+    padding: 2rem;
+}
+
+.content-area h1 {
+    font-size: 1.8rem;
+    color: #0066cc;
+    margin-bottom: 0.5rem;
+}
+
+.content-area .description {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+/* Feedback Table */
+.feedback-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.feedback-table th {
+    background-color: #0066cc;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+.feedback-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.feedback-table tbody tr:hover {
+    background-color: #f7f9fc;
+}
+
+/* Rating Stars */
+.feedback-table td:nth-child(4) {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+/* Action Buttons */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .feedback-table {
+        font-size: 0.9rem;
+    }
+
+    .feedback-table th,
+    .feedback-table td {
+        padding: 0.6rem;
+    }
+}
