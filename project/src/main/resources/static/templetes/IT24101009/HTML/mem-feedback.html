@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SLRailE - Submit Feedback</title>
+    <link rel="stylesheet" href="../CSS/mem-feedback.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="dashboard.html">Feedback</a></li>
+            <li><a href="member-schedule.html">My Schedule</a></li>
+            <li><a href="booking-history.html">Booking History</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>Submit Your Feedback</h2>
+        <p class="subtitle">We value your opinion. Help us improve your travel experience.</p>
+    </section>
+
+    <!-- Feedback Form -->
+    <section class="feedback-form-container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Share Your Experience</h3>
+                <p>Please take a moment to rate your recent journey and provide suggestions.</p>
+            </div>
+
+            <form id="feedback-form" class="feedback-form">
+                <!-- Rating -->
+                <div class="form-group">
+                    <label for="rating">Overall Experience</label>
+                    <div class="rating-group">
+              <span class="rating-item">
+                <input type="radio" id="rating-5" name="rating" value="5" required />
+                <label for="rating-5">⭐⭐⭐⭐⭐ Excellent</label>
+              </span>
+                        <span class="rating-item">
+                <input type="radio" id="rating-4" name="rating" value="4" />
+                <label for="rating-4">⭐⭐⭐⭐ Good</label>
+              </span>
+                        <span class="rating-item">
+                <input type="radio" id="rating-3" name="rating" value="3" />
+                <label for="rating-3">⭐⭐⭐ Average</label>
+              </span>
+                        <span class="rating-item">
+                <input type="radio" id="rating-2" name="rating" value="2" />
+                <label for="rating-2">⭐⭐ Fair</label>
+              </span>
+                        <span class="rating-item">
+                <input type="radio" id="rating-1" name="rating" value="1" />
+                <label for="rating-1">⭐ Poor</label>
+              </span>
+                    </div>
+                </div>
+
+                <!-- Train Journey -->
+                <div class="form-group">
+                    <label for="train-journey">Train Journey</label>
+                    <select id="train-journey" name="train-journey" required>
+                        <option value="">Select train journey</option>
+                        <option value="Mountain Route">Mountain Route (Colombo → Kandy)</option>
+                        <option value="Heritage Route">Heritage Route (Kandy → Ella)</option>
+                        <option value="Northern Route">Northern Route (Anuradapura → Jaffna)</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Date of Travel -->
+                <div class="form-group">
+                    <label for="travel-date">Date of Travel</label>
+                    <input type="date" id="travel-date" name="travel-date" required />
+                </div>
+
+                <!-- Feedback Message -->
+                <div class="form-group">
+                    <label for="message">Your Feedback</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Tell us about your journey, what you liked, or how we can improve..." required></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Submit Feedback</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Confirmation Message -->
+    <section class="confirmation-section" id="confirmation" style="display: none;">
+        <div class="card">
+            <div class="success-icon">✅</div>
+            <h3>Thank You for Your Feedback!</h3>
+            <p>We've received your input and will use it to improve our services.</p>
+            <button class="back-btn" onclick="window.location.href='member-schedule.html'">Back to Schedule</button>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <div class="train-icon"></div>
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Tickets</a></li>
+                    <li><a href="#">Reservations</a></li>
+                    <li><a href="#">Luggage</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Handle form submission
+    document.getElementById('feedback-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Show confirmation message
+        const confirmation = document.getElementById('confirmation');
+        confirmation.style.display = 'block';
+
+        // Hide form
+        this.style.display = 'none';
+    });
+
+    // Add animation to card
+    document.addEventListener('DOMContentLoaded', () => {
+        const card = document.querySelector('.card');
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, 100);
+    });
+</script>
+</body>
+</html>
