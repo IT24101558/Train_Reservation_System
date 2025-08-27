@@ -364,19 +364,20 @@ body {
 
 .footer-logo {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
-.footer-logo {
-    display: flex;
-    flex-direction: column; /* stack vertically */
-    align-items: flex-start; /* align left */
-    gap: 5px; /* spacing between h3 and p */
-}
+
 .footer-logo h3 {
     color: var(--primary-color);
     font-size: 1.5rem;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
 }
 
 .footer-links {
