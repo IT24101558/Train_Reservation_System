@@ -489,8 +489,8 @@ body {
     background-color: var(--white);
     border-top: 1px solid var(--border-color);
     padding: 3rem 5% 1.5rem;
-    margin-top: 5rem;
-    animation: slideInUp 0.6s ease-out 1.2s both;
+    margin-top: 2rem;
+    animation: slideInUp 0.6s ease-out 0.8s both;
 }
 
 .footer-content {
@@ -502,16 +502,9 @@ body {
 
 .footer-logo {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-
-.footer-logo {
-    display: flex;
-    flex-direction: column; /* stack vertically */
-    align-items: flex-start; /* align left */
-    gap: 5px; /* spacing between h3 and p */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
 .footer-logo h3 {
@@ -524,6 +517,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 2rem;
 }
+
 
 .link-column h4 {
     color: var(--primary-color);
