@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/userprofile.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+                <h1>SLRailE</h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="../../IT24102460/HTML/mem_shedule.html">My Schedule</a></li>
+            <li><a href="booking-history.html">Booking History</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="#" class="active">My Profile</a></li>
+            <li><a href="../HTML/usersettings.html" >Settings</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+    <section class="profile-container">
+        <div class="profile-header">
+            <div class="avatar">
+                <img src="../images/avatar-placeholder.png" alt="User Avatar">
+            </div>
+            <div class="profile-info">
+                <h2>Saman Perera</h2>
+                           </div>
+        </div>
+
+        <div class="profile-tabs">
+            <button class="tab-btn active" data-tab="personal">Personal Info</button>
+
+        </div>
+
+        <!-- Personal Info Tab -->
+        <div class="tab-content active" id="personal">
+            <form class="profile-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <p>Saman</p>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <p>Perera</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <p>saman.perera@example.com</p>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <p>+94 77 123 4567</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Date of Birth</label>
+                        <p>1985-06-15</p>
+                    </div>
+                    <div class="input-group">
+                        <label>Gender</label>
+                        <p>Male</p>
+                            </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group full">
+                        <label>Address</label>
+                        <p>123 Railway Lane, Colombo 03, Sri Lanka.</p>
+                    </div>
+                </div>
+                            </form>
+        </div>
+
+        <!-- Preferences Tab -->
+        <div class="tab-content" id="preferences">
+            <form class="profile-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="language">Preferred Language</label>
+                        <select id="language">
+                            <option value="en">English</option>
+                            <option value="si">Sinhala</option>
+                            <option value="ta">Tamil</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="timezone">Time Zone</label>
+                        <select id="timezone">
+                            <option value="utc+5:30" selected>UTC+5:30 (Sri Lanka)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group checkbox">
+                        <input type="checkbox" id="notifications-email" checked>
+                        <label for="notifications-email">Receive email notifications</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group checkbox">
+                        <input type="checkbox" id="notifications-sms">
+                        <label for="notifications-sms">Receive SMS alerts</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group checkbox">
+                        <input type="checkbox" id="pref-eco" checked>
+                        <label for="pref-eco">Prefer Economy Class by default</label>
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Save Preferences</button>
+            </form>
+        </div>
+
+        <!-- Security Tab -->
+        <div class="tab-content" id="security">
+            <form class="profile-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group checkbox">
+                        <input type="checkbox" id="two-factor" checked>
+                        <label for="two-factor">Enable Two-Factor Authentication</label>
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Update Security</button>
+            </form>
+        </div>
+
+        <!-- Payment Methods Tab -->
+        <div class="tab-content" id="payment">
+            <div class="payment-methods">
+                <h3>Saved Payment Methods</h3>
+                <div class="card-item">
+                    <div class="card-icon">💳</div>
+                    <div class="card-details">
+                        <strong>Visa ending in 4242</strong><br>
+                        Expires: 12/27
+                    </div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+                <div class="card-item">
+                    <div class="card-icon">💳</div>
+                    <div class="card-details">
+                        <strong>MasterCard ending in 7890</strong><br>
+                        Expires: 05/26
+                    </div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+            </div>
+
+            <form class="profile-form">
+                <h3>Add New Payment Method</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="card-name">Name on Card</label>
+                        <input type="text" id="card-name" value="Saman Perera">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="month" id="expiry">
+                    </div>
+                    <div class="input-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Add Card</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Tickets</a></li>
+                    <li><a href="#">Reservations</a></li>
+                    <li><a href="#">Luggage</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Tab switching logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            // Add active class to clicked tab
+            btn.classList.add('active');
+            const tabId = btn.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Form submission feedback
+    document.querySelectorAll('.profile-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Changes saved successfully!');
+        });
+    });
+
+    // Remove card confirmation
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to remove this payment method?')) {
+                this.closest('.card-item').remove();
+            }
+        });
+    });
+</script>
+</body>
+</html>
