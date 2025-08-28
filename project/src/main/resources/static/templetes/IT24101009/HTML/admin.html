@@ -9,166 +9,166 @@
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">SLRailE</div>
-    <nav class="nav-links">
-      <a href="#" class="active">Dashboard</a>
-      <a href="../../IT24300073/HTML/notification.html">Notifications</a>
-      <a href="admin-feedback.html">Feedback</a>
-      <a href="../../IT24300073/HTML/admin-profile.html">Profile</a>
-    </nav>
-    <div class="user-profile">
-      <span>Admin</span>
-      <img src="https://via.placeholder.com/40" alt="Admin Profile" class="profile-pic" />
-    </div>
-  </header>
+<!-- Header -->
+<header class="header">
+  <div class="logo">SLRailE</div>
+  <nav class="nav-links">
+    <a href="#" class="active">Dashboard</a>
+    <a href="#">Notifications</a>
+    <a href="admin-feedback.html">Feedback</a>
+    <a href="admin-profile.html">Profile</a>
+  </nav>
+  <div class="user-profile">
+    <span>Admin</span>
+    <img src="https://via.placeholder.com/40" alt="Admin Profile" class="profile-pic" />
+  </div>
+</header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="sidebar">
-      <ul>
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#notifications">Delay Notifications</a></li>
-        <li><a href="#feedback">Feedbacks</a></li>
-        <li><a href="#profile">My Profile</a></li>
+<!-- Main Content -->
+<main class="main-content">
+  <div class="sidebar">
+    <ul>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#notifications">Delay Notifications</a></li>
+      <li><a href="#feedback">Feedbacks</a></li>
+      <li><a href="#profile">My Profile</a></li>
+    </ul>
+  </div>
+
+  <div class="content-area">
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section active">
+      <h2>Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Bookings</h3>
+          <p class="value">1,250</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Revenue</h3>
+          <p class="value">$45,800</p>
+        </div>
+        <div class="stat-card">
+          <h3>Today's Tickets</h3>
+          <p class="value">215</p>
+        </div>
+      </div>
+
+      <h3>Recent Bookings</h3>
+      <table class="booking-table">
+        <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Passenger</th>
+          <th>Train</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>#BK1001</td>
+          <td>John Doe</td>
+          <td>Express 101</td>
+          <td>2024-04-05</td>
+          <td><span class="status active">Confirmed</span></td>
+          <td>$50.00</td>
+        </tr>
+        <tr>
+          <td>#BK1002</td>
+          <td>Alice Smith</td>
+          <td>Regional 205</td>
+          <td>2024-04-05</td>
+          <td><span class="status delayed">Delayed</span></td>
+          <td>$35.00</td>
+        </tr>
+        <tr>
+          <td>#BK1003</td>
+          <td>Bob Johnson</td>
+          <td>Commuter 301</td>
+          <td>2024-04-05</td>
+          <td><span class="status active">Confirmed</span></td>
+          <td>$25.00</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Delay Notifications -->
+    <section id="notifications" class="section">
+      <h2>Send Delay Notification</h2>
+      <form class="notification-form">
+        <label for="train-name">Train Name:</label>
+        <input type="text" id="train-name" placeholder="e.g., Express 101" required />
+
+        <label for="delay-reason">Reason for Delay:</label>
+        <textarea id="delay-reason" placeholder="Enter reason..." required></textarea>
+
+        <label for="new-departure">New Departure Time:</label>
+        <input type="datetime-local" id="new-departure" required />
+
+        <button type="submit" class="btn-primary">Send Notification</button>
+      </form>
+
+      <h3>Recent Notifications</h3>
+      <ul class="notification-list">
+        <li>Express 101 delayed due to track maintenance. New departure: 06:45.</li>
+        <li>Regional 205 delayed by 30 mins. Reason: Signal failure.</li>
       </ul>
-    </div>
+    </section>
 
-    <div class="content-area">
+    <!-- Feedback Management -->
+    <section id="feedback" class="section">
+      <h2>Manage Feedbacks</h2>
+      <table class="feedback-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Passenger</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>F001</td>
+          <td>John Doe</td>
+          <td>⭐⭐⭐⭐☆</td>
+          <td>Good service, but platform was crowded.</td>
+          <td>2024-04-05</td>
+          <td><button class="btn-delete">Delete</button></td>
+        </tr>
+        <tr>
+          <td>F002</td>
+          <td>Alice Smith</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>Excellent journey, punctual and clean!</td>
+          <td>2024-04-05</td>
+          <td><button class="btn-delete">Delete</button></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <!-- Dashboard Section -->
-      <section id="dashboard" class="section active">
-        <h2>Dashboard</h2>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3>Total Bookings</h3>
-            <p class="value">1,250</p>
-          </div>
-          <div class="stat-card">
-            <h3>Total Revenue</h3>
-            <p class="value">$45,800</p>
-          </div>
-          <div class="stat-card">
-            <h3>Today's Tickets</h3>
-            <p class="value">215</p>
-          </div>
-        </div>
+    <!-- Profile Section -->
+    <section id="profile" class="section">
+      <h2>Admin Profile</h2>
+      <div class="profile-card">
+        <img src="https://via.placeholder.com/100" alt="Profile" class="profile-img" />
+        <h3>Admin User</h3>
+        <p><strong>Email:</strong> admin@slraile.com</p>
+        <p><strong>Role:</strong> Super Admin</p>
+        <p><strong>Last Login:</strong> April 5, 2024, 10:30 AM</p>
+        <button class="btn-primary">Update Profile</button>
+      </div>
+    </section>
 
-        <h3>Recent Bookings</h3>
-        <table class="booking-table">
-          <thead>
-            <tr>
-              <th>Booking ID</th>
-              <th>Passenger</th>
-              <th>Train</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#BK1001</td>
-              <td>John Doe</td>
-              <td>Express 101</td>
-              <td>2024-04-05</td>
-              <td><span class="status on-time">Confirmed</span></td>
-              <td>$50.00</td>
-            </tr>
-            <tr>
-              <td>#BK1002</td>
-              <td>Alice Smith</td>
-              <td>Regional 205</td>
-              <td>2024-04-05</td>
-              <td><span class="status delayed">Delayed</span></td>
-              <td>$35.00</td>
-            </tr>
-            <tr>
-              <td>#BK1003</td>
-              <td>Bob Johnson</td>
-              <td>Commuter 301</td>
-              <td>2024-04-05</td>
-              <td><span class="status on-time">Confirmed</span></td>
-              <td>$25.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- Delay Notifications -->
-      <section id="notifications" class="section">
-        <h2>Send Delay Notification</h2>
-        <form class="notification-form">
-          <label for="train-name">Train Name:</label>
-          <input type="text" id="train-name" placeholder="e.g., Express 101" required />
-
-          <label for="delay-reason">Reason for Delay:</label>
-          <textarea id="delay-reason" placeholder="Enter reason..." required></textarea>
-
-          <label for="new-departure">New Departure Time:</label>
-          <input type="datetime-local" id="new-departure" required />
-
-          <button type="submit" class="btn-primary">Send Notification</button>
-        </form>
-
-        <h3>Recent Notifications</h3>
-        <ul class="notification-list">
-          <li>Express 101 delayed due to track maintenance. New departure: 06:45.</li>
-          <li>Regional 205 delayed by 30 mins. Reason: Signal failure.</li>
-        </ul>
-      </section>
-
-      <!-- Feedback Management -->
-      <section id="feedback" class="section">
-        <h2>Manage Feedbacks</h2>
-        <table class="feedback-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Passenger</th>
-              <th>Rating</th>
-              <th>Feedback</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>F001</td>
-              <td>John Doe</td>
-              <td>⭐⭐⭐⭐☆</td>
-              <td>Good service, but platform was crowded.</td>
-              <td>2024-04-05</td>
-              <td><button class="btn-delete">Delete</button></td>
-            </tr>
-            <tr>
-              <td>F002</td>
-              <td>Alice Smith</td>
-              <td>⭐⭐⭐⭐⭐</td>
-              <td>Excellent journey, punctual and clean!</td>
-              <td>2024-04-05</td>
-              <td><button class="btn-delete">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- Profile Section -->
-      <section id="profile" class="section">
-        <h2>Admin Profile</h2>
-        <div class="profile-card">
-          <img src="https://via.placeholder.com/100" alt="Profile" class="profile-img" />
-          <h3>Admin User</h3>
-          <p><strong>Email:</strong> admin@slraile.com</p>
-          <p><strong>Role:</strong> Super Admin</p>
-          <p><strong>Last Login:</strong> April 5, 2024, 10:30 AM</p>
-          <button class="btn-primary">Update Profile</button>
-        </div>
-      </section>
-
-    </div>
-  </main>
+  </div>
+</main>
 
 </body>
 </html>
