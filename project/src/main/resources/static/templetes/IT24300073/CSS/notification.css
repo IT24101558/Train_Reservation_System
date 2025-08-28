@@ -1,0 +1,262 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Dashboard container */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Header */
+.header {
+    padding: 20px 0;
+    border-bottom: 2px solid #0066cc;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #0066cc;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Content wrapper */
+.content-wrapper {
+    padding: 20px;
+}
+
+/* Notification section */
+.notification-section {
+    margin-bottom: 30px;
+}
+
+.notification-section h2 {
+    color: #0066cc;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Notification form */
+.notification-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+}
+
+.notification-form h3 {
+    color: #0066cc;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0052a3;
+}
+
+/* Notification list */
+.notification-list {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.notification-list h3 {
+    color: #0066cc;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+/* Notification header */
+.notification-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    font-weight: 500;
+    text-align: left;
+}
+
+.header-cell {
+    padding: 10px;
+}
+
+/* Notification items */
+.notification-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.cell {
+    padding: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Type indicators */
+.info-type {
+    background-color: #e6f7ff;
+    color: #0066cc;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.warning-type {
+    background-color: #fff9e6;
+    color: #d35400;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.alert-type {
+    background-color: #ffebee;
+    color: #c0392b;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.update-type {
+    background-color: #e8f5e8;
+    color: #27ae60;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Actions buttons */
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #2196f3;
+}
+
+.btn-delete {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.btn-delete:hover {
+    background-color: #e74c3c;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .notification-header,
+    .notification-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .notification-item {
+        display: block;
+    }
+
+    .cell {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+}
