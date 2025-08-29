@@ -758,12 +758,11 @@ body {
 
 /* Footer */
 .footer {
-    background-color: var(--header-bg);
+    background-color: var(--white);
     border-top: 1px solid var(--border-color);
     padding: 3rem 5% 1.5rem;
-    margin-top: 5rem;
-    animation: slideInUp 0.6s ease-out 0.6s both;
-    backdrop-filter: blur(4px);
+    margin-top: 2rem;
+    animation: slideInUp 0.6s ease-out 0.8s both;
 }
 
 .footer-content {
@@ -775,21 +774,15 @@ body {
 
 .footer-logo {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-
-.footer-logo .train-icon {
-    width: 30px;
-    height: 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
 .footer-logo h3 {
     color: var(--primary-color);
     font-size: 1.5rem;
 }
-
 .footer-links {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
