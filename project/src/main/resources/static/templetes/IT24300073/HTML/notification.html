@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Notifications</title>
+    <link rel="stylesheet" href="../CSS/notification.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <div class="header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Notification System -->
+        <div class="notification-section">
+            <h2>Notification System</h2>
+
+            <!-- Notification Form -->
+            <div class="notification-form">
+                <h3>Create New Notification</h3>
+                <form id="notificationForm">
+                    <div class="form-group">
+                        <label for="notificationTitle">Notification Title:</label>
+                        <input type="text" id="notificationTitle" name="notificationTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notificationMessage">Message:</label>
+                        <textarea id="notificationMessage" name="notificationMessage" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notificationType">Type:</label>
+                        <select id="notificationType" name="notificationType">
+                            <option value="info">Information</option>
+                            <option value="warning">Warning</option>
+                            <option value="alert">Alert</option>
+                            <option value="update">Update</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient">Recipient:</label>
+                        <select id="recipient" name="recipient">
+                            <option value="all">All Passengers</option>
+                            <option value="specific">Specific Passenger</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="passengerSelect" style="display: none;">
+                        <label for="passengerId">Passenger ID:</label>
+                        <input type="text" id="passengerId" name="passengerId" placeholder="Enter passenger ID">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Send Notification</button>
+                </form>
+            </div>
+
+            <!-- Notification List -->
+            <div class="notification-list">
+                <h3>Recent Notifications</h3>
+                <div class="notification-header">
+                    <div class="header-cell">ID</div>
+                    <div class="header-cell">Title</div>
+                    <div class="header-cell">Type</div>
+                    <div class="header-cell">Recipient</div>
+                    <div class="header-cell">Date</div>
+                    <div class="header-cell">Actions</div>
+                </div>
+
+                <div id="notificationsContainer">
+                    <!-- Notifications will be populated here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sample data for notifications
+    let notifications = [
+        {
+            id: 1,
+            title: "Train Delay Notice",
+            message: "Your train Express 101 is delayed by 30 minutes due to track maintenance.",
+            type: "warning",
+            recipient: "all",
+            date: "2024-04-05 14:30",
+            status: "sent"
+        },
+        {
+            id: 2,
+            title: "Booking Confirmation",
+            message: "Your booking #BK1001 has been confirmed for Express 101 on April 5th.",
+            type: "info",
+            recipient: "specific",
+            passengerId: "#BK1001",
+            date: "2024-04-05 10:15",
+            status: "sent"
+        },
+        {
+            id: 3,
+            title: "Service Update",
+            message: "All trains operating normally today. No delays expected.",
+            type: "info",
+            recipient: "all",
+            date: "2024-04-05 09:00",
+            status: "sent"
+        }
+    ];
+
+    // DOM Elements
+    const notificationForm = document.getElementById('notificationForm');
+    const notificationsContainer = document.getElementById('notificationsContainer');
+    const recipientSelect = document.getElementById('recipient');
+    const passengerSelect = document.getElementById('passengerSelect');
+    const passengerIdInput = document.getElementById('passengerId');
+
+    // Toggle passenger selection
+    recipientSelect.addEventListener('change', function() {
+        if (this.value === 'specific') {
+            passengerSelect.style.display = 'block';
+        } else {
+            passengerSelect.style.display = 'none';
+        }
+    });
+
+    // Handle form submission
+    notificationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const newNotification = {
+            id: Date.now(),
+            title: document.getElementById('notificationTitle').value,
+            message: document.getElementById('notificationMessage').value,
+            type: document.getElementById('notificationType').value,
+            recipient: document.getElementById('recipient').value,
+            passengerId: document.getElementById('recipient').value === 'specific' ?
+                document.getElementById('passengerId').value : null,
+            date: new Date().toLocaleString(),
+            status: 'sent'
+        };
+
+        notifications.unshift(newNotification); // Add to beginning
+        renderNotifications();
+
+        // Reset form
+        notificationForm.reset();
+        passengerSelect.style.display = 'none';
+    });
+
+    // Render notifications
+    function renderNotifications() {
+        notificationsContainer.innerHTML = '';
+
+        notifications.forEach(notification => {
+            const notificationDiv = document.createElement('div');
+            notificationDiv.className = 'notification-item';
+
+            // Determine background color based on type
+            const typeColors = {
+                'info': '#e6f7ff',
+                'warning': '#fff9e6',
+                'alert': '#ffebee',
+                'update': '#e8f5e8'
+            };
+
+            const typeClasses = {
+                'info': 'info-type',
+                'warning': 'warning-type',
+                'alert': 'alert-type',
+                'update': 'update-type'
+            };
+
+            notificationDiv.style.backgroundColor = typeColors[notification.type] || '#f5f5f5';
+
+            notificationDiv.innerHTML = `
+                    <div class="cell">${notification.id}</div>
+                    <div class="cell">${notification.title}</div>
+                    <div class="cell ${typeClasses[notification.type]}">${notification.type}</div>
+                    <div class="cell">${notification.recipient === 'specific' ? notification.passengerId : 'All'}</div>
+                    <div class="cell">${notification.date}</div>
+                    <div class="cell actions">
+                        <button class="btn-edit" onclick="editNotification(${notification.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteNotification(${notification.id})">Delete</button>
+                    </div>
+                `;
+
+            notificationsContainer.appendChild(notificationDiv);
+        });
+    }
+
+    // Edit notification function
+    window.editNotification = function(id) {
+        const notification = notifications.find(n => n.id === id);
+        if (!notification) return;
+
+        // Show edit modal or form
+        alert(`Editing notification with ID: ${id}\n\n${JSON.stringify(notification, null, 2)}`);
+
+        // In a real app, you'd open a modal form with pre-filled values
+        // For this demo, we're just showing an alert
+    };
+
+    // Delete notification function
+    window.deleteNotification = function(id) {
+        if (confirm("Are you sure you want to delete this notification?")) {
+            notifications = notifications.filter(n => n.id !== id);
+            renderNotifications();
+        }
+    };
+
+    // Initialize the page
+    window.onload = function() {
+        renderNotifications();
+    };
+</script>
+</body>
+</html>

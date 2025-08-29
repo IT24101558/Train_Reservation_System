@@ -1,0 +1,598 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Dashboard container */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Header */
+.header {
+    padding: 20px 0;
+    border-bottom: 2px solid #0066cc;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #0066cc;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Content wrapper */
+.content-wrapper {
+    padding: 20px;
+}
+
+/* Settings section */
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.settings-header h2 {
+    color: #0066cc;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Settings actions */
+.settings-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0052a3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #0066cc;
+    border: 1px solid #0066cc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-outline:hover {
+    background-color: #0066cc;
+    color: white;
+}
+
+/* Settings container */
+.settings-container {
+    display: flex;
+    gap: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+/* Settings sidebar */
+.settings-sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+/* Settings navigation */
+.settings-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-btn {
+    background-color: transparent;
+    color: #333;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.nav-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.nav-btn.active {
+    background-color: #0066cc;
+    color: white;
+    border-left-color: #0052a3;
+    font-weight: 500;
+}
+
+/* Settings content */
+.settings-content {
+    flex: 1;
+    padding: 30px;
+    background-color: white;
+}
+
+/* Tab content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h3 {
+    color: #0066cc;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Settings group */
+.settings-group {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.settings-group h4 {
+    color: #0066cc;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Forms */
+form {
+    max-width: 800px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="url"],
+.form-group input[type="number"],
+.form-group input[type="time"],
+.form-group input[type="password"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group input[type="url"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="time"]:focus,
+.form-group input[type="password"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+
+/* Logo container */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.logo-container img {
+    max-width: 200px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.logo-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Toggle switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #0066cc;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Backup list */
+.backup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.backup-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.backup-info {
+    flex: 1;
+}
+
+.backup-name {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.backup-date, .backup-size {
+    font-size: 12px;
+    color: #666;
+}
+
+.backup-status {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.backup-status.success {
+    background-color: #e8f5e8;
+    color: #27ae60;
+}
+
+.backup-status.warning {
+    background-color: #fff9e6;
+    color: #d35400;
+}
+
+.backup-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* API keys */
+.api-keys {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.api-key-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.key-info {
+    flex: 1;
+}
+
+.key-name {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.key-value {
+    font-family: monospace;
+    font-size: 12px;
+    background-color: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.key-created {
+    font-size: 12px;
+    color: #666;
+}
+
+.key-status {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.key-status.active {
+    background-color: #e6f7ff;
+    color: #0066cc;
+}
+
+.key-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Integration list */
+.integration-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.integration-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.integration-icon {
+    font-size: 24px;
+}
+
+.integration-info {
+    flex: 1;
+}
+
+.integration-name {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.integration-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.integration-status.connected {
+    background-color: #e8f5e8;
+    color: #27ae60;
+}
+
+.integration-status.disconnected {
+    background-color: #ffebee;
+    color: #c0392b;
+}
+
+.integration-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Webhook list */
+.webhook-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.webhook-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.webhook-url {
+    flex: 1;
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.webhook-events {
+    font-size: 12px;
+    color: #666;
+    min-width: 150px;
+}
+
+.webhook-status {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.webhook-status.active {
+    background-color: #e8f5e8;
+    color: #27ae60;
+}
+
+.webhook-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Backup actions */
+.backup-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+    .settings-container {
+        flex-direction: column;
+    }
+
+    .settings-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .backup-item,
+    .api-key-item,
+    .integration-item,
+    .webhook-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .backup-actions,
+    .key-actions,
+    .integration-actions,
+    .webhook-actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .settings-actions {
+        justify-content: flex-end;
+    }
+
+    .backup-item,
+    .api-key-item,
+    .integration-item,
+    .webhook-item {
+        padding: 12px;
+    }
+
+    .settings-content {
+        padding: 20px;
+    }
+}

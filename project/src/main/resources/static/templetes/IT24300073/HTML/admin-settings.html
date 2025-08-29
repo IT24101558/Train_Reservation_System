@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Settings</title>
+    <link rel="stylesheet" href="../CSS/admin-settings.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <div class="header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Admin Settings Section -->
+        <div class="settings-section">
+            <div class="settings-header">
+                <h2>System Settings</h2>
+                <div class="settings-actions">
+                    <button id="saveSettingsBtn" class="btn-primary">Save All Settings</button>
+                </div>
+            </div>
+
+            <div class="settings-container">
+                <!-- Settings Sidebar -->
+                <div class="settings-sidebar">
+                    <div class="settings-navigation">
+                        <button class="nav-btn active" data-tab="general">General Settings</button>
+                        <button class="nav-btn" data-tab="system">System Configuration</button>
+                        <button class="nav-btn" data-tab="security">Security Settings</button>
+                        <button class="nav-btn" data-tab="notifications">Notification Settings</button>
+                        <button class="nav-btn" data-tab="backup">Backup & Recovery</button>
+                        <button class="nav-btn" data-tab="integration">API Integration</button>
+                    </div>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- General Settings Tab -->
+                    <div class="tab-content active" id="general">
+                        <h3>General Settings</h3>
+                        <form id="generalForm">
+                            <div class="settings-group">
+                                <h4>Company Information</h4>
+                                <div class="form-group">
+                                    <label for="companyName">Company Name:</label>
+                                    <input type="text" id="companyName" value="National Railway System">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="companyAddress">Company Address:</label>
+                                    <textarea id="companyAddress" rows="3">123 Railway Street, Cityville, State 12345</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="companyPhone">Phone Number:</label>
+                                    <input type="tel" id="companyPhone" value="+1 (800) 555-1234">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="companyEmail">Support Email:</label>
+                                    <input type="email" id="companyEmail" value="support@railway.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="website">Website URL:</label>
+                                    <input type="url" id="website" value="https://www.railway.com">
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>System Preferences</h4>
+                                <div class="form-group">
+                                    <label for="systemName">System Name:</label>
+                                    <input type="text" id="systemName" value="Railway Reservation System">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="timezone">Default Timezone:</label>
+                                    <select id="timezone">
+                                        <option value="utc-5" selected>Eastern Time (UTC-5)</option>
+                                        <option value="utc-8">Pacific Time (UTC-8)</option>
+                                        <option value="utc+0">Greenwich Mean Time (UTC+0)</option>
+                                        <option value="utc+1">Central European Time (UTC+1)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dateFormat">Default Date Format:</label>
+                                    <select id="dateFormat">
+                                        <option value="mm-dd-yyyy" selected>MM-DD-YYYY</option>
+                                        <option value="dd-mm-yyyy">DD-MM-YYYY</option>
+                                        <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="currency">Default Currency:</label>
+                                    <select id="currency">
+                                        <option value="usd" selected>USD - US Dollar</option>
+                                        <option value="eur">EUR - Euro</option>
+                                        <option value="gbp">GBP - British Pound</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Appearance</h4>
+                                <div class="form-group">
+                                    <label for="primaryColor">Primary Color:</label>
+                                    <input type="color" id="primaryColor" value="#0066cc">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="logoFile">Company Logo:</label>
+                                    <div class="logo-container">
+                                        <img src="https://via.placeholder.com/200x60" alt="Company Logo" id="logoPreview">
+                                        <div class="logo-actions">
+                                            <input type="file" id="logoFile" accept="image/*" style="display: none;">
+                                            <button type="button" id="uploadLogoBtn">Upload Logo</button>
+                                            <button type="button" id="removeLogoBtn">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- System Configuration Tab -->
+                    <div class="tab-content" id="system">
+                        <h3>System Configuration</h3>
+                        <form id="systemForm">
+                            <div class="settings-group">
+                                <h4>Reservation Settings</h4>
+                                <div class="form-group">
+                                    <label for="maxReservationDays">Maximum Reservation Days in Advance:</label>
+                                    <input type="number" id="maxReservationDays" value="90" min="1" max="365">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="reservationWindow">Reservation Window (hours before departure):</label>
+                                    <input type="number" id="reservationWindow" value="2" min="0" max="24">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cancellationWindow">Cancellation Window (hours before departure):</label>
+                                    <input type="number" id="cancellationWindow" value="4" min="0" max="72">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="refundPolicy">Refund Policy (% of fare):</label>
+                                    <input type="number" id="refundPolicy" value="80" min="0" max="100">%
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Train Operations</h4>
+                                <div class="form-group">
+                                    <label for="minTrainSpeed">Minimum Train Speed (km/h):</label>
+                                    <input type="number" id="minTrainSpeed" value="80" min="1" max="500">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="maxTrainSpeed">Maximum Train Speed (km/h):</label>
+                                    <input type="number" id="maxTrainSpeed" value="300" min="1" max="500">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="avgDelay">Average Delay Tolerance (minutes):</label>
+                                    <input type="number" id="avgDelay" value="15" min="0" max="60">
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>System Performance</h4>
+                                <div class="form-group">
+                                    <label for="cacheDuration">Cache Duration (minutes):</label>
+                                    <input type="number" id="cacheDuration" value="30" min="1" max="1440">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sessionTimeout">Session Timeout (minutes):</label>
+                                    <input type="number" id="sessionTimeout" value="30" min="1" max="120">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="maxConcurrentUsers">Maximum Concurrent Users:</label>
+                                    <input type="number" id="maxConcurrentUsers" value="1000" min="1" max="10000">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Security Settings Tab -->
+                    <div class="tab-content" id="security">
+                        <h3>Security Settings</h3>
+                        <form id="securityForm">
+                            <div class="settings-group">
+                                <h4>Password Policy</h4>
+                                <div class="form-group">
+                                    <label for="minPasswordLength">Minimum Password Length:</label>
+                                    <input type="number" id="minPasswordLength" value="8" min="6" max="20">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passwordExpiry">Password Expiry (days):</label>
+                                    <input type="number" id="passwordExpiry" value="90" min="1" max="365">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passwordHistory">Remember Password History:</label>
+                                    <input type="number" id="passwordHistory" value="5" min="0" max="10">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="failedAttempts">Maximum Failed Login Attempts:</label>
+                                    <input type="number" id="failedAttempts" value="5" min="1" max="10">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lockoutDuration">Account Lockout Duration (minutes):</label>
+                                    <input type="number" id="lockoutDuration" value="15" min="1" max="60">
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Authentication</h4>
+                                <div class="form-group">
+                                    <label for="twoFactorAuth">Two-Factor Authentication:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="twoFactorAuth" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="twoFactorMethod">Default 2FA Method:</label>
+                                    <select id="twoFactorMethod">
+                                        <option value="app" selected>Authentication App</option>
+                                        <option value="email">Email</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="captcha">Enable CAPTCHA:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="captcha" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Security Monitoring</h4>
+                                <div class="form-group">
+                                    <label for="logRetention">Security Log Retention (days):</label>
+                                    <input type="number" id="logRetention" value="90" min="1" max="365">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="alertEmail">Security Alert Email:</label>
+                                    <input type="email" id="alertEmail" value="security@railway.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ipWhitelist">IP Address Whitelist:</label>
+                                    <textarea id="ipWhitelist" rows="3">192.168.1.0/24
+10.0.0.0/8</textarea>
+                                    <small>Enter one IP address or range per line. Use CIDR notation for ranges.</small>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Notification Settings Tab -->
+                    <div class="tab-content" id="notifications">
+                        <h3>Notification Settings</h3>
+                        <form id="notificationForm">
+                            <div class="settings-group">
+                                <h4>Email Notifications</h4>
+                                <div class="form-group">
+                                    <label for="smtpHost">SMTP Host:</label>
+                                    <input type="text" id="smtpHost" value="smtp.gmail.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="smtpPort">SMTP Port:</label>
+                                    <input type="number" id="smtpPort" value="587">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="smtpUser">SMTP Username:</label>
+                                    <input type="email" id="smtpUser" value="notifications@railway.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="smtpPassword">SMTP Password:</label>
+                                    <input type="password" id="smtpPassword" value="••••••••">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fromEmail">From Email Address:</label>
+                                    <input type="email" id="fromEmail" value="notifications@railway.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fromName">From Name:</label>
+                                    <input type="text" id="fromName" value="Railway Reservation System">
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Notification Templates</h4>
+                                <div class="form-group">
+                                    <label for="bookingTemplate">Booking Confirmation Template:</label>
+                                    <textarea id="bookingTemplate" rows="5">Dear {name},
+
+Your booking {booking_id} has been confirmed for train {train_name} on {date}.
+
+Departure: {departure_station} at {departure_time}
+Arrival: {arrival_station} at {arrival_time}
+Seat: {seat_number}
+
+Thank you for choosing Railway Reservation System.</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cancellationTemplate">Cancellation Template:</label>
+                                    <textarea id="cancellationTemplate" rows="5">Dear {name},
+
+Your booking {booking_id} for train {train_name} on {date} has been cancelled.
+
+Refund amount: {refund_amount}
+Refund will be processed within {processing_days} business days.
+
+Thank you for choosing Railway Reservation System.</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="delayTemplate">Delay Notification Template:</label>
+                                    <textarea id="delayTemplate" rows="5">Dear {name},
+
+We regret to inform you that your train {train_name} (booking {booking_id}) is delayed by {delay_minutes} minutes.
+
+New departure time: {new_departure_time}
+New arrival time: {new_arrival_time}
+
+We apologize for the inconvenience.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Notification Preferences</h4>
+                                <div class="form-group">
+                                    <label for="emailNotifications">Enable Email Notifications:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="pushNotifications">Enable Push Notifications:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="pushNotifications" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="smsNotifications">Enable SMS Notifications:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="smsNotifications">
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="notificationSound">Notification Sound:</label>
+                                    <select id="notificationSound">
+                                        <option value="default" selected>Default</option>
+                                        <option value="chime">Chime</option>
+                                        <option value="beep">Beep</option>
+                                        <option value="silent">Silent</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Backup & Recovery Tab -->
+                    <div class="tab-content" id="backup">
+                        <h3>Backup & Recovery</h3>
+                        <form id="backupForm">
+                            <div class="settings-group">
+                                <h4>Backup Configuration</h4>
+                                <div class="form-group">
+                                    <label for="backupFrequency">Backup Frequency:</label>
+                                    <select id="backupFrequency">
+                                        <option value="daily" selected>Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="backupTime">Backup Time:</label>
+                                    <input type="time" id="backupTime" value="02:00">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="backupLocation">Backup Location:</label>
+                                    <select id="backupLocation">
+                                        <option value="local" selected>Local Server</option>
+                                        <option value="cloud">Cloud Storage</option>
+                                        <option value="external">External Drive</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="backupRetention">Backup Retention Period:</label>
+                                    <select id="backupRetention">
+                                        <option value="7">7 days</option>
+                                        <option value="14">14 days</option>
+                                        <option value="30" selected>30 days</option>
+                                        <option value="90">90 days</option>
+                                        <option value="365">1 year</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="encryption">Enable Backup Encryption:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="encryption" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Recent Backups</h4>
+                                <div class="backup-list">
+                                    <div class="backup-item">
+                                        <div class="backup-info">
+                                            <div class="backup-name">Full System Backup</div>
+                                            <div class="backup-date">April 5, 2024 - 02:05 AM</div>
+                                            <div class="backup-size">2.4 GB</div>
+                                        </div>
+                                        <div class="backup-status success">Completed</div>
+                                        <div class="backup-actions">
+                                            <button class="btn-outline">Download</button>
+                                            <button class="btn-secondary">Restore</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="backup-item">
+                                        <div class="backup-info">
+                                            <div class="backup-name">Database Backup</div>
+                                            <div class="backup-date">April 4, 2024 - 02:03 AM</div>
+                                            <div class="backup-size">850 MB</div>
+                                        </div>
+                                        <div class="backup-status success">Completed</div>
+                                        <div class="backup-actions">
+                                            <button class="btn-outline">Download</button>
+                                            <button class="btn-secondary">Restore</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="backup-item">
+                                        <div class="backup-info">
+                                            <div class="backup-name">Full System Backup</div>
+                                            <div class="backup-date">April 3, 2024 - 02:06 AM</div>
+                                            <div class="backup-size">2.3 GB</div>
+                                        </div>
+                                        <div class="backup-status warning">Warning</div>
+                                        <div class="backup-actions">
+                                            <button class="btn-outline">Download</button>
+                                            <button class="btn-secondary">Restore</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Backup Actions</h4>
+                                <div class="backup-actions">
+                                    <button type="button" class="btn-primary">Create Manual Backup</button>
+                                    <button type="button" class="btn-outline">Test Recovery</button>
+                                    <button type="button" class="btn-secondary">Clear Old Backups</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- API Integration Tab -->
+                    <div class="tab-content" id="integration">
+                        <h3>API Integration</h3>
+                        <form id="integrationForm">
+                            <div class="settings-group">
+                                <h4>API Access</h4>
+                                <div class="form-group">
+                                    <label for="apiStatus">API Status:</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="apiStatus" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="apiRateLimit">API Rate Limit (requests/minute):</label>
+                                    <input type="number" id="apiRateLimit" value="100" min="1" max="1000">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="apiTimeout">API Timeout (seconds):</label>
+                                    <input type="number" id="apiTimeout" value="30" min="1" max="300">
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>API Keys</h4>
+                                <div class="api-keys">
+                                    <div class="api-key-item">
+                                        <div class="key-info">
+                                            <div class="key-name">Production Key</div>
+                                            <div class="key-value">pk_live_5e7a3f9c8d2b1a6e</div>
+                                            <div class="key-created">Created: Jan 15, 2024</div>
+                                        </div>
+                                        <div class="key-status active">Active</div>
+                                        <div class="key-actions">
+                                            <button class="btn-outline">Regenerate</button>
+                                            <button class="btn-secondary">Revoke</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="api-key-item">
+                                        <div class="key-info">
+                                            <div class="key-name">Staging Key</div>
+                                            <div class="key-value">pk_test_8f2c9a1d7e4b6c3f</div>
+                                            <div class="key-created">Created: Feb 3, 2024</div>
+                                        </div>
+                                        <div class="key-status active">Active</div>
+                                        <div class="key-actions">
+                                            <button class="btn-outline">Regenerate</button>
+                                            <button class="btn-secondary">Revoke</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn-primary" id="createApiKeyBtn">Create New API Key</button>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Integrated Services</h4>
+                                <div class="integration-list">
+                                    <div class="integration-item">
+                                        <div class="integration-icon">📧</div>
+                                        <div class="integration-info">
+                                            <div class="integration-name">Email Service</div>
+                                            <div class="integration-status connected">Connected</div>
+                                        </div>
+                                        <div class="integration-actions">
+                                            <button class="btn-outline">Configure</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="integration-item">
+                                        <div class="integration-icon">📱</div>
+                                        <div class="integration-info">
+                                            <div class="integration-name">SMS Gateway</div>
+                                            <div class="integration-status disconnected">Disconnected</div>
+                                        </div>
+                                        <div class="integration-actions">
+                                            <button class="btn-outline">Connect</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="integration-item">
+                                        <div class="integration-icon">💳</div>
+                                        <div class="integration-info">
+                                            <div class="integration-name">Payment Gateway</div>
+                                            <div class="integration-status connected">Connected</div>
+                                        </div>
+                                        <div class="integration-actions">
+                                            <button class="btn-outline">Configure</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="integration-item">
+                                        <div class="integration-icon">📊</div>
+                                        <div class="integration-info">
+                                            <div class="integration-name">Analytics</div>
+                                            <div class="integration-status connected">Connected</div>
+                                        </div>
+                                        <div class="integration-actions">
+                                            <button class="btn-outline">Configure</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Webhooks</h4>
+                                <div class="webhook-list">
+                                    <div class="webhook-item">
+                                        <div class="webhook-url">https://api.external.com/webhook/bookings</div>
+                                        <div class="webhook-events">booking_created, booking_updated</div>
+                                        <div class="webhook-status active">Active</div>
+                                        <div class="webhook-actions">
+                                            <button class="btn-outline">Edit</button>
+                                            <button class="btn-secondary">Delete</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="webhook-item">
+                                        <div class="webhook-url">https://analytics.external.com/webhook/events</div>
+                                        <div class="webhook-events">system_event, user_action</div>
+                                        <div class="webhook-status active">Active</div>
+                                        <div class="webhook-actions">
+                                            <button class="btn-outline">Edit</button>
+                                            <button class="btn-secondary">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn-primary" id="addWebhookBtn">Add Webhook</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab navigation
+    document.querySelectorAll('.nav-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons and tabs
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+            // Add active class to clicked button and corresponding tab
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Save all settings button
+    document.getElementById('saveSettingsBtn').addEventListener('click', function() {
+        // In a real app, this would save all settings to the server
+        alert('All settings saved successfully!');
+    });
+
+    // Logo upload functionality
+    document.getElementById('uploadLogoBtn').addEventListener('click', function() {
+        document.getElementById('logoFile').click();
+    });
+
+    document.getElementById('logoFile').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('logoPreview').src = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    document.getElementById('removeLogoBtn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to remove the current logo?')) {
+            document.getElementById('logoPreview').src = 'https://via.placeholder.com/200x60';
+        }
+    });
+
+    // Create new API key
+    document.getElementById('createApiKeyBtn').addEventListener('click', function() {
+        alert('New API key created successfully!\n\nKey: pk_live_' + Math.random().toString(36).substr(2, 16));
+    });
+
+    // Add webhook
+    document.getElementById('addWebhookBtn').addEventListener('click', function() {
+        alert('Please enter webhook URL and events in the form that would appear in a real application.');
+    });
+
+    // Prevent form submissions (in a real app, these would save to server)
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+.nav-links a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-links a.active {
+  color: #0066cc;
+  border-bottom: 2px solid #0066cc;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Main Layout */
+.main-content {
+  display: flex;
+  min-height: calc(100vh - 60px);
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f0f2f5;
+  padding: 1.5rem 0;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li a {
+  display: block;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.3s;
+}
+
+.sidebar li a:hover {
+  background-color: #e0e7ed;
+}
+
+.sidebar li a.active {
+  background-color: #0066cc;
+  color: white;
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+  margin-bottom: 2rem;
+}
+
+.section.active {
+  display: block;
+}
+
+.section h2 {
+  margin-bottom: 1.5rem;
+  color: #0066cc;
+  border-bottom: 2px solid #0066cc;
+  padding-bottom: 0.5rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+/* Tables */
+.booking-table, .feedback-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.booking-table th,
+.feedback-table th {
+  background-color: #0066cc;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+}
+
+.booking-table td,
+.feedback-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status.on-time {
+  background-color: #d0f0c0;
+  color: #2e8b57;
+}
+
+.status.delayed {
+  background-color: #fffacd;
+  color: #b8860b;
+}
+
+.status.canceled {
+  background-color: #f8d7da;
+  color: #dc3545;
+}
+
+/* Form */
+.notification-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.notification-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.notification-form input,
+.notification-form textarea {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.notification-form button {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notification-form button:hover {
+  background-color: #0052a3;
+}
+
+/* Notification List */
+.notification-list {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.notification-list li {
+  background: #f0f2f5;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #0052a3;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Profile Card */
+.profile-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+}
+
+.profile-card h3 {
+  margin-bottom: 0.5rem;
+  color: #0066cc;
+}
