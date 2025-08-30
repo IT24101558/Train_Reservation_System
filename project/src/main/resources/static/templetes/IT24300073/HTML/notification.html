@@ -3,219 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Notifications</title>
+    <title>Notifications - SLRail Express</title>
     <link rel="stylesheet" href="../CSS/notification.css">
 </head>
 <body>
-<div class="dashboard-container">
-    <div class="header">
-        <h1>Dashboard</h1>
+
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
     </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="../../IT24101525/HTML/userprofile.html">My Profile</a></li>
+            <li><a href="../../IT24102460/HTML/mem_shedule.html">Schedule</a></li>
+            <li><a href="#">Booking History</a></li>
+            <li><a href="#" class="active">Notifications</a></li>
+            <li><a href="../../IT24101009/HTML/mem-feedback.html">Feedback</a></li>
+            <li><a href="../../IT24101525/HTML/usersettings.html">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <div class="content-wrapper">
-        <!-- Notification System -->
-        <div class="notification-section">
-            <h2>Notification System</h2>
+<main class="main-content">
+    <section class="notifications-header">
+        <h1>Notifications</h1>
+        <p>You have <strong>4 unread</strong> messages</p>
+    </section>
 
-            <!-- Notification Form -->
-            <div class="notification-form">
-                <h3>Create New Notification</h3>
-                <form id="notificationForm">
-                    <div class="form-group">
-                        <label for="notificationTitle">Notification Title:</label>
-                        <input type="text" id="notificationTitle" name="notificationTitle" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notificationMessage">Message:</label>
-                        <textarea id="notificationMessage" name="notificationMessage" rows="4" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notificationType">Type:</label>
-                        <select id="notificationType" name="notificationType">
-                            <option value="info">Information</option>
-                            <option value="warning">Warning</option>
-                            <option value="alert">Alert</option>
-                            <option value="update">Update</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recipient">Recipient:</label>
-                        <select id="recipient" name="recipient">
-                            <option value="all">All Passengers</option>
-                            <option value="specific">Specific Passenger</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="passengerSelect" style="display: none;">
-                        <label for="passengerId">Passenger ID:</label>
-                        <input type="text" id="passengerId" name="passengerId" placeholder="Enter passenger ID">
-                    </div>
-
-                    <button type="submit" class="btn-primary">Send Notification</button>
-                </form>
+    <section class="notifications-list">
+        <!-- Notification 1 -->
+        <div class="notification unread">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
             </div>
+            <div class="notification-content">
+                <p>Your booking <strong>#B12345</strong> is confirmed for <strong>Dec 16</strong>. Boarding at 05:30 AM from Colombo.</p>
+                <small>2 hours ago</small>
+            </div>
+            <button class="mark-read">✕</button>
+        </div>
 
-            <!-- Notification List -->
-            <div class="notification-list">
-                <h3>Recent Notifications</h3>
-                <div class="notification-header">
-                    <div class="header-cell">ID</div>
-                    <div class="header-cell">Title</div>
-                    <div class="header-cell">Type</div>
-                    <div class="header-cell">Recipient</div>
-                    <div class="header-cell">Date</div>
-                    <div class="header-cell">Actions</div>
-                </div>
+        <!-- Notification 2 -->
+        <div class="notification unread">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                    <path d="M2 8v8"></path>
+                    <path d="M2 12h16"></path>
+                </svg>
+            </div>
+            <div class="notification-content">
+                <p>Delay Alert: <strong>Mountain Route</strong> is delayed by 12 minutes due to weather conditions.</p>
+                <small>5 hours ago</small>
+            </div>
+            <button class="mark-read">✕</button>
+        </div>
 
-                <div id="notificationsContainer">
-                    <!-- Notifications will be populated here via JavaScript -->
-                </div>
+        <!-- Notification 3 -->
+        <div class="notification read">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.07V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <div class="notification-content">
+                <p>Your feedback has been received. Thank you for helping us improve!</p>
+                <small>1 day ago</small>
+            </div>
+            <button class="mark-read">✕</button>
+        </div>
+
+        <!-- Notification 4 -->
+        <div class="notification read">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+            </div>
+            <div class="notification-content">
+                <p>New schedule update: <strong>Heritage Route</strong> now includes additional stops in Nuwara Eliya.</p>
+                <small>2 days ago</small>
+            </div>
+            <button class="mark-read">✕</button>
+        </div>
+
+        <!-- Notification 5 -->
+        <div class="notification read">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v4"></path>
+                    <path d="m16.24 7.76-2.12 2.12"></path>
+                    <path d="M18.5 12h-4"></path>
+                    <path d="m16.24 16.24-2.12-2.12"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="m4.93 4.93 2.12 2.12"></path>
+                    <path d="M2 12h4"></path>
+                    <path d="m4.93 19.07 2.12-2.12"></path>
+                </svg>
+            </div>
+            <div class="notification-content">
+                <p>Promotion: Enjoy 20% off on First Class bookings this weekend only!</p>
+                <small>5 days ago</small>
+            </div>
+            <button class="mark-read">✕</button>
+        </div>
+    </section>
+
+    <div class="notifications-actions">
+        <button id="mark-all-read" class="action-btn">Mark All as Read</button>
+        <button id="clear-all" class="action-btn danger">Clear All</button>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Tickets</a></li>
+                    <li><a href="#">Reservations</a></li>
+                    <li><a href="#">Luggage</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
 
 <script>
-    // Sample data for notifications
-    let notifications = [
-        {
-            id: 1,
-            title: "Train Delay Notice",
-            message: "Your train Express 101 is delayed by 30 minutes due to track maintenance.",
-            type: "warning",
-            recipient: "all",
-            date: "2024-04-05 14:30",
-            status: "sent"
-        },
-        {
-            id: 2,
-            title: "Booking Confirmation",
-            message: "Your booking #BK1001 has been confirmed for Express 101 on April 5th.",
-            type: "info",
-            recipient: "specific",
-            passengerId: "#BK1001",
-            date: "2024-04-05 10:15",
-            status: "sent"
-        },
-        {
-            id: 3,
-            title: "Service Update",
-            message: "All trains operating normally today. No delays expected.",
-            type: "info",
-            recipient: "all",
-            date: "2024-04-05 09:00",
-            status: "sent"
-        }
-    ];
-
-    // DOM Elements
-    const notificationForm = document.getElementById('notificationForm');
-    const notificationsContainer = document.getElementById('notificationsContainer');
-    const recipientSelect = document.getElementById('recipient');
-    const passengerSelect = document.getElementById('passengerSelect');
-    const passengerIdInput = document.getElementById('passengerId');
-
-    // Toggle passenger selection
-    recipientSelect.addEventListener('change', function() {
-        if (this.value === 'specific') {
-            passengerSelect.style.display = 'block';
-        } else {
-            passengerSelect.style.display = 'none';
-        }
-    });
-
-    // Handle form submission
-    notificationForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const newNotification = {
-            id: Date.now(),
-            title: document.getElementById('notificationTitle').value,
-            message: document.getElementById('notificationMessage').value,
-            type: document.getElementById('notificationType').value,
-            recipient: document.getElementById('recipient').value,
-            passengerId: document.getElementById('recipient').value === 'specific' ?
-                document.getElementById('passengerId').value : null,
-            date: new Date().toLocaleString(),
-            status: 'sent'
-        };
-
-        notifications.unshift(newNotification); // Add to beginning
-        renderNotifications();
-
-        // Reset form
-        notificationForm.reset();
-        passengerSelect.style.display = 'none';
-    });
-
-    // Render notifications
-    function renderNotifications() {
-        notificationsContainer.innerHTML = '';
-
-        notifications.forEach(notification => {
-            const notificationDiv = document.createElement('div');
-            notificationDiv.className = 'notification-item';
-
-            // Determine background color based on type
-            const typeColors = {
-                'info': '#e6f7ff',
-                'warning': '#fff9e6',
-                'alert': '#ffebee',
-                'update': '#e8f5e8'
-            };
-
-            const typeClasses = {
-                'info': 'info-type',
-                'warning': 'warning-type',
-                'alert': 'alert-type',
-                'update': 'update-type'
-            };
-
-            notificationDiv.style.backgroundColor = typeColors[notification.type] || '#f5f5f5';
-
-            notificationDiv.innerHTML = `
-                    <div class="cell">${notification.id}</div>
-                    <div class="cell">${notification.title}</div>
-                    <div class="cell ${typeClasses[notification.type]}">${notification.type}</div>
-                    <div class="cell">${notification.recipient === 'specific' ? notification.passengerId : 'All'}</div>
-                    <div class="cell">${notification.date}</div>
-                    <div class="cell actions">
-                        <button class="btn-edit" onclick="editNotification(${notification.id})">Edit</button>
-                        <button class="btn-delete" onclick="deleteNotification(${notification.id})">Delete</button>
-                    </div>
-                `;
-
-            notificationsContainer.appendChild(notificationDiv);
+    // Mark notification as read
+    document.querySelectorAll('.mark-read').forEach(button => {
+        button.addEventListener('click', function () {
+            const notification = this.closest('.notification');
+            notification.classList.remove('unread');
+            notification.classList.add('read');
+            this.parentElement.style.opacity = '0.6';
+            setTimeout(() => {
+                this.parentElement.style.transition = 'opacity 0.3s ease';
+            }, 100);
         });
-    }
+    });
 
-    // Edit notification function
-    window.editNotification = function(id) {
-        const notification = notifications.find(n => n.id === id);
-        if (!notification) return;
+    // Mark all as read
+    document.getElementById('mark-all-read').addEventListener('click', function () {
+        document.querySelectorAll('.notification.unread').forEach(notif => {
+            notif.classList.remove('unread');
+            notif.classList.add('read');
+        });
+    });
 
-        // Show edit modal or form
-        alert(`Editing notification with ID: ${id}\n\n${JSON.stringify(notification, null, 2)}`);
-
-        // In a real app, you'd open a modal form with pre-filled values
-        // For this demo, we're just showing an alert
-    };
-
-    // Delete notification function
-    window.deleteNotification = function(id) {
-        if (confirm("Are you sure you want to delete this notification?")) {
-            notifications = notifications.filter(n => n.id !== id);
-            renderNotifications();
+    // Clear all notifications
+    document.getElementById('clear-all').addEventListener('click', function () {
+        if (confirm('Are you sure you want to clear all notifications?')) {
+            document.querySelector('.notifications-list').innerHTML = '<p class="no-notifications">No notifications to show.</p>';
         }
-    };
+    });
 
-    // Initialize the page
-    window.onload = function() {
-        renderNotifications();
-    };
+    // Animate notifications on load
+    document.addEventListener('DOMContentLoaded', function () {
+        const notifications = document.querySelectorAll('.notification');
+        notifications.forEach((notif, index) => {
+            notif.style.opacity = '0';
+            notif.style.transform = 'translateY(15px)';
+            setTimeout(() => {
+                notif.style.opacity = '1';
+                notif.style.transform = 'translateY(0)';
+                notif.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            }, 100 + index * 100);
+        });
+    });
 </script>
+
 </body>
 </html>
