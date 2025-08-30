@@ -3,391 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Profile</title>
-    <link rel="stylesheet" href="../Css/admin-profile.css">
+    <title>Admin Profile - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/admin-profile.css">
 </head>
 <body>
-<div class="dashboard-container">
-    <div class="header">
-        <h1>Dashboard</h1>
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
     </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="admin-schedule.html">Schedule</a></li>
+            <li><a href="admin-users.html">Users</a></li>
+            <li><a href="admin-reports.html">Reports</a></li>
+            <li><a href="admin-profile.html" class="active">My Profile</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <div class="content-wrapper">
-        <!-- Admin Profile Section -->
-        <div class="profile-section">
-            <div class="profile-header">
-                <h2>Admin Profile</h2>
-                <div class="profile-actions">
-                    <button id="editProfileBtn" class="btn-primary">Edit Profile</button>
+<main class="main-content">
+    <section class="hero">
+        <h1>Admin Profile</h1>
+        <p class="subtitle">Manage your account settings and preferences</p>
+    </section>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic">👤</div>
+            <h2>Saman Perera</h2>
+            <p>Administrator • Colombo Central Hub</p>
+        </div>
+
+        <div class="profile-body">
+            <!-- Personal Information -->
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="full-name">Full Name *</label>
+                    <input type="text" id="full-name" value="Saman Perera" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" value="saman.p@slraile.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" value="+94 77 123 4567">
+                </div>
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" value="Senior Administrator" readonly>
                 </div>
             </div>
 
-            <div class="profile-container">
-                <!-- Profile Sidebar -->
-                <div class="profile-sidebar">
-                    <div class="profile-avatar">
-                        <img src="https://via.placeholder.com/150  " alt="Profile Picture" id="profileImage">
-                        <div class="upload-avatar">
-                            <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
-                            <button id="uploadBtn">Change Photo</button>
-                        </div>
-                    </div>
-
-                    <div class="profile-info">
-                        <h3 id="profileName">John Admin</h3>
-                        <p id="profileRole">System Administrator</p>
-                        <p id="profileStatus" class="status active">Online</p>
-                    </div>
-
-                    <div class="profile-navigation">
-                        <button class="nav-btn active" data-tab="personal">Personal Info</button>
-                        <button class="nav-btn" data-tab="security">Security</button>
-                        <button class="nav-btn" data-tab="preferences">Preferences</button>
-                        <button class="nav-btn" data-tab="activity">Activity Log</button>
-                    </div>
+            <!-- Account Settings -->
+            <h3 class="section-title">Account Settings</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" value="saman_admin" readonly>
                 </div>
-
-                <div class="profile-content">
-
-                    <div class="tab-content active" id="personal">
-                        <h3>Personal Information</h3>
-                        <form id="personalForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="firstName">First Name:</label>
-                                    <input type="text" id="firstName" value="John" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName">Last Name:</label>
-                                    <input type="text" id="lastName" value="Admin" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email">Email Address:</label>
-                                <input type="email" id="email" value="john.admin@railway.com" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="phone">Phone Number:</label>
-                                <input type="tel" id="phone" value="+1 (555) 123-4567" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="position">Position:</label>
-                                <input type="text" id="position" value="System Administrator" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="department">Department:</label>
-                                <input type="text" id="department" value="IT & Operations" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="employeeId">Employee ID:</label>
-                                <input type="text" id="employeeId" value="ADM-001" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="joinDate">Join Date:</label>
-                                <input type="text" id="joinDate" value="January 15, 2020" disabled>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn-edit" id="editPersonalBtn">Edit</button>
-                                <button type="submit" class="btn-primary" id="savePersonalBtn" style="display: none;">Save Changes</button>
-                                <button type="button" class="btn-secondary" id="cancelPersonalBtn" style="display: none;">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="tab-content" id="security">
-                        <h3>Security Settings</h3>
-                        <form id="securityForm">
-                            <div class="form-group">
-                                <label for="currentPassword">Current Password:</label>
-                                <input type="password" id="currentPassword" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="newPassword">New Password:</label>
-                                <input type="password" id="newPassword" disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirm New Password:</label>
-                                <input type="password" id="confirmPassword" disabled>
-                            </div>
-
-                            <div class="password-strength">
-                                <label>Password Strength:</label>
-                                <div class="strength-meter">
-                                    <div class="strength-bar" id="strengthBar"></div>
-                                </div>
-                                <span id="strengthText">Weak</span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="twoFactor">Two-Factor Authentication:</label>
-                                <div class="toggle-switch">
-                                    <input type="checkbox" id="twoFactor" disabled>
-                                    <span class="slider"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="sessionTimeout">Session Timeout (minutes):</label>
-                                <select id="sessionTimeout" disabled>
-                                    <option value="15">15 minutes</option>
-                                    <option value="30" selected>30 minutes</option>
-                                    <option value="60">1 hour</option>
-                                    <option value="120">2 hours</option>
-                                </select>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn-edit" id="editSecurityBtn">Edit</button>
-                                <button type="submit" class="btn-primary" id="saveSecurityBtn" style="display: none;">Save Changes</button>
-                                <button type="button" class="btn-secondary" id="cancelSecurityBtn" style="display: none;">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="tab-content" id="preferences">
-                        <h3>Preferences</h3>
-                        <form id="preferencesForm">
-                            <div class="form-group">
-                                <label for="language">Language:</label>
-                                <select id="language" disabled>
-                                    <option value="en" selected>English</option>
-                                    <option value="es">Spanish</option>
-                                    <option value="fr">French</option>
-                                    <option value="de">German</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="timezone">Timezone:</label>
-                                <select id="timezone" disabled>
-                                    <option value="utc-5" selected>Eastern Time (UTC-5)</option>
-                                    <option value="utc-8">Pacific Time (UTC-8)</option>
-                                    <option value="utc+0">Greenwich Mean Time (UTC+0)</option>
-                                    <option value="utc+1">Central European Time (UTC+1)</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="dateFormat">Date Format:</label>
-                                <select id="dateFormat" disabled>
-                                    <option value="mm-dd-yyyy" selected>MM-DD-YYYY</option>
-                                    <option value="dd-mm-yyyy">DD-MM-YYYY</option>
-                                    <option value="yyyy-mm-dd">YYYY-MM-DD</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="theme">Theme:</label>
-                                <select id="theme" disabled>
-                                    <option value="light" selected>Light</option>
-                                    <option value="dark">Dark</option>
-                                    <option value="blue">Blue</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="emailNotifications">Notification Preferences:</label>
-                                <div class="checkbox-group">
-                                    <label>
-                                        <input type="checkbox" id="emailNotifications" checked disabled>
-                                        Email Notifications
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" id="pushNotifications" checked disabled>
-                                        Push Notifications
-                                    </label>
-                                                                    </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn-edit" id="editPreferencesBtn">Edit</button>
-                                <button type="submit" class="btn-primary" id="savePreferencesBtn" style="display: none;">Save Changes</button>
-                                <button type="button" class="btn-secondary" id="cancelPreferencesBtn" style="display: none;">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="tab-content" id="activity">
-                        <h3>Activity Log</h3>
-                        <div class="activity-filters">
-                            <div class="filter-group">
-                                <label for="activityType">Activity Type:</label>
-                                <select id="activityType">
-                                    <option value="all" selected>All Activities</option>
-                                    <option value="login">Login/Logout</option>
-                                    <option value="system">System Changes</option>
-                                    <option value="data">Data Modifications</option>
-                                </select>
-                            </div>
-                            <div class="filter-group">
-                                <label for="dateRange">Date Range:</label>
-                                <select id="dateRange">
-                                    <option value="today">Today</option>
-                                    <option value="week" selected>Last 7 Days</option>
-                                    <option value="month">Last 30 Days</option>
-                                    <option value="custom">Custom Range</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="activity-icon login"></div>
-                                <div class="activity-details">
-                                    <p class="activity-desc">Logged in to the system</p>
-                                    <p class="activity-time">Today, 10:30 AM</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon system"></div>
-                                <div class="activity-details">
-                                    <p class="activity-desc">Updated train schedule for Express 101</p>
-                                    <p class="activity-time">Yesterday, 3:45 PM</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon data"></div>
-                                <div class="activity-details">
-                                    <p class="activity-desc">Modified passenger record #P100245</p>
-                                    <p class="activity-time">April 4, 2024, 1:20 PM</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon login"></div>
-                                <div class="activity-details">
-                                    <p class="activity-desc">Logged out of the system</p>
-                                    <p class="activity-time">April 4, 2024, 6:15 PM</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon system"></div>
-                                <div class="activity-details">
-                                    <p class="activity-desc">Created new notification for delayed trains</p>
-                                    <p class="activity-time">April 3, 2024, 9:00 AM</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="activity-actions">
-                            <button class="btn-secondary">Export Log</button>
-                            <button class="btn-outline">Clear Log</button>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="last-login">Last Login</label>
+                    <input type="text" id="last-login" value="Today, 09:42 AM" readonly>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 
-<script>
-    // Tab navigation
-    document.querySelectorAll('.nav-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            this.classList.add('active');
-            document.getElementById(this.getAttribute('data-tab')).classList.add('active');
-        });
-    });
-
-    // Handle Edit Profile button
-    document.getElementById('editProfileBtn').addEventListener('click', function() {
-        // Switch to Personal Info tab
-        document.querySelector('[data-tab="personal"]').click();
-        enableForm('personalForm');
-        showSaveButtons('personal');
-    });
-
-    // Edit/Save functionality
-    document.getElementById('editPersonalBtn').addEventListener('click', () => { enableForm('personalForm'); showSaveButtons('personal'); });
-    document.getElementById('editSecurityBtn').addEventListener('click', () => { enableForm('securityForm'); showSaveButtons('security'); });
-    document.getElementById('editPreferencesBtn').addEventListener('click', () => { enableForm('preferencesForm'); showSaveButtons('preferences'); });
-
-    // Cancel buttons
-    document.getElementById('cancelPersonalBtn').addEventListener('click', () => { disableForm('personalForm'); hideSaveButtons('personal'); });
-    document.getElementById('cancelSecurityBtn').addEventListener('click', () => { disableForm('securityForm'); hideSaveButtons('security'); });
-    document.getElementById('cancelPreferencesBtn').addEventListener('click', () => { disableForm('preferencesForm'); hideSaveButtons('preferences'); });
-
-    // Password strength indicator (fixed order)
-    document.getElementById('newPassword').addEventListener('input', function() {
-        const password = this.value;
-        const bar = document.getElementById('strengthBar');
-        const text = document.getElementById('strengthText');
-
-        if (password.length === 0) {
-            bar.style.width = '0%'; bar.style.backgroundColor = '#ccc'; text.textContent = 'Weak';
-        } else if (password.length >= 12 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password) && /[^a-zA-Z0-9]/.test(password)) {
-            bar.style.width = '100%'; bar.style.backgroundColor = '#27ae60'; text.textContent = 'Strong';
-        } else if (password.length >= 10 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password)) {
-            bar.style.width = '75%'; bar.style.backgroundColor = '#3498db'; text.textContent = 'Good';
-        } else if (password.length >= 6 && /[a-z]/.test(password) && /[A-Z]/.test(password)) {
-            bar.style.width = '50%'; bar.style.backgroundColor = '#f39c12'; text.textContent = 'Fair';
-        } else {
-            bar.style.width = '25%'; bar.style.backgroundColor = '#e74c3c'; text.textContent = 'Weak';
-        }
-    });
-
-    // Form helpers
-    function enableForm(formId) {
-        document.querySelectorAll(`#${formId} input, #${formId} select`).forEach(el => el.disabled = false);
-    }
-    function disableForm(formId) {
-        document.querySelectorAll(`#${formId} input, #${formId} select`).forEach(el => el.disabled = true);
-    }
-    function showSaveButtons(tab) {
-        document.getElementById(`save${cap(tab)}Btn`).style.display = 'inline-block';
-        document.getElementById(`cancel${cap(tab)}Btn`).style.display = 'inline-block';
-        document.getElementById(`edit${cap(tab)}Btn`).style.display = 'none';
-    }
-    function hideSaveButtons(tab) {
-        document.getElementById(`save${cap(tab)}Btn`).style.display = 'none';
-        document.getElementById(`cancel${cap(tab)}Btn`).style.display = 'none';
-        document.getElementById(`edit${cap(tab)}Btn`).style.display = 'inline-block';
-    }
-    function cap(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
-
-    // Form submission (demo only)
-    document.getElementById('personalForm').addEventListener('submit', e => {
-        e.preventDefault(); alert('Personal information updated successfully!');
-        disableForm('personalForm'); hideSaveButtons('personal');
-    });
-
-    document.getElementById('securityForm').addEventListener('submit', e => {
-        e.preventDefault();
-        const current = document.getElementById('currentPassword').value;
-        const newP = document.getElementById('newPassword').value;
-        const confirm = document.getElementById('confirmPassword').value;
-
-        if (!current || !newP || !confirm) return alert('Please fill in all password fields');
-        if (newP !== confirm) return alert('New passwords do not match');
-        if (newP.length < 8) return alert('Password must be at least 8 characters long');
-
-        alert('Security settings updated successfully!');
-        disableForm('securityForm'); hideSaveButtons('security');
-    });
-
-    document.getElementById('preferencesForm').addEventListener('submit', e => {
-        e.preventDefault(); alert('Preferences updated successfully!');
-        disableForm('preferencesForm'); hideSaveButtons('preferences');
-    });
-
-    // Avatar upload
-    document.getElementById('uploadBtn').addEventListener('click', () => document.getElementById('avatarUpload').click());
-    document.getElementById('avatarUpload').addEventListener('change', e => {
-        if (e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = ev => document.getElementById('profileImage').src = ev.target.result;
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-</script>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Admin Tools</h4>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Users</a></li>
+                    <li><a href="#">Reports</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
 </body>
+</html>
