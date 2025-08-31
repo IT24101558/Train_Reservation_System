@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Railway Admin Panel - Seat & 360 View</title>
+    <link rel="stylesheet" href="../CSS/adminseatmanagement.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Railway Admin Panel</h1>
+
+    <div class="form-group">
+        <label for="firstClassSeats">First Class Seat Count</label>
+        <input
+                type="number"
+                id="firstClassSeats"
+                class="input-field"
+                placeholder="Enter number of seats"
+                min="0"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="secondClassSeats">Second Class Seat Count</label>
+        <input
+                type="number"
+                id="secondClassSeats"
+                class="input-field"
+                placeholder="Enter number of seats"
+                min="0"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="view360Link">360° View Image Upload Link</label>
+        <input
+                type="text"
+                id="view360Link"
+                class="input-field"
+                placeholder="https://example.com/360-image.jpg"
+        />
+    </div>
+
+    <button class="submit-btn">Save Changes</button>
+</div>
+</body>
+</html>
