@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" href="../CSS/Style.css">
+</head>
+<body>
+<div class="container">
+  <h2>Welcome, ${sessionScope.user.name}</h2>
+  <p>Email: ${sessionScope.user.email}</p>
+  <form action="/Logout" method="post">
+    <button type="submit">Logout</button>
+  </form>
+</div>
+</body>
+</html>
