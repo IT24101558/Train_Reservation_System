@@ -1,25 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Register</title>
-  <link rel="stylesheet" href="../CSS/Style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - SLRailE</title>
+  <link rel="stylesheet" href="../CSS/signup.css" />
 </head>
 <body>
-<div class="container">
-  <h2>Register</h2>
-  <form action="Register.html" method="post">
-    <label for="name">Full Name:</label>
-    <input type="text" id="name" name="name" placeholder="Full Name" required>
+<header class="header">
+  <div class="logo-container">
+    <div class="train-icon"></div>
+    <h1>SLRailE</h1>
+  </div>
+  <nav class="navigation">
+    <ul>
+      <li><a href="../../IT24101009/HTML/index.html">Home</a></li>
+      <li><a href="../../IT24102460/HTML/Gallery.html">Gallery</a></li>
+      <li><a href="../../IT24102460/HTML/guest_shedule.html">Schedule</a></li>
+      <li><a href="#" class="active">SignUp</a></li>
+      <li><a href="../../IT24101009/HTML/contact.html">Contact Us</a></li>
+      <li><a href="../../IT24102460/HTML/about.html">About Us</a></li>
+    </ul>
+  </nav>
+</header>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="Email" required>
+<main class="main-content">
+  <section class="signup-container">
+    <div class="signup-form">
+      <h2>Create an Account</h2>
+      <p>Join SLRailE for a seamless travel experience across Sri Lanka.</p>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" placeholder="Password" required>
+      <form id="signupForm" action="#" method="POST">
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required />
+        </div>
 
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account? <a href="Login.html">Login</a></p>
-</div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="e.g. +94 77 123 4567" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a password" required />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required />
+        </div>
+
+        <div class="form-group checkbox">
+          <input type="checkbox" id="terms" name="terms" required />
+          <label for="terms">
+            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-signup">Sign Up</button>
+      </form>
+
+      <div class="login-link">
+        <p>Already have an account? <a href="../HTML/Login.html">Log In</a></p>
+      </div>
+    </div>
+
+    <div class="signup-image">
+      <img src="../../IT24102460/images/Ride12.jpg" alt="Train travel experience" />
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo">
+      <h3>SLRailE</h3>
+      <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+      <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+    </div>
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Tickets</a></li>
+          <li><a href="#">Reservations</a></li>
+          <li><a href="#">Luggage</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2025 SLRailE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // Simple form validation
+  document.getElementById("signupForm").addEventListener("submit", function(e) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+      e.preventDefault();
+      alert("Passwords do not match!");
+    } else {
+      alert("Account created successfully!");
+    }
+  });
+</script>
 </body>
 </html>
