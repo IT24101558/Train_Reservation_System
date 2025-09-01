@@ -42,7 +42,14 @@ body {
     align-items: center;
     gap: 10px;
 }
-
+.train-icon {
+    width: 40px;
+    height: 40px;
+    background-image: url('#');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 .header h1 {
     color: var(--primary-color);
     font-size: 1.8rem;
