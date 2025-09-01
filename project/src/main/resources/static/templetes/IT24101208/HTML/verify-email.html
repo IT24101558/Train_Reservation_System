@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Email - SLRailE</title>
+  <link rel="stylesheet" href="../CSS/verify-email.css" />
+</head>
+<body>
+<header class="header">
+  <div class="logo-container">
+    <div class="train-icon"></div>
+    <h1>SLRailE</h1>
+  </div>
+  <nav class="navigation">
+    <ul>
+      <li><a href="../../IT24101009/HTML/index.html">Home</a></li>
+      <li><a href="../HTML/gallery.html">Gallery</a></li>
+      <li><a href="../HTML/guest_shedule.html">Schedule</a></li>
+      <li><a href="../HTML/signup.html">SignUp</a></li>
+      <li><a href="../../IT24101009/HTML/contact.html">Contact Us</a></li>
+      <li><a href="../HTML/about.html">About Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="main-content">
+  <section class="verify-container">
+    <div class="icon success-icon">
+      📨
+    </div>
+    <h2>Check Your Email</h2>
+    <p>We've sent a verification link to <strong>user@example.com</strong>. Please click on the link to verify your account.</p>
+    <p class="note">If you don't see the email, check your spam folder.</p>
+
+    <button class="btn-resend">Resend Verification Email</button>
+
+    <div class="support-link">
+      <p>Need help? <a href="../../IT24101009/HTML/contact.html">Contact Support</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo">
+      <h3>SLRailE</h3>
+      <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+      <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+    </div>
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Tickets</a></li>
+          <li><a href="#">Reservations</a></li>
+          <li><a href="#">Luggage</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2025 SLRailE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelector('.btn-resend').addEventListener('click', function () {
+    alert("A new verification email has been sent to user@example.com.");
+  });
+</script>
+</body>
+</html>
