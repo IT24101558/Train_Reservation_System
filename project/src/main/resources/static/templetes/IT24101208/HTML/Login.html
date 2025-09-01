@@ -1,22 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="../CSS/Style.css">
-  <title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - SLRailE</title>
+  <link rel="stylesheet" href="../CSS/login.css" />
 </head>
 <body>
-<div class="container">
-  <h2>Login</h2>
-  <form action="/Login" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="Email" required>
+<header class="header">
+  <div class="logo-container">
+    <div class="train-icon"></div>
+    <h1>SLRailE</h1>
+  </div>
+  <nav class="navigation">
+    <ul>
+      <li><a href="../../IT24101009/HTML/index.html">Home</a></li>
+      <li><a href="../HTML/gallery.html">Gallery</a></li>
+      <li><a href="../HTML/guest_shedule.html">Schedule</a></li>
+      <li><a href="../HTML/signup.html">SignUp</a></li>
+      <li><a href="../../IT24101009/HTML/contact.html">Contact Us</a></li>
+      <li><a href="../HTML/about.html">About Us</a></li>
+    </ul>
+  </nav>
+</header>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" placeholder="Password" required>
+<main class="main-content">
+  <section class="login-container">
+    <div class="login-form">
+      <h2>Welcome Back</h2>
+      <p>Log in to access your SLRailE account and manage your journeys.</p>
 
-    <button type="submit">Login</button>
-  </form>
-  <p>Don't have an account? <a href="Register.html">Register</a></p>
-</div>
+      <form id="loginForm" action="#" method="POST">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        </div>
+
+        <div class="form-options">
+          <div class="checkbox">
+            <input type="checkbox" id="remember" name="remember" />
+            <label for="remember">Remember me</label>
+          </div>
+          <a href="../HTML/forgot-password.html" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-login">Log In</button>
+      </form>
+
+      <div class="signup-link">
+        <p>Don't have an account? <a href="../HTML/Register.html">Sign Up</a> <br> Back to  <a href="../../IT24101009/HTML/index.html">Home</a></p>
+      </div>
+    </div>
+
+    <div class="login-image">
+      <img src="../../IT24102460/images/Ride12.jpg" alt="Train journey at sunset" />
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo">
+      <h3>SLRailE</h3>
+      <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+      <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+    </div>
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Tickets</a></li>
+          <li><a href="#">Reservations</a></li>
+          <li><a href="#">Luggage</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="link-column">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2025 SLRailE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // Simple login validation
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    // Basic example — in real app, use backend auth
+    if (email === "" || password === "") {
+      e.preventDefault();
+      alert("Please fill in both fields.");
+    } else {
+      alert("Logged in successfully!");
+    }
+  });
+</script>
 </body>
 </html>
