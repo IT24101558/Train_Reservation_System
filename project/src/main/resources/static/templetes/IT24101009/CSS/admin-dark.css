@@ -230,6 +230,72 @@ body {
   color: var(--status-canceled);
 }
 
+/* Footer */
+.footer {
+  background-color: var(--white);
+  border-top: 1px solid var(--border-color);
+  padding: 3rem 5% 1.5rem;
+  margin-top: 2rem;
+  animation: slideInUp 0.6s ease-out 0.8s both;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.footer-logo h3 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+}
+
+.link-column h4 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.link-column ul {
+  list-style: none;
+}
+
+.link-column li {
+  margin-bottom: 0.5rem;
+}
+
+.link-column a {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+.link-column a:hover {
+  color: var(--highlight);
+  text-decoration: underline;
+}
+
+.copyright {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--light-text);
+}
+
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
