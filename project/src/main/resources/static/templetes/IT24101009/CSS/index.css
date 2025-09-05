@@ -61,6 +61,13 @@ body {
     font-weight: 600;
 }
 
+.header h1 a,
+.header h1 a:visited {
+    color: var(--primary-color); /* Sets the color back to your theme's blue */
+    text-decoration: none; /* Removes the underline */
+    transition: color 0.3s ease; /* Adds a smooth transition for hover */
+}
+
 .navigation ul {
     display: flex;
     list-style: none;
