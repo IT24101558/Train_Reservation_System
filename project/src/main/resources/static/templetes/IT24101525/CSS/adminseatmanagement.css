@@ -5,17 +5,105 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Adding the color variables from your other stylesheets for consistency */
+    --primary-color: #4285f4;
+    --text-color: #e0e0e0;
+    --highlight: #8ab4f8;
+    --header-bg: #1a1a1a;
+    --border-color: #333333;
+    --transition: all 0.3s ease;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;
     color: #e0e0e0;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    /* REMOVED flex properties that were causing alignment issues */
 }
 
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.train-icon {
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234285f4"><path d="M12 2C8 2 5 5 5 8v8c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2h4v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2V8c0-3-3-6-7-6zm-1 12H9v-2h2v2zm4 0h-2v-2h2v2zm-6-4H7V8h2v2zm4 0h-2V8h2v2z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.header h1 a,
+.header h1 a:visited {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.header h1 a:hover {
+    color: var(--highlight);
+}
+
+/* Navigation Styles */
+.navigation ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transition);
+}
+
+.navigation a:hover {
+    color: var(--highlight);
+}
+
+.navigation a.active {
+    color: var(--primary-color);
+}
+
+.navigation a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+/* Main Form Container */
 .container {
     background-color: #1e1e1e;
     padding: 30px;
@@ -24,9 +112,11 @@ body {
     width: 100%;
     max-width: 500px;
     border: 1px solid #333;
+    /* Added margin to center the form on the page */
+    margin: 3rem auto;
 }
 
-h1 {
+.container h1 {
     text-align: center;
     margin-bottom: 30px;
     color: #bb86fc;
@@ -93,9 +183,10 @@ label {
 @media (max-width: 600px) {
     .container {
         padding: 20px;
+        margin: 1.5rem auto;
     }
 
-    h1 {
+    .container h1 {
         font-size: 1.5rem;
     }
 
