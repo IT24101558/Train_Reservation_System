@@ -59,8 +59,8 @@
                 placeholder="https://example.com/360-image.jpg"
         />
     </div>
-    <a href=""></a>
-    <button class="submit-btn">Save Changes</button>
+
+    <button id="save-seat-changes-btn" class="submit-btn">Save Changes</button>
 </div>
 
 <footer class="footer">
@@ -105,5 +105,14 @@
     </div>
 </footer>
 
+<script>
+    document.getElementById('save-seat-changes-btn').addEventListener('click', function() {
+        // Here you would normally save the seat data.
+        // For this task, we just redirect back to the schedule page.
+
+        // IMPORTANT: Make sure this path is correct for your file structure.
+        window.location.href = '../../IT24102460/HTML/admin_shedule.html';
+    });
+</script>
 </body>
 </html>
