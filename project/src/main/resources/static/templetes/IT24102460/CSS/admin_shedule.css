@@ -648,6 +648,23 @@ body {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+.seat-btn {
+    background-color: #2d2d2d;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.seat-btn:hover {
+    background-color: #333;
+    border-color: var(--light-text);
+    transform: translateY(-1px);
+}
+
 .cancel-btn {
     background-color: #2d2d2d;
     color: var(--text-color);
