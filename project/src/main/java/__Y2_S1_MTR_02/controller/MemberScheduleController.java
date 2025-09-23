@@ -1,8 +1,8 @@
 // src/main/java/com/slraile/controller/MemberScheduleController.java
-package _Y2_S1_MTR_02.controller;
+package __Y2_S1_MTR_02.controller;
 
-import com.slraile.dto.TrainScheduleDTO;
-import com.slraile.service.TrainScheduleService;
+import __Y2_S1_MTR_02.dto.TrainScheduleDTO;
+import __Y2_S1_MTR_02.service.TrainScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
