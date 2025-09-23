@@ -1,4 +1,4 @@
-package __Y2_S1_MTR_02;
+package _Y2_S1_MTR_02.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

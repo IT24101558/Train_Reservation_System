@@ -12,4 +12,5 @@ import java.util.List;
 public interface TrainScheduleRepository extends JpaRepository<TrainSchedule, Long> {
     List<TrainSchedule> findByStatus(TrainStatus status);
     List<TrainSchedule> findByRouteFromContainingIgnoreCaseOrRouteToContainingIgnoreCase(String from, String to);
+    long countByStatus(TrainStatus status);
 }

@@ -28,20 +28,6 @@ public class MemberScheduleController {
             @RequestParam(required = false) String routeFrom,
             @RequestParam(required = false) String routeTo) {
 
-        List<TrainScheduleDTO> all = scheduleService.getAllSchedules();
-        return ResponseEntity.ok(all.stream()
-                .filter(dto -> {
-                    boolean matchesQuery = query != null && (
-                            dto.getTrainName().toLowerCase().contains(query.toLowerCase()) ||
-                                    dto.getRouteFrom().toLowerCase().contains(query.toLowerCase()) ||
-                                    dto.getRouteTo().toLowerCase().contains(query.toLowerCase())
-                    );
-                    boolean matchesFrom = routeFrom != null && dto.getRouteFrom().equalsIgnoreCase(routeFrom);
-                    boolean matchesTo = routeTo != null && dto.getRouteTo().equalsIgnoreCase(routeTo);
-
-                    return matchesQuery || matchesFrom || matchesTo;
-                })
-                .toList()
-        );
+        return ResponseEntity.ok(scheduleService.searchSchedules(query, routeFrom, routeTo));
     }
 }

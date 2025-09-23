@@ -73,6 +73,36 @@ public class TrainScheduleService {
                 .collect(Collectors.toList());
     }
 
+    public List<TrainScheduleDTO> getActiveSchedules() {
+        return getSchedulesByStatus(TrainStatus.ACTIVE);
+    }
+
+    public List<TrainScheduleDTO> searchSchedules(String query, String routeFrom, String routeTo) {
+        List<TrainScheduleDTO> all = getAllSchedules();
+        return all.stream()
+                .filter(dto -> {
+                    boolean matchesQuery = query != null && (
+                            dto.getTrainName().toLowerCase().contains(query.toLowerCase()) ||
+                            dto.getRouteFrom().toLowerCase().contains(query.toLowerCase()) ||
+                            dto.getRouteTo().toLowerCase().contains(query.toLowerCase())
+                    );
+                    boolean matchesFrom = routeFrom != null && dto.getRouteFrom().equalsIgnoreCase(routeFrom);
+                    boolean matchesTo = routeTo != null && dto.getRouteTo().equalsIgnoreCase(routeTo);
+                    return (query == null && routeFrom == null && routeTo == null) || matchesQuery || matchesFrom || matchesTo;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<TrainScheduleDTO> searchActiveSchedules(String query, String routeFrom, String routeTo) {
+        return searchSchedules(query, routeFrom, routeTo).stream()
+                .filter(dto -> dto.getStatus() == TrainStatus.ACTIVE)
+                .collect(Collectors.toList());
+    }
+
+    public long countByStatus(TrainStatus status) {
+        return scheduleRepository.countByStatus(status);
+    }
+
     // Helper: Convert Entity to DTO
     private TrainScheduleDTO convertToDTO(TrainSchedule schedule) {
         String duration = schedule.getDuration(); // computed via @Transient
