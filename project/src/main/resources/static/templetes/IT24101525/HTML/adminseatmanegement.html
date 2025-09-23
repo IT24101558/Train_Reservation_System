@@ -1,117 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>SLRailE - Admin Panel - Seat Management</title>
-    <link rel="stylesheet" href="../CSS/adminseatmanagement.css" />
-</head>
-<body>
-
-<header class="header">
-    <div class="logo-container">
-        <div class="train-icon"></div>
-        <h1><a href="../../IT24101009/HTML/index.html"> SLRailE </a></h1>
-    </div>
-    <nav class="navigation">
-        <ul>
-            <li><a href="../../IT24101009/HTML/admin.html">Dashboard</a></li>
-            <li><a href="../../IT24102460/HTML/admin_shedule.html">Schedule</a></li>
-            <li><a href="#"class="active">Seat Allocation</a></li>
-            <li><a href="../../IT24300073/HTML/admin-profile.html">My Profile</a></li>
-            <li><a href="../../IT24101009/HTML/admin-feedback.html">Feedback</a></li>
-        </ul>
-    </nav>
-</header>
-
-
-<div class="container">
-    <h1>Railway Admin Panel - Seat Management</h1>
-
-    <div class="form-group">
-        <label for="firstClassSeats">First Class Seat Count</label>
-        <input
-                type="number"
-                id="firstClassSeats"
-                class="input-field"
-                placeholder="Enter number of seats"
-                min="0"
-        />
-    </div>
-
-    <div class="form-group">
-        <label for="secondClassSeats">Second Class Seat Count</label>
-        <input
-                type="number"
-                id="secondClassSeats"
-                class="input-field"
-                placeholder="Enter number of seats"
-                min="0"
-        />
-    </div>
-
-    <div class="form-group">
-        <label for="view360Link">360° View Image Upload Link</label>
-        <input
-                type="text"
-                id="view360Link"
-                class="input-field"
-                placeholder="https://example.com/360-image.jpg"
-        />
-    </div>
-
-    <button id="save-seat-changes-btn" class="submit-btn">Save Changes</button>
-</div>
-
-<footer class="footer">
-    <div class="footer-content">
-        <div class="footer-logo">
-            <h3>SLRailE</h3>
-            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
-            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
-        </div>
-        <div class="footer-links">
-            <div class="link-column">
-                <h4>Admin Tools</h4>
-                <ul>
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Schedule</a></li>
-                    <li><a href="#">Feedback</a></li>
-                    <li><a href="#">Seat Allocation</a></li>
-                    <li><a href="#">Profile</a></li>
-                </ul>
-            </div>
-            <div class="link-column">
-                <h4>Information</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <div class="link-column">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="copyright">
-        <p>&copy; 2025 SLRailE. All rights reserved.</p>
-    </div>
-</footer>
-
 <script>
-    document.getElementById('save-seat-changes-btn').addEventListener('click', function() {
-        // Here you would normally save the seat data.
-        // For this task, we just redirect back to the schedule page.
+    document.getElementById('save-seat-changes-btn').addEventListener('click', async function() {
+        const firstClassSeats = document.getElementById('firstClassSeats').value;
+        const secondClassSeats = document.getElementById('secondClassSeats').value;
+        const view360Link = document.getElementById('view360Link').value;
 
-        // IMPORTANT: Make sure this path is correct for your file structure.
-        window.location.href = '../../IT24102460/HTML/admin_shedule.html';
+        if (!firstClassSeats || !secondClassSeats) {
+            alert("Please fill in both seat counts.");
+            return;
+        }
+
+        const seatData = {
+            firstClassSeats: parseInt(firstClassSeats),
+            secondClassSeats: parseInt(secondClassSeats),
+            view360Link: view360Link.trim()
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/admin/seats', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(seatData)
+            });
+
+            if (response.ok) {
+                alert("Seat changes saved successfully!");
+                window.location.href = '../../IT24102460/HTML/admin_shedule.html';
+            } else {
+                const errorText = await response.text();
+                alert("Error saving: " + errorText);
+            }
+        } catch (error) {
+            alert("Network error: " + error.message);
+        }
     });
 </script>
 </body>
