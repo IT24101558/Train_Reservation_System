@@ -30,7 +30,7 @@
       <h2>Create an Account</h2>
       <p>Join SLRailE for a seamless travel experience across Sri Lanka.</p>
 
-      <form id="signupForm" action="#" method="POST">
+      <div id="signupForm">
         <div class="form-group">
           <label for="fullname">Full Name</label>
           <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required />
@@ -63,8 +63,8 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-signup">Sign Up</button>
-      </form>
+        <button type="button" id="btnSignup" class="btn-signup">Sign Up</button>
+      </div>
 
       <div class="login-link">
         <p>Already have an account? <a href="../HTML/Login.html">Log In</a></p>
@@ -119,18 +119,72 @@
 </footer>
 
 <script>
-  // Simple form validation
-  document.getElementById("signupForm").addEventListener("submit", function(e) {
+  // Register via backend and redirect to login
+  document.getElementById("btnSignup").addEventListener("click", async function(e) {
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
 
     if (password !== confirmPassword) {
-      e.preventDefault();
       alert("Passwords do not match!");
-    } else {
-      alert("Account created successfully!");
+      return;
+    }
+    if (!fullname || !email || !phone || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      const resp = await fetch(window.location.origin + "/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, email, phone, password })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        alert("Account created successfully! Please login.");
+        window.location.href = window.location.origin + "/templetes/IT24101208/HTML/Login.html";
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
     }
   });
+
+  // Prevent Enter key from submitting the form
+  (function(){
+    const form = document.getElementById("signupForm");
+    form.addEventListener("keydown", function(ev){
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+      }
+    });
+    // Absolute prevention in capture phase for any stray <form>
+    document.addEventListener("submit", function(ev){
+      console.warn("Blocked stray form submit:", ev.target);
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      return false;
+    }, true);
+    // Detect and neutralize any <form> elements that might be present
+    const forms = Array.from(document.querySelectorAll("form"));
+    if (forms.length > 0) {
+      console.warn("Neutralizing stray forms on page:", forms);
+      forms.forEach(f => {
+        try {
+          f.setAttribute("novalidate", "true");
+          f.addEventListener("submit", function(e){ e.preventDefault(); e.stopImmediatePropagation(); return false; }, true);
+        } catch(_e) {}
+      });
+    }
+    // Avoid resubmit on refresh (replace history state)
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+  })();
 </script>
 </body>
 </html>

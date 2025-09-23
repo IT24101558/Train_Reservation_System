@@ -30,7 +30,7 @@
       <h2>Welcome Back</h2>
       <p>Log in to access your SLRailE account and manage your journeys.</p>
 
-      <form id="loginForm" action="#" method="POST">
+      <div id="loginForm">
         <div class="form-group">
           <label for="email">Email Address</label>
           <input type="email" id="email" name="email" placeholder="Enter your email" required />
@@ -49,8 +49,8 @@
           <a href="../HTML/forgot-password.html" class="forgot-link">Forgot password?</a>
         </div>
 
-        <button type="submit" class="btn-login">Log In</button>
-      </form>
+        <button type="button" id="btnLogin" class="btn-login">Log In</button>
+      </div>
 
       <div class="signup-link">
         <p>Don't have an account? <a href="../HTML/Register.html">Sign Up</a> <br> Back to  <a href="../../IT24101009/HTML/index.html">Home</a></p>
@@ -105,19 +105,58 @@
 </footer>
 
 <script>
-  // Simple login validation
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
-    const email = document.getElementById("email").value;
+  // Login via backend and redirect by role
+  document.getElementById("btnLogin").addEventListener("click", async function(e) {
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    // Basic example — in real app, use backend auth
-    if (email === "" || password === "") {
-      e.preventDefault();
+    if (!email || !password) {
       alert("Please fill in both fields.");
-    } else {
-      alert("Logged in successfully!");
+      return;
+    }
+
+    try {
+      const resp = await fetch(window.location.origin + "/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        // store logged-in email for profile fetch
+        try { localStorage.setItem("slraile_email", email); } catch(_) {}
+        if (data.role === "ADMIN") {
+          window.location.href = window.location.origin + "/templetes/IT24101009/HTML/admin.html";
+        } else {
+          const qp = "?email=" + encodeURIComponent(email);
+          window.location.href = window.location.origin + "/templetes/IT24101525/HTML/userprofile.html" + qp;
+        }
+      } else {
+        alert(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
     }
   });
+
+  // Prevent Enter key from submitting the form
+  (function(){
+    const form = document.getElementById("loginForm");
+    form.addEventListener("keydown", function(ev){
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+      }
+    });
+    // Absolute prevention in capture phase for any stray <form>
+    document.addEventListener("submit", function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      return false;
+    }, true);
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+  })();
 </script>
 </body>
 </html>

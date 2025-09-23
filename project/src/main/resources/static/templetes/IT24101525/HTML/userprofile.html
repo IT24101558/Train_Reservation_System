@@ -32,7 +32,7 @@
                 <img src="../../IT24102460/images/Ulindu.jpg" alt="User Avatar">
             </div>
             <div class="profile-info">
-                <h2>Saman Perera</h2>
+                <h2 id="profile-name">Loading...</h2>
             </div>
         </div>
 
@@ -47,21 +47,21 @@
                 <div class="form-row">
                     <div class="input-group">
                         <label>First Name</label>
-                        <p>Saman</p>
+                        <p id="first-name">-</p>
                     </div>
                     <div class="input-group">
                         <label>Last Name</label>
-                        <p>Perera</p>
+                        <p id="last-name">-</p>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="input-group">
                         <label>Email Address</label>
-                        <p>saman.perera@example.com</p>
+                        <p id="email-text">-</p>
                     </div>
                     <div class="input-group">
                         <label>Phone Number</label>
-                        <p>+94 77 123 4567</p>
+                        <p id="phone-text">-</p>
                     </div>
                 </div>
                 <div class="form-row">
@@ -263,6 +263,26 @@
             document.getElementById(tabId).classList.add('active');
         });
     });
+
+    // Fetch and render user profile
+    (async function(){
+        try {
+            const urlEmail = new URLSearchParams(window.location.search).get('email');
+            const email = (urlEmail || localStorage.getItem('slraile_email') || '').trim();
+            if (!email) return;
+            const resp = await fetch(window.location.origin + '/api/auth/profile?email=' + encodeURIComponent(email));
+            if (!resp.ok) return;
+            const data = await resp.json();
+            const full = (data.fullName || '').trim();
+            document.getElementById('profile-name').textContent = full || 'My Profile';
+            // simple split into first/last for display
+            const parts = full.split(' ');
+            document.getElementById('first-name').textContent = parts[0] || full || '-';
+            document.getElementById('last-name').textContent = parts.slice(1).join(' ') || '-';
+            document.getElementById('email-text').textContent = data.email || '-';
+            document.getElementById('phone-text').textContent = data.phone || '-';
+        } catch(_e) {}
+    })();
 
     // Form submission feedback
     document.querySelectorAll('.profile-form').forEach(form => {
