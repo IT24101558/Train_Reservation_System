@@ -1,10 +1,10 @@
 // src/main/java/com/slraile/service/TrainScheduleService.java
-package _Y2_S1_MTR_02.service;
+package __Y2_S1_MTR_02.service;
 
-import com.slraile.dto.TrainScheduleDTO;
-import com.slraile.model.TrainSchedule;
-import com.slraile.model.TrainStatus;
-import com.slraile.repository.TrainScheduleRepository;
+import __Y2_S1_MTR_02.dto.TrainScheduleDTO;
+import __Y2_S1_MTR_02.model.TrainSchedule;
+import __Y2_S1_MTR_02.model.TrainStatus;
+import __Y2_S1_MTR_02.repository.TrainScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
