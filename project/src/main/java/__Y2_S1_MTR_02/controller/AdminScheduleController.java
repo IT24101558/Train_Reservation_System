@@ -1,10 +1,10 @@
 // src/main/java/com/slraile/controller/AdminScheduleController.java
-package _Y2_S1_MTR_02.controller;
+package __Y2_S1_MTR_02.controller;
 
-import com.slraile.dto.TrainScheduleDTO;
-import com.slraile.model.TrainSchedule;
-import com.slraile.model.TrainStatus;
-import com.slraile.service.TrainScheduleService;
+import __Y2_S1_MTR_02.dto.TrainScheduleDTO;
+import __Y2_S1_MTR_02.model.TrainSchedule;
+import __Y2_S1_MTR_02.model.TrainStatus;
+import __Y2_S1_MTR_02.service.TrainScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
