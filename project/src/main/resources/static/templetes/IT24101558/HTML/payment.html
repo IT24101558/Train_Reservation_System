@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/payment.css">
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1>SLRailE</h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="../../IT24101525/HTML/userprofile.html">My Profile</a></li>
+            <li><a href="../../IT24102460/HTML/mem_shedule.html">Schedule</a></li>
+            <li><a href="../../IT24101558/HTML/bookinghistory.html">Booking History</a></li>
+            <li><a href="../../IT24300073/HTML/notification.html">Notifications</a></li>
+            <li><a href="../../IT24101009/HTML/mem-feedback.html">Feedback</a></li>
+            <li><a href="../../IT24101525/HTML/usersettings.html">Settings</a></li>
+            <li><a href="../../IT24101208/HTML/member-logout.html">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+    <!-- Payment Summary -->
+    <section class="payment-summary">
+        <h2>Payment Summary</h2>
+        <div class="summary-row">
+            <strong>Train:</strong> <span>Mountain Route (101)</span>
+        </div>
+        <div class="summary-row">
+            <strong>Route:</strong> <span>Colombo → Kandy</span>
+        </div>
+        <div class="summary-row">
+            <strong>Date:</strong> <span>December 15, 2023</span>
+        </div>
+        <div class="summary-row">
+            <strong>Seats:</strong> <span>A1, B2, C3</span>
+        </div>
+        <div class="summary-row">
+            <strong>Total Amount:</strong> <span id="total-amount">Rs. 1,200.00</span>
+        </div>
+    </section>
+
+    <!-- Payment Methods Section -->
+    <section class="payment-methods-container">
+        <div class="title-with-button">
+            <h2>Payment Methods</h2>
+            <button class="btn add-method">+ Add New Method</button>
+        </div>
+
+        <!-- Saved Payment Methods -->
+        <div class="saved-methods">
+            <h3>Your Saved Payment Methods</h3>
+            <div class="methods-grid">
+                <!-- Method 1 -->
+                <div class="payment-method-card active">
+                    <div class="method-header">
+                        <h4>Visa Card</h4>
+                        <div class="method-actions">
+                            <button class="edit-btn" title="Edit">✏️</button>
+                            <button class="delete-btn" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-number">**** **** **** 4567</div>
+                        <div class="card-expiry">Expires: 12/25</div>
+                        <div class="card-holder">John Doe</div>
+                    </div>
+                    <div class="method-footer">
+                        <span class="default-tag">Default</span>
+                    </div>
+                </div>
+
+                <!-- Method 2 -->
+                <div class="payment-method-card">
+                    <div class="method-header">
+                        <h4>MasterCard</h4>
+                        <div class="method-actions">
+                            <button class="edit-btn" title="Edit">✏️</button>
+                            <button class="delete-btn" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-number">**** **** **** 7890</div>
+                        <div class="card-expiry">Expires: 08/24</div>
+                        <div class="card-holder">Jane Smith</div>
+                    </div>
+                </div>
+
+                <!-- Method 3 -->
+                <div class="payment-method-card">
+                    <div class="method-header">
+                        <h4>Bank Transfer</h4>
+                        <div class="method-actions">
+                            <button class="edit-btn" title="Edit">✏️</button>
+                            <button class="delete-btn" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-number">Account: ****5678</div>
+                        <div class="card-expiry">Bank: Commercial Bank</div>
+                        <div class="card-holder">John Doe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Payment Method Form (Hidden by default) -->
+        <div class="payment-form-container" id="payment-form" style="display: none;">
+            <h3 id="form-title">Add New Payment Method</h3>
+            <form class="payment-form">
+                <div class="form-group">
+                    <label for="method-type">Payment Method Type</label>
+                    <select id="method-type" class="form-select">
+                        <option value="visa">Visa Card</option>
+                        <option value="mastercard">MasterCard</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="card-number">Card Number / Account Number</label>
+                    <input type="text" id="card-number" class="form-input" placeholder="Enter card or account number">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry-date">Expiry Date (MM/YY)</label>
+                        <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" class="form-input" placeholder="CVV">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card-holder">Card/Account Holder Name</label>
+                    <input type="text" id="card-holder" class="form-input" placeholder="Enter full name">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="set-default" class="form-checkbox">
+                    <label for="set-default">Set as default payment method</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn cancel-form">Cancel</button>
+                    <button type="submit" class="btn save-method">Save Method</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Payment Action Buttons -->
+        <div class="payment-actions">
+            <button class="btn cancel-payment">Cancel Payment</button>
+            <button class="btn proceed-payment">Proceed to Payment</button>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Tickets</a></li>
+                    <li><a href="#">Reservations</a></li>
+                    <li><a href="#">Luggage</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Script -->
+<script>
+    // Show payment form when Add New Method button is clicked
+    document.querySelector('.add-method').addEventListener('click', function() {
+        document.getElementById('form-title').textContent = 'Add New Payment Method';
+        document.getElementById('payment-form').style.display = 'block';
+        window.scrollTo(0, document.getElementById('payment-form').offsetTop - 100);
+    });
+
+    // Hide payment form when Cancel button is clicked
+    document.querySelector('.cancel-form').addEventListener('click', function() {
+        document.getElementById('payment-form').style.display = 'none';
+    });
+
+    // Edit payment method
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('form-title').textContent = 'Edit Payment Method';
+            document.getElementById('payment-form').style.display = 'block';
+            window.scrollTo(0, document.getElementById('payment-form').offsetTop - 100);
+        });
+    });
+
+    // Delete payment method with confirmation
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this payment method?')) {
+                this.closest('.payment-method-card').remove();
+                alert('Payment method deleted successfully.');
+            }
+        });
+    });
+
+    // Set active payment method
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('edit-btn') && !e.target.classList.contains('delete-btn')) {
+                document.querySelectorAll('.payment-method-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                this.classList.add('active');
+            }
+        });
+    });
+
+    // Save payment method
+    document.querySelector('.payment-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Payment method saved successfully!');
+        document.getElementById('payment-form').style.display = 'none';
+
+        // In a real application, you would add the new payment method to the UI here
+    });
+
+    // Proceed to payment
+    document.querySelector('.proceed-payment').addEventListener('click', function () {
+        const activeMethod = document.querySelector('.payment-method-card.active');
+        if (!activeMethod) {
+            alert('Please select a payment method to proceed.');
+            return;
+        }
+        // Show success message and redirect button
+        const mainContent = document.querySelector('.main-content');
+        mainContent.innerHTML = `
+      <section class="success-message">
+        <h2>Payment Successful!</h2>
+        <p>Your payment has been processed successfully.</p>
+        <button class="btn go-to-history" onclick="window.location.href='../../IT24101558/HTML/bookinghistory.html'">Go to Booking History</button>
+      </section>
+    `;
+    });
+
+    // Cancel payment
+    document.querySelector('.cancel-payment').addEventListener('click', function() {
+        if (confirm('Are you sure you want to cancel this payment process?')) {
+            // Redirect to member schedule page
+            window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+        }
+    });
+</script>
+</body>
+</html>

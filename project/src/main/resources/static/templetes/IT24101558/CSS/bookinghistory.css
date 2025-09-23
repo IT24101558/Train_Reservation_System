@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.header {
+    background-color: #004080;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navigation ul li {
+    margin: 0 10px;
+}
+
+.navigation ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.navigation ul li a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 80vh; /* Center vertically */
+    padding: 20px;
+}
+
+.booking-history {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%; /* Adjust width */
+    max-width: 1200px; /* Limit max width */
+}
+
+.booking-history h2 {
+    margin-top: 0;
+    text-align: center;
+    color: #004080;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th, .history-table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.history-table tr:hover {
+    background-color: #e6f7ff;
+}
+
+.history-table td {
+    border-bottom: 1px solid #ddd;
+}
+
+.history-table td:last-child {
+    text-align: center;
+}
+
+.btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: white;
+    background-color: #004080;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #003366;
+}
+
+.btn.view-details {
+    margin-right: 5px;
+}
+
+.btn.download-ticket {
+    margin-left: 5px;
+}
+
+.footer {
+    background-color: #004080;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+}
