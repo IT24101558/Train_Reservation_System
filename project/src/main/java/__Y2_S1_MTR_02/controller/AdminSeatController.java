@@ -1,10 +1,10 @@
 // File: src/main/java/com/yourpackage/controller/AdminSeatController.java
 
-package com.__Y2_S1_MTR_02.controller;
+package __Y2_S1_MTR_02.controller;
 
-import com.__Y2_S1_MTR_02.dto.SeatConfigurationDTO;
-import com.__Y2_S1_MTR_02.model.SeatConfiguration;
-import com.__Y2_S1_MTR_02.repository.SeatConfigurationRepository;
+import __Y2_S1_MTR_02.dto.SeatConfigurationDTO;
+import __Y2_S1_MTR_02.model.SeatConfiguration;
+import __Y2_S1_MTR_02.repository.SeatConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

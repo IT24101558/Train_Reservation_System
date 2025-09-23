@@ -1,6 +1,6 @@
 // File: src/main/java/com/yourpackage/model/SeatConfiguration.java
 
-package com.__Y2_S1_MTR_02.model;
+package __Y2_S1_MTR_02.model;
 
 import jakarta.persistence.*;
 import lombok.*;

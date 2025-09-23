@@ -1,6 +1,6 @@
 // File: src/main/java/com/yourpackage/dto/SeatConfigurationDTO.java
 
-package com.__Y2_S1_MTR_02.dto;
+package __Y2_S1_MTR_02.dto;
 
 public class SeatConfigurationDTO {
     private int firstClassSeats;
