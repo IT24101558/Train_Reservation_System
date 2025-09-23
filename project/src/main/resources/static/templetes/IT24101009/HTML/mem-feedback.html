@@ -157,16 +157,35 @@
 </footer>
 
 <script>
-    // Handle form submission
-    document.getElementById('feedback-form').addEventListener('submit', function(e) {
+    document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Show confirmation message
-        const confirmation = document.getElementById('confirmation');
-        confirmation.style.display = 'block';
+        const feedback = {
+            rating: document.querySelector('input[name="rating"]:checked').value,
+            trainJourney: document.getElementById('train-journey').value,
+            travelDate: document.getElementById('travel-date').value,
+            message: document.getElementById('message').value
+        };
 
-        // Hide form
-        this.style.display = 'none';
+        try {
+            const response = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(feedback)
+            });
+
+            if (response.ok) {
+                alert('Feedback submitted successfully!');
+                window.location.reload();
+            } else {
+                alert('Failed to submit feedback. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            alert('An error occurred. Please try again later.');
+        }
     });
 
     // Add animation to card
