@@ -1,5 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Seat Management - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/adminseatmanegement.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1><a href="index.html"> SLRailE </a></h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="../../IT24101009/HTML/admin.html">Dashboard</a></li>
+            <li><a href="../../IT24102460/HTML/admin_shedule.html">Schedule</a></li>
+            <li><a href="#" class="active">Seat Allocation</a></li>
+            <li><a href="../../IT24300073/HTML/admin-profile.html">My Profile</a></li>
+            <li><a href="../../IT24300073/HTML/admin-notification.html">Notification</a></li>
+            <li><a href="../../IT24101009/HTML/admin-feedback.html">Feedback</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+    <section class="hero">
+        <h1>Seat Management</h1>
+        <p class="subtitle">Configure seat allocation and train capacity settings</p>
+    </section>
+
+    <div class="seat-management-container">
+        <!-- Seat Configuration Form -->
+        <div class="seat-config-section">
+            <h3 class="section-title">Seat Configuration</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstClassSeats">First Class Seats *</label>
+                    <input type="number" id="firstClassSeats" placeholder="Enter number of first class seats" min="1" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="secondClassSeats">Second Class Seats *</label>
+                    <input type="number" id="secondClassSeats" placeholder="Enter number of second class seats" min="1" max="200" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="view360Link">360° View Link (Optional)</label>
+                    <input type="url" id="view360Link" placeholder="Enter 360° view URL for train interior">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="primary-btn" id="save-seat-changes-btn">Save Seat Configuration</button>
+                <button class="secondary-btn" id="reset-seat-config-btn">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Current Seat Status -->
+        <div class="seat-status-section">
+            <h3 class="section-title">Current Seat Status</h3>
+            <div class="status-grid">
+                <div class="status-card">
+                    <h4>First Class</h4>
+                    <p class="seat-count" id="current-first-class">0</p>
+                    <p class="status-label">Configured Seats</p>
+                </div>
+                <div class="status-card">
+                    <h4>Second Class</h4>
+                    <p class="seat-count" id="current-second-class">0</p>
+                    <p class="status-label">Configured Seats</p>
+                </div>
+                <div class="status-card">
+                    <h4>Total Capacity</h4>
+                    <p class="seat-count" id="total-capacity">0</p>
+                    <p class="status-label">Total Seats</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seat Allocation History -->
+        <div class="allocation-history-section">
+            <h3 class="section-title">Recent Changes</h3>
+            <div class="history-list" id="allocation-history">
+                <div class="history-item">
+                    <div class="history-date">Today, 10:30 AM</div>
+                    <div class="history-action">Seat configuration updated</div>
+                    <div class="history-details">First Class: 20 seats, Second Class: 80 seats</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-date">Yesterday, 2:15 PM</div>
+                    <div class="history-action">Default configuration restored</div>
+                    <div class="history-details">Reset to system defaults</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Admin Tools</h4>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Feedback</a></li>
+                    <li><a href="#">Seat Allocation</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
 <script>
-    document.getElementById('save-seat-changes-btn').addEventListener('click', async function() {
+    // Load current seat configuration on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCurrentSeatConfig();
+        setupEventListeners();
+    });
+
+    // Load current seat configuration from API
+    async function loadCurrentSeatConfig() {
+        try {
+            const response = await fetch('http://localhost:8080/api/admin/seats/current');
+            if (response.ok) {
+                const config = await response.json();
+                document.getElementById('firstClassSeats').value = config.firstClassSeats || '';
+                document.getElementById('secondClassSeats').value = config.secondClassSeats || '';
+                document.getElementById('view360Link').value = config.view360Link || '';
+                
+                // Update status display
+                updateSeatStatus(config.firstClassSeats || 0, config.secondClassSeats || 0);
+            } else {
+                console.log('No current configuration found, using defaults');
+                updateSeatStatus(0, 0);
+            }
+        } catch (error) {
+            console.error('Error loading seat configuration:', error);
+            updateSeatStatus(0, 0);
+        }
+    }
+
+    // Update seat status display
+    function updateSeatStatus(firstClass, secondClass) {
+        document.getElementById('current-first-class').textContent = firstClass;
+        document.getElementById('current-second-class').textContent = secondClass;
+        document.getElementById('total-capacity').textContent = firstClass + secondClass;
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Save seat changes button
+        document.getElementById('save-seat-changes-btn').addEventListener('click', saveSeatConfiguration);
+
+        // Reset to default button
+        document.getElementById('reset-seat-config-btn').addEventListener('click', resetToDefault);
+
+        // Real-time updates when values change
+        document.getElementById('firstClassSeats').addEventListener('input', function() {
+            const firstClass = parseInt(this.value) || 0;
+            const secondClass = parseInt(document.getElementById('secondClassSeats').value) || 0;
+            updateSeatStatus(firstClass, secondClass);
+        });
+
+        document.getElementById('secondClassSeats').addEventListener('input', function() {
+            const firstClass = parseInt(document.getElementById('firstClassSeats').value) || 0;
+            const secondClass = parseInt(this.value) || 0;
+            updateSeatStatus(firstClass, secondClass);
+        });
+    }
+
+    // Save seat configuration
+    async function saveSeatConfiguration() {
         const firstClassSeats = document.getElementById('firstClassSeats').value;
         const secondClassSeats = document.getElementById('secondClassSeats').value;
         const view360Link = document.getElementById('view360Link').value;
@@ -25,8 +222,9 @@
             });
 
             if (response.ok) {
-                alert("Seat changes saved successfully!");
-                window.location.href = '../../IT24102460/HTML/admin_shedule.html';
+                alert("Seat configuration saved successfully!");
+                addToHistory('Seat configuration updated', `First Class: ${firstClassSeats} seats, Second Class: ${secondClassSeats} seats`);
+                updateSeatStatus(parseInt(firstClassSeats), parseInt(secondClassSeats));
             } else {
                 const errorText = await response.text();
                 alert("Error saving: " + errorText);
@@ -34,7 +232,41 @@
         } catch (error) {
             alert("Network error: " + error.message);
         }
-    });
+    }
+
+    // Reset to default configuration
+    function resetToDefault() {
+        if (confirm('Are you sure you want to reset to default seat configuration?')) {
+            document.getElementById('firstClassSeats').value = '20';
+            document.getElementById('secondClassSeats').value = '80';
+            document.getElementById('view360Link').value = '';
+            updateSeatStatus(20, 80);
+            addToHistory('Default configuration restored', 'Reset to system defaults');
+        }
+    }
+
+    // Add entry to allocation history
+    function addToHistory(action, details) {
+        const historyList = document.getElementById('allocation-history');
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        const now = new Date();
+        const timeString = now.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+        
+        historyItem.innerHTML = `
+            <div class="history-date">${timeString}</div>
+            <div class="history-action">${action}</div>
+            <div class="history-details">${details}</div>
+        `;
+        
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    }
 </script>
 </body>
 </html>
