@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Notifications - SLRailE</title>
+    <link rel="stylesheet" href="../CSS/admin-notification.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <div class="train-icon"></div>
+        <h1><a href="index.html"> SLRailE </a></h1>
+    </div>
+    <nav class="navigation">
+        <ul>
+            <li><a href="../../IT24101009/HTML/admin.html">Dashboard</a></li>
+            <li><a href="../../IT24102460/HTML/admin_shedule.html">Schedule</a></li>
+            <li><a href="../../IT24101525/HTML/adminseatmanegement.html">Seat Allocation</a></li>
+            <li><a href="../../IT24101009/HTML/admin-profile.html">My Profile</a></li>
+            <li><a href="#" class="active">Notifications</a></li>
+            <li><a href="../../IT24101009/HTML/admin-feedback.html">Feedback</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main-content">
+    <section class="hero">
+        <h1>Admin Notifications</h1>
+        <p class="subtitle">Manage system notifications for users and staff</p>
+    </section>
+
+    <div class="notification-container">
+        <!-- Add New Notification Form -->
+        <div class="add-notification-section">
+            <h3 class="section-title">Add New Notification</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="notification-title">Title *</label>
+                    <input type="text" id="notification-title" placeholder="Enter notification title" required>
+                </div>
+                <div class="form-group">
+                    <label for="notification-type">Type *</label>
+                    <select id="notification-type" required>
+                        <option value="">Select notification type</option>
+                        <option value="system">System</option>
+                        <option value="alert">Alert</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="update">Update</option>
+                        <option value="info">Information</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="notification-message">Message *</label>
+                    <textarea id="notification-message" rows="4" placeholder="Enter notification message" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notification-audience">Audience *</label>
+                    <select id="notification-audience" required>
+                        <option value="">Select audience</option>
+                        <option value="all">All Users</option>
+                        <option value="passengers">Passengers</option>
+                        <option value="staff">Staff</option>
+                        <option value="admins">Administrators</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notification-priority">Priority *</label>
+                    <select id="notification-priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notification-expiry">Expiry Date</label>
+                    <input type="datetime-local" id="notification-expiry">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="primary-btn" id="add-notification-btn">Add Notification</button>
+                <button class="secondary-btn" id="clear-form-btn">Clear Form</button>
+            </div>
+        </div>
+
+        <!-- Notification List -->
+        <div class="notification-list-section">
+            <h3 class="section-title">Current Notifications</h3>
+            <div class="notification-list">
+                <!-- Sample Notification 1 -->
+                <div class="notification-item" data-id="1">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <h4>System Maintenance Scheduled</h4>
+                            <span class="notification-badge status-maintenance">Maintenance</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="edit-btn" title="Edit notification">✏️</button>
+                            <button class="delete-btn" title="Delete notification">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="notification-body">
+                        <p class="notification-message">Scheduled maintenance will be performed on the booking system this Saturday from 2 AM to 6 AM. Service may be temporarily unavailable during this period.</p>
+                        <div class="notification-meta">
+                            <span class="audience">Audience: All Users</span>
+                            <span class="priority">Priority: High</span>
+                            <span class="timestamp">Created: Today, 09:42 AM</span>
+                            <span class="expiry">Expires: Dec 15, 2025, 6:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 2 -->
+                <div class="notification-item" data-id="2">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <h4>Mobile App Update Available</h4>
+                            <span class="notification-badge status-update">Update</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="edit-btn" title="Edit notification">✏️</button>
+                            <button class="delete-btn" title="Delete notification">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="notification-body">
+                        <p class="notification-message">A new version of the SLRailE mobile app is now available with improved booking features and bug fixes. Please update to enjoy the best experience.</p>
+                        <div class="notification-meta">
+                            <span class="audience">Audience: Passengers</span>
+                            <span class="priority">Priority: Medium</span>
+                            <span class="timestamp">Created: Yesterday, 3:15 PM</span>
+                            <span class="expiry">Expires: Jan 1, 2026, 12:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 3 -->
+                <div class="notification-item" data-id="3">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <h4>Train Schedule Changes</h4>
+                            <span class="notification-badge status-alert">Alert</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="edit-btn" title="Edit notification">✏️</button>
+                            <button class="delete-btn" title="Delete notification">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="notification-body">
+                        <p class="notification-message">Due to track maintenance, several train schedules have been adjusted for routes between Colombo and Kandy from December 10-20. Please check updated schedules before traveling.</p>
+                        <div class="notification-meta">
+                            <span class="audience">Audience: All Users</span>
+                            <span class="priority">Priority: Urgent</span>
+                            <span class="timestamp">Created: Dec 5, 2025, 11:30 AM</span>
+                            <span class="expiry">Expires: Dec 20, 2025, 11:59 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Notification Modal (Hidden by default) -->
+        <div class="modal" id="edit-notification-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Notification</h3>
+                    <button class="close-modal-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-notification-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit-notification-title">Title *</label>
+                            <input type="text" id="edit-notification-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-notification-type">Type *</label>
+                            <select id="edit-notification-type" required>
+                                <option value="system">System</option>
+                                <option value="alert">Alert</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="update">Update</option>
+                                <option value="info">Information</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="edit-notification-message">Message *</label>
+                            <textarea id="edit-notification-message" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-notification-audience">Audience *</label>
+                            <select id="edit-notification-audience" required>
+                                <option value="all">All Users</option>
+                                <option value="passengers">Passengers</option>
+                                <option value="staff">Staff</option>
+                                <option value="admins">Administrators</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-notification-priority">Priority *</label>
+                            <select id="edit-notification-priority" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-notification-expiry">Expiry Date</label>
+                            <input type="datetime-local" id="edit-notification-expiry">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="secondary-btn close-modal">Cancel</button>
+                    <button class="primary-btn" id="save-notification-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal" id="delete-confirmation-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm Deletion</h3>
+                    <button class="close-modal-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this notification? This action cannot be undone.</p>
+                    <input type="hidden" id="delete-notification-id">
+                </div>
+                <div class="modal-footer">
+                    <button class="secondary-btn close-modal">Cancel</button>
+                    <button class="danger-btn" id="confirm-delete-btn">Delete Notification</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <h3>SLRailE</h3>
+            <p>SLRailE is your all-in-one digital companion for train travel across Sri Lanka. Designed to make journeys smoother and more convenient, SLRailE provides real-time train schedules, route planning, and live updates on arrivals, departures, and delays.</p>
+            <p>Whether you're a daily commuter or a tourist exploring the island's breathtaking scenery, SLRailE is your essential partner for smart and seamless railway travel.</p>
+        </div>
+        <div class="footer-links">
+            <div class="link-column">
+                <h4>Admin Tools</h4>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Schedule</a></li>
+                    <li><a href="#">Feedback</a></li>
+                    <li><a href="#">Seat Allocation</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 SLRailE. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Basic functionality for the notification system
+    document.addEventListener('DOMContentLoaded', function() {
+        // Clear form button
+        document.getElementById('clear-form-btn').addEventListener('click', function() {
+            document.getElementById('notification-title').value = '';
+            document.getElementById('notification-type').value = '';
+            document.getElementById('notification-message').value = '';
+            document.getElementById('notification-audience').value = '';
+            document.getElementById('notification-priority').value = 'medium';
+            document.getElementById('notification-expiry').value = '';
+        });
+
+        // Edit button functionality
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationItem = this.closest('.notification-item');
+                const id = notificationItem.dataset.id;
+                const title = notificationItem.querySelector('h4').textContent;
+                const type = notificationItem.querySelector('.notification-badge').textContent.toLowerCase();
+                const message = notificationItem.querySelector('.notification-message').textContent;
+                const audience = notificationItem.querySelector('.audience').textContent.replace('Audience: ', '').toLowerCase();
+                const priority = notificationItem.querySelector('.priority').textContent.replace('Priority: ', '').toLowerCase();
+
+                // Set values in edit modal
+                document.getElementById('edit-notification-id').value = id;
+                document.getElementById('edit-notification-title').value = title;
+                document.getElementById('edit-notification-type').value = type;
+                document.getElementById('edit-notification-message').value = message;
+                document.getElementById('edit-notification-audience').value = audience === 'all users' ? 'all' : audience;
+                document.getElementById('edit-notification-priority').value = priority;
+
+                // Show modal
+                document.getElementById('edit-notification-modal').style.display = 'block';
+            });
+        });
+
+        // Delete button functionality
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationItem = this.closest('.notification-item');
+                const id = notificationItem.dataset.id;
+
+                document.getElementById('delete-notification-id').value = id;
+                document.getElementById('delete-confirmation-modal').style.display = 'block';
+            });
+        });
+
+        // Close modal buttons
+        const closeButtons = document.querySelectorAll('.close-modal-btn, .close-modal');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('edit-notification-modal').style.display = 'none';
+                document.getElementById('delete-confirmation-modal').style.display = 'none';
+            });
+        });
+
+        // Confirm delete button
+        document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+            const id = document.getElementById('delete-notification-id').value;
+            const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
+            if (notificationItem) {
+                notificationItem.remove();
+            }
+            document.getElementById('delete-confirmation-modal').style.display = 'none';
+
+            // Show success message (you can implement a toast notification here)
+            alert('Notification deleted successfully!');
+        });
+
+        // Save edited notification
+        document.getElementById('save-notification-btn').addEventListener('click', function() {
+            const id = document.getElementById('edit-notification-id').value;
+            const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
+
+            if (notificationItem) {
+                // Update the notification content
+                notificationItem.querySelector('h4').textContent = document.getElementById('edit-notification-title').value;
+                const badge = notificationItem.querySelector('.notification-badge');
+                const type = document.getElementById('edit-notification-type').value;
+                badge.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                badge.className = `notification-badge status-${type}`;
+                notificationItem.querySelector('.notification-message').textContent = document.getElementById('edit-notification-message').value;
+                notificationItem.querySelector('.audience').textContent = `Audience: ${document.getElementById('edit-notification-audience').value.charAt(0).toUpperCase() + document.getElementById('edit-notification-audience').value.slice(1)}`;
+                notificationItem.querySelector('.priority').textContent = `Priority: ${document.getElementById('edit-notification-priority').value.charAt(0).toUpperCase() + document.getElementById('edit-notification-priority').value.slice(1)}`;
+            }
+
+            document.getElementById('edit-notification-modal').style.display = 'none';
+            alert('Notification updated successfully!');
+        });
+
+        // Add new notification
+        document.getElementById('add-notification-btn').addEventListener('click', function() {
+            const title = document.getElementById('notification-title').value;
+            const type = document.getElementById('notification-type').value;
+            const message = document.getElementById('notification-message').value;
+            const audience = document.getElementById('notification-audience').value;
+            const priority = document.getElementById('notification-priority').value;
+            const expiry = document.getElementById('notification-expiry').value;
+
+            if (!title || !type || !message || !audience) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Create new notification element
+            const notificationList = document.querySelector('.notification-list');
+            const newNotification = document.createElement('div');
+            newNotification.className = 'notification-item';
+            newNotification.dataset.id = Date.now(); // Simple ID generation
+
+            // Format expiry date for display
+            let expiryText = 'Never';
+            if (expiry) {
+                const expiryDate = new Date(expiry);
+                expiryText = expiryDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                });
+            }
+
+            // Format audience for display
+            let audienceText = audience.charAt(0).toUpperCase() + audience.slice(1);
+            if (audience === 'all') audienceText = 'All Users';
+
+            newNotification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <h4>${title}</h4>
+                        <span class="notification-badge status-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="edit-btn" title="Edit notification">✏️</button>
+                        <button class="delete-btn" title="Delete notification">🗑️</button>
+                    </div>
+                </div>
+                <div class="notification-body">
+                    <p class="notification-message">${message}</p>
+                    <div class="notification-meta">
+                        <span class="audience">Audience: ${audienceText}</span>
+                        <span class="priority">Priority: ${priority.charAt(0).toUpperCase() + priority.slice(1)}</span>
+                        <span class="timestamp">Created: Today, ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="expiry">Expires: ${expiryText}</span>
+                    </div>
+                </div>
+            `;
+
+            // Add to beginning of list
+            notificationList.insertBefore(newNotification, notificationList.firstChild);
+
+            // Add event listeners to new buttons
+            newNotification.querySelector('.edit-btn').addEventListener('click', function() {
+                const id = this.closest('.notification-item').dataset.id;
+                const title = this.closest('.notification-item').querySelector('h4').textContent;
+                const type = this.closest('.notification-item').querySelector('.notification-badge').textContent.toLowerCase();
+                const message = this.closest('.notification-item').querySelector('.notification-message').textContent;
+                const audience = this.closest('.notification-item').querySelector('.audience').textContent.replace('Audience: ', '').toLowerCase();
+                const priority = this.closest('.notification-item').querySelector('.priority').textContent.replace('Priority: ', '').toLowerCase();
+
+                document.getElementById('edit-notification-id').value = id;
+                document.getElementById('edit-notification-title').value = title;
+                document.getElementById('edit-notification-type').value = type;
+                document.getElementById('edit-notification-message').value = message;
+                document.getElementById('edit-notification-audience').value = audience === 'all users' ? 'all' : audience;
+                document.getElementById('edit-notification-priority').value = priority;
+
+                document.getElementById('edit-notification-modal').style.display = 'block';
+            });
+
+            newNotification.querySelector('.delete-btn').addEventListener('click', function() {
+                const id = this.closest('.notification-item').dataset.id;
+                document.getElementById('delete-notification-id').value = id;
+                document.getElementById('delete-confirmation-modal').style.display = 'block';
+            });
+
+            // Clear form
+            document.getElementById('notification-title').value = '';
+            document.getElementById('notification-type').value = '';
+            document.getElementById('notification-message').value = '';
+            document.getElementById('notification-audience').value = '';
+            document.getElementById('notification-priority').value = 'medium';
+            document.getElementById('notification-expiry').value = '';
+
+            alert('Notification added successfully!');
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            const editModal = document.getElementById('edit-notification-modal');
+            const deleteModal = document.getElementById('delete-confirmation-modal');
+
+            if (event.target === editModal) {
+                editModal.style.display = 'none';
+            }
+            if (event.target === deleteModal) {
+                deleteModal.style.display = 'none';
+            }
+        });
+    });
+</script>
+</body>
+</html>
