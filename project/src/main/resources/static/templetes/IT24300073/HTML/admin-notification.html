@@ -20,6 +20,7 @@
             <li><a href="../../IT24300073/HTML/admin-profile.html">My Profile</a></li>
             <li><a href="#" class="active">Notification</a></li>
             <li><a href="../../IT24101009/HTML/admin-feedback.html">Feedback</a></li>
+            <li><a href="#" id="logout-link">Logout</a></li>
         </ul>
     </nav>
 </header>
@@ -593,6 +594,16 @@
         // Simple alert for now - you can replace with a better notification system
         alert(message);
     }
+
+    // Logout handler
+    document.getElementById('logout-link')?.addEventListener('click', function(e){
+        e.preventDefault();
+        try {
+            localStorage.removeItem('slraile_email');
+            localStorage.clear();
+        } catch(_e) {}
+        window.location.href='../../IT24101208/HTML/Login.html';
+    });
 </script>
 </body>
 </html>

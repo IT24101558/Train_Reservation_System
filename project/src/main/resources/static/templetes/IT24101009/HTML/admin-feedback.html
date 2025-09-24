@@ -20,6 +20,7 @@
             <li><a href="../../IT24300073/HTML/admin-profile.html">My Profile</a></li>
             <li><a href="../../IT24300073/HTML/admin-notification.html">Notification</a></li>
             <li><a href="#" class="active">Feedback</a></li>
+            <li><a href="#" id="logout-link">Logout</a></li>
         </ul>
     </nav>
     </div>
@@ -141,6 +142,16 @@
     }
 
     document.addEventListener('DOMContentLoaded', fetchFeedbacks);
+
+    // Logout handler
+    document.getElementById('logout-link')?.addEventListener('click', function(e){
+        e.preventDefault();
+        try {
+            localStorage.removeItem('slraile_email');
+            localStorage.clear();
+        } catch(_e) {}
+        window.location.href='../../IT24101208/HTML/Login.html';
+    });
 </script>
 
 </body>
