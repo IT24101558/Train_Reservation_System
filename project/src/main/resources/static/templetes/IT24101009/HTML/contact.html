@@ -36,7 +36,7 @@
     <section class="contact-container">
         <div class="contact-form">
             <h3>Send Us a Message</h3>
-            <form action="#" method="POST">
+            <form id="contact-form" action="#" method="POST">
                 <div class="input-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required />
@@ -132,6 +132,41 @@
         <p>&copy; 2025 SLRailE. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    // Submit contact message as a feedback entry so it shows in admin feedback page
+    document.getElementById('contact-form')?.addEventListener('submit', async function(e){
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const msg = document.getElementById('message').value.trim();
+
+        const feedbackPayload = {
+            passengerName: name || null,
+            email: email || null,
+            rating: 0, // contact messages have no rating; show 0 stars in admin table
+            message: subject ? `[${subject}] ${msg}` : msg
+        };
+
+        try {
+            const resp = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedbackPayload)
+            });
+            if (resp.ok) {
+                alert('Thank you! Your message has been sent.');
+                (this).reset();
+            } else {
+                alert('Failed to send message. Please try again.');
+            }
+        } catch (err) {
+            console.error('Contact submit failed', err);
+            alert('Network error. Please try again later.');
+        }
+    });
+</script>
 
 </body>
 </html>
