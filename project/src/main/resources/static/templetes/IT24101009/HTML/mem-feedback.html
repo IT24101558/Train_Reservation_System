@@ -77,10 +77,6 @@
                     <label for="train-journey">Train Journey</label>
                     <select id="train-journey" name="train-journey" required>
                         <option value="">Select train journey</option>
-                        <option value="Mountain Route">Mountain Route (Colombo → Kandy)</option>
-                        <option value="Heritage Route">Heritage Route (Kandy → Ella)</option>
-                        <option value="Northern Route">Northern Route (Anuradapura → Jaffna)</option>
-                        <option value="Other">Other</option>
                     </select>
                 </div>
 
@@ -157,6 +153,9 @@
 </footer>
 
 <script>
+    let currentUserFullName = null;
+    let currentUserEmail = null;
+
     document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -164,7 +163,9 @@
             rating: document.querySelector('input[name="rating"]:checked').value,
             trainJourney: document.getElementById('train-journey').value,
             travelDate: document.getElementById('travel-date').value,
-            message: document.getElementById('message').value
+            message: document.getElementById('message').value,
+            passengerName: currentUserFullName,
+            email: currentUserEmail
         };
 
         try {
@@ -189,7 +190,7 @@
     });
 
     // Add animation to card
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const card = document.querySelector('.card');
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
@@ -198,6 +199,74 @@
             card.style.transform = 'translateY(0)';
             card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         }, 100);
+
+        // Load logged-in user's name and email (if available)
+        try {
+            const storedEmail = (localStorage.getItem('slraile_email') || '').trim();
+            if (storedEmail) {
+                const profileRes = await fetch(window.location.origin + '/api/auth/profile?email=' + encodeURIComponent(storedEmail));
+                if (profileRes.ok) {
+                    const profile = await profileRes.json();
+                    currentUserFullName = (profile.fullName || '').trim() || null;
+                    currentUserEmail = (profile.email || '').trim() || null;
+                } else {
+                    currentUserEmail = storedEmail; // at least include email if profile fetch fails
+                }
+            }
+        } catch (e) {
+            // Non-fatal; allow anonymous feedback if profile not available
+        }
+
+        // Populate train journeys from backend schedules
+        const journeySelect = document.getElementById('train-journey');
+        try {
+            const res = await fetch('/api/member/schedules');
+            if (!res.ok) throw new Error('Failed to load schedules');
+            const schedules = await res.json();
+
+            // Build a unique list of journeys by train name + route
+            const seen = new Set();
+            const options = [];
+            schedules.forEach(s => {
+                const trainName = s.trainName || '';
+                const routeFrom = s.routeFrom || '';
+                const routeTo = s.routeTo || '';
+                if (!trainName) return;
+                const key = `${trainName}|${routeFrom}|${routeTo}`;
+                if (seen.has(key)) return;
+                seen.add(key);
+                const label = routeFrom && routeTo
+                    ? `${trainName} (${routeFrom} → ${routeTo})`
+                    : trainName;
+                options.push({ value: trainName, label });
+            });
+
+            // Sort options by label for nicer UX
+            options.sort((a, b) => a.label.localeCompare(b.label));
+
+            // Append to select
+            options.forEach(opt => {
+                const optionEl = document.createElement('option');
+                optionEl.value = opt.value;
+                optionEl.textContent = opt.label;
+                journeySelect.appendChild(optionEl);
+            });
+
+            // Fallback if no schedules
+            if (options.length === 0) {
+                const optionEl = document.createElement('option');
+                optionEl.value = 'Other';
+                optionEl.textContent = 'Other';
+                journeySelect.appendChild(optionEl);
+            }
+        } catch (err) {
+            console.error('Error loading train journeys:', err);
+            // Graceful fallback
+            const optionEl = document.createElement('option');
+            optionEl.value = 'Other';
+            optionEl.textContent = 'Other';
+            journeySelect.appendChild(optionEl);
+        }
     });
 </script>
 </body>
