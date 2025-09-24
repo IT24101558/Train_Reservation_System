@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="" version="5.0">
-    <display-name>Train Reservation</display-name>
-
-    <welcome-file-list>
-        <welcome-file>HTML/login.jsp</welcome-file>
-    </welcome-file-list>
-</web-app>
