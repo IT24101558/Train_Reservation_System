@@ -12,6 +12,12 @@ public class HomeController {
         // Redirect to the index.html page so static resources load correctly
         return "redirect:/templetes/IT24101009/HTML/index.html";
     }
+    
+    @GetMapping("/index")
+    public String index() {
+        // Alternative mapping for index
+        return "redirect:/templetes/IT24101009/HTML/index.html";
+    }
 
     @GetMapping("/health")
     @ResponseBody
