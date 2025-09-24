@@ -17,8 +17,8 @@
             <li><a href="../../IT24101009/HTML/admin.html">Dashboard</a></li>
             <li><a href="../../IT24102460/HTML/admin_shedule.html">Schedule</a></li>
             <li><a href="../../IT24101525/HTML/adminseatmanegement.html">Seat Allocation</a></li>
-            <li><a href="../../IT24101009/HTML/admin-profile.html">My Profile</a></li>
-            <li><a href="#" class="active">Notifications</a></li>
+            <li><a href="../../IT24300073/HTML/admin-profile.html">My Profile</a></li>
+            <li><a href="#" class="active">Notification</a></li>
             <li><a href="../../IT24101009/HTML/admin-feedback.html">Feedback</a></li>
         </ul>
     </nav>
@@ -43,11 +43,11 @@
                     <label for="notification-type">Type *</label>
                     <select id="notification-type" required>
                         <option value="">Select notification type</option>
-                        <option value="system">System</option>
-                        <option value="alert">Alert</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="update">Update</option>
-                        <option value="info">Information</option>
+                        <option value="SYSTEM">System</option>
+                        <option value="ALERT">Alert</option>
+                        <option value="MAINTENANCE">Maintenance</option>
+                        <option value="UPDATE">Update</option>
+                        <option value="INFO">Information</option>
                     </select>
                 </div>
                 <div class="form-group full-width">
@@ -58,24 +58,25 @@
                     <label for="notification-audience">Audience *</label>
                     <select id="notification-audience" required>
                         <option value="">Select audience</option>
-                        <option value="all">All Users</option>
-                        <option value="passengers">Passengers</option>
-                        <option value="staff">Staff</option>
-                        <option value="admins">Administrators</option>
+                        <option value="ALL">All Users</option>
+                        <option value="PASSENGERS">Passengers</option>
+                        <option value="STAFF">Staff</option>
+                        <option value="ADMINS">Administrators</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="notification-priority">Priority *</label>
                     <select id="notification-priority" required>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                        <option value="urgent">Urgent</option>
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="notification-expiry">Expiry Date</label>
-                    <input type="datetime-local" id="notification-expiry">
+                    <label for="notification-expiry">Expiry Date (Optional)</label>
+                    <input type="datetime-local" id="notification-expiry" placeholder="Leave empty for no expiry">
+                    <small style="color: #666; font-size: 0.8em;">Leave empty if you don't want the notification to expire</small>
                 </div>
             </div>
             <div class="btn-group">
@@ -176,11 +177,11 @@
                         <div class="form-group">
                             <label for="edit-notification-type">Type *</label>
                             <select id="edit-notification-type" required>
-                                <option value="system">System</option>
-                                <option value="alert">Alert</option>
-                                <option value="maintenance">Maintenance</option>
-                                <option value="update">Update</option>
-                                <option value="info">Information</option>
+                                <option value="SYSTEM">System</option>
+                                <option value="ALERT">Alert</option>
+                                <option value="MAINTENANCE">Maintenance</option>
+                                <option value="UPDATE">Update</option>
+                                <option value="INFO">Information</option>
                             </select>
                         </div>
                         <div class="form-group full-width">
@@ -190,19 +191,19 @@
                         <div class="form-group">
                             <label for="edit-notification-audience">Audience *</label>
                             <select id="edit-notification-audience" required>
-                                <option value="all">All Users</option>
-                                <option value="passengers">Passengers</option>
-                                <option value="staff">Staff</option>
-                                <option value="admins">Administrators</option>
+                                <option value="ALL">All Users</option>
+                                <option value="PASSENGERS">Passengers</option>
+                                <option value="STAFF">Staff</option>
+                                <option value="ADMINS">Administrators</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="edit-notification-priority">Priority *</label>
                             <select id="edit-notification-priority" required>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                                <option value="urgent">Urgent</option>
+                                <option value="LOW">Low</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="HIGH">High</option>
+                                <option value="URGENT">Urgent</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -281,122 +282,66 @@
 </footer>
 
 <script>
-    // Basic functionality for the notification system
+    // API Base URL
+    const API_BASE_URL = 'http://localhost:8080/api/admin/notifications';
+    
+    // Load notifications on page load
     document.addEventListener('DOMContentLoaded', function() {
-        // Clear form button
-        document.getElementById('clear-form-btn').addEventListener('click', function() {
-            document.getElementById('notification-title').value = '';
-            document.getElementById('notification-type').value = '';
-            document.getElementById('notification-message').value = '';
-            document.getElementById('notification-audience').value = '';
-            document.getElementById('notification-priority').value = 'medium';
-            document.getElementById('notification-expiry').value = '';
-        });
+        loadNotifications();
+        setupEventListeners();
+    });
 
-        // Edit button functionality
-        const editButtons = document.querySelectorAll('.edit-btn');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const notificationItem = this.closest('.notification-item');
-                const id = notificationItem.dataset.id;
-                const title = notificationItem.querySelector('h4').textContent;
-                const type = notificationItem.querySelector('.notification-badge').textContent.toLowerCase();
-                const message = notificationItem.querySelector('.notification-message').textContent;
-                const audience = notificationItem.querySelector('.audience').textContent.replace('Audience: ', '').toLowerCase();
-                const priority = notificationItem.querySelector('.priority').textContent.replace('Priority: ', '').toLowerCase();
-
-                // Set values in edit modal
-                document.getElementById('edit-notification-id').value = id;
-                document.getElementById('edit-notification-title').value = title;
-                document.getElementById('edit-notification-type').value = type;
-                document.getElementById('edit-notification-message').value = message;
-                document.getElementById('edit-notification-audience').value = audience === 'all users' ? 'all' : audience;
-                document.getElementById('edit-notification-priority').value = priority;
-
-                // Show modal
-                document.getElementById('edit-notification-modal').style.display = 'block';
-            });
-        });
-
-        // Delete button functionality
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const notificationItem = this.closest('.notification-item');
-                const id = notificationItem.dataset.id;
-
-                document.getElementById('delete-notification-id').value = id;
-                document.getElementById('delete-confirmation-modal').style.display = 'block';
-            });
-        });
-
-        // Close modal buttons
-        const closeButtons = document.querySelectorAll('.close-modal-btn, .close-modal');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                document.getElementById('edit-notification-modal').style.display = 'none';
-                document.getElementById('delete-confirmation-modal').style.display = 'none';
-            });
-        });
-
-        // Confirm delete button
-        document.getElementById('confirm-delete-btn').addEventListener('click', function() {
-            const id = document.getElementById('delete-notification-id').value;
-            const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
-            if (notificationItem) {
-                notificationItem.remove();
+    // Load all notifications from API
+    async function loadNotifications() {
+        try {
+            const response = await fetch(API_BASE_URL);
+            if (response.ok) {
+                const notifications = await response.json();
+                displayNotifications(notifications);
+            } else {
+                console.error('Failed to load notifications');
+                showMessage('Failed to load notifications', 'error');
             }
-            document.getElementById('delete-confirmation-modal').style.display = 'none';
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+            showMessage('Error loading notifications', 'error');
+        }
+    }
 
-            // Show success message (you can implement a toast notification here)
-            alert('Notification deleted successfully!');
+    // Display notifications in the UI
+    function displayNotifications(notifications) {
+        const notificationList = document.querySelector('.notification-list');
+        notificationList.innerHTML = '';
+
+        if (notifications.length === 0) {
+            notificationList.innerHTML = '<p class="no-notifications">No notifications found.</p>';
+            return;
+        }
+
+        notifications.forEach(notification => {
+            const notificationElement = createNotificationElement(notification);
+            notificationList.appendChild(notificationElement);
+        });
+    }
+
+    // Create notification element
+    function createNotificationElement(notification) {
+        const div = document.createElement('div');
+        div.className = 'notification-item';
+        div.dataset.id = notification.id;
+
+        // Format dates
+        const createdAt = new Date(notification.createdAt).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
         });
 
-        // Save edited notification
-        document.getElementById('save-notification-btn').addEventListener('click', function() {
-            const id = document.getElementById('edit-notification-id').value;
-            const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
-
-            if (notificationItem) {
-                // Update the notification content
-                notificationItem.querySelector('h4').textContent = document.getElementById('edit-notification-title').value;
-                const badge = notificationItem.querySelector('.notification-badge');
-                const type = document.getElementById('edit-notification-type').value;
-                badge.textContent = type.charAt(0).toUpperCase() + type.slice(1);
-                badge.className = `notification-badge status-${type}`;
-                notificationItem.querySelector('.notification-message').textContent = document.getElementById('edit-notification-message').value;
-                notificationItem.querySelector('.audience').textContent = `Audience: ${document.getElementById('edit-notification-audience').value.charAt(0).toUpperCase() + document.getElementById('edit-notification-audience').value.slice(1)}`;
-                notificationItem.querySelector('.priority').textContent = `Priority: ${document.getElementById('edit-notification-priority').value.charAt(0).toUpperCase() + document.getElementById('edit-notification-priority').value.slice(1)}`;
-            }
-
-            document.getElementById('edit-notification-modal').style.display = 'none';
-            alert('Notification updated successfully!');
-        });
-
-        // Add new notification
-        document.getElementById('add-notification-btn').addEventListener('click', function() {
-            const title = document.getElementById('notification-title').value;
-            const type = document.getElementById('notification-type').value;
-            const message = document.getElementById('notification-message').value;
-            const audience = document.getElementById('notification-audience').value;
-            const priority = document.getElementById('notification-priority').value;
-            const expiry = document.getElementById('notification-expiry').value;
-
-            if (!title || !type || !message || !audience) {
-                alert('Please fill in all required fields');
-                return;
-            }
-
-            // Create new notification element
-            const notificationList = document.querySelector('.notification-list');
-            const newNotification = document.createElement('div');
-            newNotification.className = 'notification-item';
-            newNotification.dataset.id = Date.now(); // Simple ID generation
-
-            // Format expiry date for display
             let expiryText = 'Never';
-            if (expiry) {
-                const expiryDate = new Date(expiry);
+        if (notification.expiresAt) {
+            const expiryDate = new Date(notification.expiresAt);
                 expiryText = expiryDate.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -407,14 +352,14 @@
             }
 
             // Format audience for display
-            let audienceText = audience.charAt(0).toUpperCase() + audience.slice(1);
-            if (audience === 'all') audienceText = 'All Users';
+        let audienceText = notification.audience.charAt(0).toUpperCase() + notification.audience.slice(1);
+        if (notification.audience === 'ALL') audienceText = 'All Users';
 
-            newNotification.innerHTML = `
+        div.innerHTML = `
                 <div class="notification-header">
                     <div class="notification-title">
-                        <h4>${title}</h4>
-                        <span class="notification-badge status-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                    <h4>${notification.title}</h4>
+                    <span class="notification-badge status-${notification.type.toLowerCase()}">${notification.type}</span>
                     </div>
                     <div class="notification-actions">
                         <button class="edit-btn" title="Edit notification">✏️</button>
@@ -422,53 +367,36 @@
                     </div>
                 </div>
                 <div class="notification-body">
-                    <p class="notification-message">${message}</p>
+                <p class="notification-message">${notification.message}</p>
                     <div class="notification-meta">
                         <span class="audience">Audience: ${audienceText}</span>
-                        <span class="priority">Priority: ${priority.charAt(0).toUpperCase() + priority.slice(1)}</span>
-                        <span class="timestamp">Created: Today, ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span class="priority">Priority: ${notification.priority}</span>
+                    <span class="timestamp">Created: ${createdAt}</span>
                         <span class="expiry">Expires: ${expiryText}</span>
                     </div>
                 </div>
             `;
 
-            // Add to beginning of list
-            notificationList.insertBefore(newNotification, notificationList.firstChild);
+        return div;
+    }
 
-            // Add event listeners to new buttons
-            newNotification.querySelector('.edit-btn').addEventListener('click', function() {
-                const id = this.closest('.notification-item').dataset.id;
-                const title = this.closest('.notification-item').querySelector('h4').textContent;
-                const type = this.closest('.notification-item').querySelector('.notification-badge').textContent.toLowerCase();
-                const message = this.closest('.notification-item').querySelector('.notification-message').textContent;
-                const audience = this.closest('.notification-item').querySelector('.audience').textContent.replace('Audience: ', '').toLowerCase();
-                const priority = this.closest('.notification-item').querySelector('.priority').textContent.replace('Priority: ', '').toLowerCase();
+    // Setup event listeners
+    function setupEventListeners() {
+        // Clear form button
+        document.getElementById('clear-form-btn').addEventListener('click', clearForm);
 
-                document.getElementById('edit-notification-id').value = id;
-                document.getElementById('edit-notification-title').value = title;
-                document.getElementById('edit-notification-type').value = type;
-                document.getElementById('edit-notification-message').value = message;
-                document.getElementById('edit-notification-audience').value = audience === 'all users' ? 'all' : audience;
-                document.getElementById('edit-notification-priority').value = priority;
+        // Add notification button
+        document.getElementById('add-notification-btn').addEventListener('click', addNotification);
 
-                document.getElementById('edit-notification-modal').style.display = 'block';
-            });
+        // Save edited notification button
+        document.getElementById('save-notification-btn').addEventListener('click', saveNotification);
 
-            newNotification.querySelector('.delete-btn').addEventListener('click', function() {
-                const id = this.closest('.notification-item').dataset.id;
-                document.getElementById('delete-notification-id').value = id;
-                document.getElementById('delete-confirmation-modal').style.display = 'block';
-            });
+        // Confirm delete button
+        document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
 
-            // Clear form
-            document.getElementById('notification-title').value = '';
-            document.getElementById('notification-type').value = '';
-            document.getElementById('notification-message').value = '';
-            document.getElementById('notification-audience').value = '';
-            document.getElementById('notification-priority').value = 'medium';
-            document.getElementById('notification-expiry').value = '';
-
-            alert('Notification added successfully!');
+        // Close modal buttons
+        document.querySelectorAll('.close-modal-btn, .close-modal').forEach(button => {
+            button.addEventListener('click', closeModals);
         });
 
         // Close modals when clicking outside
@@ -483,7 +411,188 @@
                 deleteModal.style.display = 'none';
             }
         });
-    });
+
+        // Delegate event listeners for dynamic content
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('edit-btn')) {
+                editNotification(event.target);
+            } else if (event.target.classList.contains('delete-btn')) {
+                deleteNotification(event.target);
+            }
+        });
+    }
+
+    // Clear form
+    function clearForm() {
+        document.getElementById('notification-title').value = '';
+        document.getElementById('notification-type').value = '';
+        document.getElementById('notification-message').value = '';
+        document.getElementById('notification-audience').value = '';
+        document.getElementById('notification-priority').value = 'MEDIUM';
+        document.getElementById('notification-expiry').value = '';
+    }
+
+    // Add new notification
+    async function addNotification() {
+        const title = document.getElementById('notification-title').value;
+        const type = document.getElementById('notification-type').value;
+        const message = document.getElementById('notification-message').value;
+        const audience = document.getElementById('notification-audience').value;
+        const priority = document.getElementById('notification-priority').value;
+        const expiry = document.getElementById('notification-expiry').value;
+
+        if (!title || !type || !message || !audience) {
+            showMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        const notificationData = {
+            title: title,
+            message: message,
+            type: type,
+            audience: audience,
+            priority: priority,
+            expiresAt: expiry ? new Date(expiry).toISOString() : null
+        };
+        
+        console.log('DEBUG: Notification data being sent:', notificationData);
+        console.log('DEBUG: Expiry date:', expiry);
+        console.log('DEBUG: Current time:', new Date().toISOString());
+
+        try {
+            const response = await fetch(API_BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(notificationData)
+            });
+
+            if (response.ok) {
+                showMessage('Notification added successfully!', 'success');
+                clearForm();
+                loadNotifications(); // Reload the list
+            } else {
+                showMessage('Failed to add notification', 'error');
+            }
+        } catch (error) {
+            console.error('Error adding notification:', error);
+            showMessage('Error adding notification', 'error');
+        }
+    }
+
+    // Edit notification
+    function editNotification(button) {
+        const notificationItem = button.closest('.notification-item');
+        const id = notificationItem.dataset.id;
+        
+        // Find the notification data (you might want to store this in a data attribute)
+        const title = notificationItem.querySelector('h4').textContent;
+        const type = notificationItem.querySelector('.notification-badge').textContent;
+        const message = notificationItem.querySelector('.notification-message').textContent;
+        const audience = notificationItem.querySelector('.audience').textContent.replace('Audience: ', '');
+        const priority = notificationItem.querySelector('.priority').textContent.replace('Priority: ', '');
+
+        // Set values in edit modal
+        document.getElementById('edit-notification-id').value = id;
+        document.getElementById('edit-notification-title').value = title;
+        document.getElementById('edit-notification-type').value = type;
+        document.getElementById('edit-notification-message').value = message;
+        document.getElementById('edit-notification-audience').value = audience === 'All Users' ? 'ALL' : audience.toUpperCase();
+        document.getElementById('edit-notification-priority').value = priority.toUpperCase();
+
+        // Show modal
+        document.getElementById('edit-notification-modal').style.display = 'block';
+    }
+
+    // Save edited notification
+    async function saveNotification() {
+        const id = document.getElementById('edit-notification-id').value;
+        const title = document.getElementById('edit-notification-title').value;
+        const type = document.getElementById('edit-notification-type').value;
+        const message = document.getElementById('edit-notification-message').value;
+        const audience = document.getElementById('edit-notification-audience').value;
+        const priority = document.getElementById('edit-notification-priority').value;
+        const expiry = document.getElementById('edit-notification-expiry').value;
+
+        if (!title || !type || !message || !audience) {
+            showMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        const notificationData = {
+            title: title,
+            message: message,
+            type: type,
+            audience: audience,
+            priority: priority,
+            expiresAt: expiry ? new Date(expiry).toISOString() : null
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(notificationData)
+            });
+
+            if (response.ok) {
+                showMessage('Notification updated successfully!', 'success');
+                closeModals();
+                loadNotifications(); // Reload the list
+            } else {
+                showMessage('Failed to update notification', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating notification:', error);
+            showMessage('Error updating notification', 'error');
+        }
+    }
+
+    // Delete notification
+    function deleteNotification(button) {
+        const notificationItem = button.closest('.notification-item');
+        const id = notificationItem.dataset.id;
+
+        document.getElementById('delete-notification-id').value = id;
+        document.getElementById('delete-confirmation-modal').style.display = 'block';
+    }
+
+    // Confirm delete
+    async function confirmDelete() {
+        const id = document.getElementById('delete-notification-id').value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                showMessage('Notification deleted successfully!', 'success');
+                closeModals();
+                loadNotifications(); // Reload the list
+            } else {
+                showMessage('Failed to delete notification', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+            showMessage('Error deleting notification', 'error');
+        }
+    }
+
+    // Close modals
+    function closeModals() {
+        document.getElementById('edit-notification-modal').style.display = 'none';
+        document.getElementById('delete-confirmation-modal').style.display = 'none';
+    }
+
+    // Show message (you can implement a better toast notification system)
+    function showMessage(message, type) {
+        // Simple alert for now - you can replace with a better notification system
+        alert(message);
+    }
 </script>
 </body>
 </html>
