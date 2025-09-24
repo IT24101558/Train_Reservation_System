@@ -5,6 +5,152 @@
     box-sizing: border-box;
 }
 
+/* Schedule container styles (from guest_shedule.css) */
+.schedule-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    color: var(--text-color);
+}
+
+.tab-btn.active {
+    background-color: var(--white);
+    color: var(--primary-color) !important;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-btn:hover {
+    background-color: rgba(26, 115, 232, 0.1);
+}
+
+.schedule-table-container {
+    overflow-x: auto;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table thead {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.schedule-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+.schedule-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInRow 0.5s ease-out var(--delay) both;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.schedule-table td {
+    padding: 1rem;
+}
+
+.schedule-table .train-name {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: rgba(52, 168, 83, 0.15);
+    color: #2d924a;
+}
+
+.status-delayed {
+    background-color: rgba(251, 188, 5, 0.15);
+    color: #f9ab00;
+}
+
+.status-canceled {
+    background-color: rgba(234, 67, 53, 0.15);
+    color: #ea4335;
+}
+
+.book-btn {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.book-btn:hover:not(:disabled) {
+    background-color: #2d924a;
+    transform: scale(1.05);
+}
+
+.book-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+@keyframes slideInRow {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 :root {
     --primary-color: #1a73e8;
     --secondary-color: #34a853;
@@ -266,6 +412,23 @@ body {
     background-color: #1557b0;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2);
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.refresh-btn {
+    background-color: #28a745 !important;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+}
+
+.refresh-btn:hover {
+    background-color: #218838 !important;
 }
 
 /* Results container */

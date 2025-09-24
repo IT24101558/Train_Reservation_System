@@ -34,29 +34,18 @@
     <div class="search-box">
       <div class="input-group">
         <label for="from">From</label>
-        <select id="from" name="from">
-          <option value="">Select departure station</option>
-          <option value="central">Central Station</option>
-          <option value="north">North Terminal</option>
-          <option value="south">South Junction</option>
-          <option value="east">East Point</option>
-          <option value="west">West Hub</option>
-        </select>
+        <input type="text" id="from" name="from" placeholder="Type departure station">
       </div>
       <div class="input-group">
         <label for="to">To</label>
-        <select id="to" name="to">
-          <option value="">Select destination station</option>
-          <option value="central">Central Station</option>
-          <option value="north">North Terminal</option>
-          <option value="south">South Junction</option>
-          <option value="east">East Point</option>
-          <option value="west">West Hub</option>
-        </select>
+        <input type="text" id="to" name="to" placeholder="Type destination station">
       </div>
       <div class="input-group">
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date">
+        <label for="userType">User Type</label>
+        <select id="userType" name="userType">
+          <option value="GUEST" selected>Guest</option>
+          <option value="MEMBER">Member</option>
+        </select>
       </div>
       <button class="search-btn">Search Trains</button>
     </div>
@@ -65,7 +54,6 @@
   <section class="schedule-container">
     <div class="tabs">
       <button class="tab-btn active" data-tab="today">Today's Schedule</button>
-      <button class="tab-btn" data-tab="tomorrow">Tomorrow's Schedule</button>
     </div>
 
     <div class="schedule-table-container">
@@ -73,6 +61,8 @@
         <thead>
         <tr>
           <th>Train</th>
+          <th>From</th>
+          <th>To</th>
           <th>Departure</th>
           <th>Arrival</th>
           <th>Duration</th>
@@ -238,11 +228,71 @@
 
   // Add animation to rows when page loads
   document.addEventListener('DOMContentLoaded', () => {
-      const rows = document.querySelectorAll('.schedule-row');
-      rows.forEach((row, index) => {
-          row.style.setProperty('--delay', `${index * 0.1}s`);
-      });
+      attachSearchHandler();
+      // initial load: fetch active schedules for guests
+      fetchAndRenderSchedules({ userType: 'GUEST' });
   });
+
+  function attachSearchHandler() {
+      const btn = document.querySelector('.search-btn');
+      btn.addEventListener('click', () => {
+          const from = document.getElementById('from').value.trim();
+          const to = document.getElementById('to').value.trim();
+          const userType = document.getElementById('userType') ? document.getElementById('userType').value : 'GUEST';
+          fetchAndRenderSchedules({ routeFrom: from || null, routeTo: to || null, userType });
+      });
+  }
+
+  function fetchAndRenderSchedules({ routeFrom = null, routeTo = null, userType = 'GUEST' } = {}) {
+      const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+          ? 'http://localhost:8080'
+          : window.location.origin;
+      const base = userType === 'MEMBER' ? `${ORIGIN}/api/member/schedules` : `${ORIGIN}/api/guest/schedules`;
+      const params = new URLSearchParams();
+      if (routeFrom) params.append('routeFrom', routeFrom);
+      if (routeTo) params.append('routeTo', routeTo);
+      const url = params.toString() ? `${base}/search?${params.toString()}` : base;
+
+      fetch(url)
+          .then(res => res.json())
+          .then(data => renderTable(data))
+          .catch(err => console.error('Failed to fetch schedules', err));
+  }
+
+  function renderTable(items) {
+      const tbody = document.querySelector('.schedule-table tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!items || items.length === 0) {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 9;
+          td.textContent = 'No trains found for the given criteria.';
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+          return;
+      }
+      items.forEach((it) => {
+          const tr = document.createElement('tr');
+          tr.className = 'schedule-row';
+          tr.innerHTML = `
+              <td class="train-name">${it.trainName}</td>
+              <td class="from">${it.routeFrom || ''}</td>
+              <td class="to">${it.routeTo || ''}</td>
+              <td class="departure-time">${(it.departureTime || '').toString().slice(0,5)}</td>
+              <td class="arrival-time">${(it.arrivalTime || '').toString().slice(0,5)}</td>
+              <td class="duration">${it.duration || ''}</td>
+              <td class="platform">${it.platform ?? ''}</td>
+              <td class="status">${it.status || ''}</td>
+              <td><a class="book-btn" href="../../IT24101208/HTML/Register.html">Book</a></td>
+          `;
+          // Ensure visibility if CSS animation delay var is not set
+          tr.style.setProperty('--delay', '0s');
+          tr.style.opacity = '1';
+          tr.style.transform = 'translateY(0)';
+          tbody.appendChild(tr);
+      });
+  }
 </script>
 </body>
 </html>

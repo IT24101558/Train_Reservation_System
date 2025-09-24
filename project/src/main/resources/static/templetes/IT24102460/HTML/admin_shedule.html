@@ -565,6 +565,215 @@
     });
 
     // --- 🚀 END: NEW LOGIC FOR STATE MANAGEMENT 🚀 ---
+
+    // --- 🌐 START: BACKEND INTEGRATION FOR CRUD AND LISTING ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSchedules();
+        loadStats();
+
+        // Create/Update submit
+        scheduleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = formToSchedulePayload();
+            try {
+                if (currentAction === 'edit' && currentScheduleId) {
+                    await apiPut(`/api/admin/schedules/${currentScheduleId}`, payload);
+                } else {
+                    await apiPost('/api/admin/schedules', payload);
+                }
+                scheduleModal.style.display = 'none';
+                await loadSchedules();
+                await loadStats();
+            } catch (err) {
+                console.error('Save failed', err);
+                alert('Failed to save schedule. Check console for details.');
+            }
+        });
+
+        // Delete schedule
+        document.querySelectorAll('.confirm-delete-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!currentScheduleId) return;
+                try {
+                    await apiDelete(`/api/admin/schedules/${currentScheduleId}`);
+                    deleteModal.style.display = 'none';
+                    await loadSchedules();
+                    await loadStats();
+                } catch (err) {
+                    console.error('Delete failed', err);
+                    alert('Failed to delete schedule.');
+                }
+            });
+        });
+
+        // Open delete modal with selected row & open edit modal with backend data
+        document.addEventListener('click', (e) => {
+            const delBtn = e.target.closest('.delete-btn');
+            if (delBtn) {
+                const row = delBtn.closest('tr');
+                currentScheduleId = row?.dataset?.scheduleId;
+                document.getElementById('delete-train-name').textContent = row.querySelector('.train-name')?.textContent || '';
+                document.getElementById('delete-route').textContent = row.querySelector('.route')?.textContent || '';
+                deleteModal.style.display = 'flex';
+            }
+
+            const editBtn = e.target.closest('.edit-btn');
+            if (editBtn) {
+                const row = editBtn.closest('tr');
+                const id = row?.dataset?.scheduleId;
+                if (!id) return;
+                currentAction = 'edit';
+                currentScheduleId = id;
+                openEditWithData(id);
+            }
+        });
+
+        // Search and filters
+        document.getElementById('search-btn')?.addEventListener('click', () => applyFilters());
+        document.getElementById('route-filter')?.addEventListener('change', () => applyFilters());
+        document.getElementById('status-filter')?.addEventListener('change', () => applyFilters());
+    });
+
+    async function loadSchedules() {
+        try {
+            const data = await apiGet('/api/admin/schedules');
+            renderScheduleTable(data);
+        } catch (e) {
+            console.error('Failed to load schedules', e);
+        }
+    }
+
+    async function loadStats() {
+        try {
+            const stats = await apiGet('/api/admin/schedules/stats');
+            const active = stats?.ACTIVE ?? 0;
+            const delayed = stats?.DELAYED ?? 0;
+            const canceled = stats?.CANCELED ?? 0;
+            document.querySelectorAll('.stat .label').forEach((el) => {
+                const label = el.textContent?.toUpperCase();
+                if (label === 'ACTIVE TRAINS') el.previousElementSibling.textContent = active;
+                if (label === 'DELAYED') el.previousElementSibling.textContent = delayed;
+                if (label === 'CANCELED') el.previousElementSibling.textContent = canceled;
+            });
+        } catch (e) {
+            console.error('Failed to load stats', e);
+        }
+    }
+
+    function applyFilters() {
+        const q = document.getElementById('search-input')?.value.trim();
+        const route = document.getElementById('route-filter')?.value || '';
+        const status = document.getElementById('status-filter')?.value || '';
+        let routeFrom = null, routeTo = null;
+        if (route && route.includes('-')) {
+            const [from, to] = route.split('-');
+            routeFrom = from.replace(/_/g,' ').trim();
+            routeTo = to.replace(/_/g,' ').trim();
+        }
+        const params = new URLSearchParams();
+        if (q) params.append('query', q);
+        if (routeFrom) params.append('routeFrom', routeFrom);
+        if (routeTo) params.append('routeTo', routeTo);
+        if (status) params.append('status', status.toUpperCase());
+        const url = params.toString() ? `/api/admin/schedules/search?${params.toString()}` : '/api/admin/schedules';
+        apiGet(url).then(renderScheduleTable).catch(console.error);
+    }
+
+    function renderScheduleTable(items) {
+        const tbody = document.getElementById('schedule-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (!items || items.length === 0) {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 9;
+            td.textContent = 'No schedules available.';
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            return;
+        }
+        items.forEach(it => {
+            const tr = document.createElement('tr');
+            tr.dataset.scheduleId = it.id;
+            tr.innerHTML = `
+                <td class="train-name">${it.trainName || ''}</td>
+                <td class="route">${(it.routeFrom || '')} - ${(it.routeTo || '')}</td>
+                <td class="departure">${(it.departureTime || '').toString().slice(0,5)}</td>
+                <td class="arrival">${(it.arrivalTime || '').toString().slice(0,5)}</td>
+                <td class="duration">${it.duration || ''}</td>
+                <td class="platform">${it.platform ?? ''}</td>
+                <td class="status ${statusClass(it.status)}">${it.status || ''}</td>
+                <td class="price">Rs.${fmt(it.economyPrice)} / Rs.${fmt(it.businessPrice)} / Rs.${fmt(it.firstPrice)}</td>
+                <td class="actions">
+                    <button class="edit-btn" data-action="edit" title="Edit Schedule">✏️</button>
+                    <button class="delete-btn" data-action="delete" title="Delete Schedule">🗑️</button>
+                </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function fmt(v){ return (v ?? '') === '' ? '' : Number(v).toFixed(2); }
+    function statusClass(s){
+        const v = (s||'').toString().toUpperCase();
+        if (v==='ACTIVE') return 'status-active';
+        if (v==='DELAYED') return 'status-delayed';
+        if (v==='CANCELED') return 'status-canceled';
+        return 'status-maintenance';
+    }
+
+    function formToSchedulePayload(){
+        return {
+            trainName: document.getElementById('train-name').value,
+            trainType: toEnum(document.getElementById('train-type').value),
+            routeFrom: document.getElementById('route-from').value,
+            routeTo: document.getElementById('route-to').value,
+            departureTime: document.getElementById('departure-time').value+':00',
+            arrivalTime: document.getElementById('arrival-time').value+':00',
+            platform: Number(document.getElementById('platform').value),
+            status: document.getElementById('status').value.toUpperCase(),
+            economyPrice: Number(document.getElementById('economy-price').value),
+            businessPrice: Number(document.getElementById('business-price').value),
+            firstPrice: Number(document.getElementById('first-price').value),
+            notes: document.getElementById('notes').value
+        };
+    }
+    function toEnum(v){
+        const map = { 'express':'EXPRESS','regional':'REGIONAL','commuter':'COMMUTER','high-speed':'HIGH_SPEED' };
+        return map[v] || 'EXPRESS';
+    }
+
+    async function apiGet(url){ const r = await fetch(url); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+    async function apiPost(url, body){ const r = await fetch(url,{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+    async function apiPut(url, body){ const r = await fetch(url,{method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+    async function apiDelete(url){ const r = await fetch(url,{method:'DELETE'}); if(!r.ok) throw new Error(await r.text()); return true; }
+    // --- 🌐 END: BACKEND INTEGRATION ---
+
+    async function openEditWithData(id){
+        try {
+            const it = await apiGet(`/api/admin/schedules/${id}`);
+            document.getElementById('train-name').value = it.trainName || '';
+            document.getElementById('train-type').value = fromEnum(it.trainType);
+            document.getElementById('route-from').value = it.routeFrom || '';
+            document.getElementById('route-to').value = it.routeTo || '';
+            document.getElementById('departure-time').value = (it.departureTime || '').toString().slice(0,5);
+            document.getElementById('arrival-time').value = (it.arrivalTime || '').toString().slice(0,5);
+            document.getElementById('platform').value = it.platform ?? '';
+            document.getElementById('status').value = (it.status || 'ACTIVE').toString().toLowerCase();
+            document.getElementById('economy-price').value = it.economyPrice ?? '';
+            document.getElementById('business-price').value = it.businessPrice ?? '';
+            document.getElementById('first-price').value = it.firstPrice ?? '';
+            document.getElementById('notes').value = it.notes ?? '';
+            modalTitle.textContent = 'Edit Schedule';
+            scheduleModal.style.display = 'flex';
+        } catch (e) {
+            console.error('Failed to load schedule', e);
+            alert('Failed to load schedule for editing.');
+        }
+    }
+    function fromEnum(v){
+        const map = { 'EXPRESS':'express','REGIONAL':'regional','COMMUTER':'commuter','HIGH_SPEED':'high-speed' };
+        return map[v] || 'express';
+    }
 </script>
 </body>
 </html>

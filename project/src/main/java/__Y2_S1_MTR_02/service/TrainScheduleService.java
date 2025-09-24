@@ -79,16 +79,36 @@ public class TrainScheduleService {
 
     public List<TrainScheduleDTO> searchSchedules(String query, String routeFrom, String routeTo) {
         List<TrainScheduleDTO> all = getAllSchedules();
+        String q = query != null ? query.trim().toLowerCase() : null;
+        String from = routeFrom != null ? routeFrom.trim().toLowerCase() : null;
+        String to = routeTo != null ? routeTo.trim().toLowerCase() : null;
+
         return all.stream()
                 .filter(dto -> {
-                    boolean matchesQuery = query != null && (
-                            dto.getTrainName().toLowerCase().contains(query.toLowerCase()) ||
-                            dto.getRouteFrom().toLowerCase().contains(query.toLowerCase()) ||
-                            dto.getRouteTo().toLowerCase().contains(query.toLowerCase())
-                    );
-                    boolean matchesFrom = routeFrom != null && dto.getRouteFrom().equalsIgnoreCase(routeFrom);
-                    boolean matchesTo = routeTo != null && dto.getRouteTo().equalsIgnoreCase(routeTo);
-                    return (query == null && routeFrom == null && routeTo == null) || matchesQuery || matchesFrom || matchesTo;
+                    boolean anyFilter = q != null || from != null || to != null;
+
+                    String dtoFrom = dto.getRouteFrom() == null ? "" : dto.getRouteFrom().trim().toLowerCase();
+                    String dtoTo = dto.getRouteTo() == null ? "" : dto.getRouteTo().trim().toLowerCase();
+                    String dtoName = dto.getTrainName() == null ? "" : dto.getTrainName().trim().toLowerCase();
+
+                    boolean matchesQuery = (q == null) || dtoName.contains(q) || dtoFrom.contains(q) || dtoTo.contains(q);
+
+                    // Flexible contains match for locations (typed value can be part of stored value or vice-versa)
+                    boolean fromOk = (from == null) || dtoFrom.contains(from) || from.contains(dtoFrom);
+                    boolean toOk = (to == null) || dtoTo.contains(to) || to.contains(dtoTo);
+
+                    boolean locationMatch;
+                    if (from != null && to != null) {
+                        locationMatch = fromOk && toOk;
+                    } else if (from != null) {
+                        locationMatch = fromOk;
+                    } else if (to != null) {
+                        locationMatch = toOk;
+                    } else {
+                        locationMatch = true;
+                    }
+
+                    return !anyFilter || (matchesQuery && locationMatch);
                 })
                 .collect(Collectors.toList());
     }

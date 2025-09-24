@@ -32,51 +32,52 @@
             <div class="form-row">
                 <div class="input-group">
                     <label for="from">From</label>
-                    <select id="from" name="from">
-                        <option value="">Select departure station</option>
-                        <option value="central" selected>Central Station</option>
-                        <option value="north">North Terminal</option>
-                        <option value="south">South Junction</option>
-                        <option value="east">East Point</option>
-                        <option value="west">West Hub</option>
-                    </select>
+                    <input type="text" id="from" name="from" placeholder="Type departure station">
                 </div>
                 <div class="input-group">
                     <label for="to">To</label>
-                    <select id="to" name="to">
-                        <option value="">Select destination station</option>
-                        <option value="central">Central Station</option>
-                        <option value="north">North Terminal</option>
-                        <option value="south" selected>South Junction</option>
-                        <option value="east">East Point</option>
-                        <option value="west">West Hub</option>
+                    <input type="text" id="to" name="to" placeholder="Type destination station">
+                </div>
+                <div class="input-group">
+                    <label for="userType">User Type</label>
+                    <select id="userType" name="userType">
+                        <option value="MEMBER" selected>Member</option>
+                        <option value="GUEST">Guest</option>
                     </select>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="input-group">
-                    <label for="date">Date</label>
-                    <input type="date" id="date" name="date" value="2023-12-15">
-                </div>
-                <div class="input-group">
-                    <label for="time">Time</label>
-                    <select id="time" name="time">
-                        <option value="any">Any Time</option>
-                        <option value="morning">Morning (6AM-12PM)</option>
-                        <option value="afternoon" selected>Afternoon (12PM-6PM)</option>
-                        <option value="evening">Evening (6PM-12AM)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="class">Class</label>
-                    <select id="class" name="class">
-                        <option value="economy">Economy</option>
-                        <option value="business" selected>Business</option>
-                        <option value="first">First Class</option>
-                    </select>
-                </div>
+            
+            <div class="button-group">
+                <button class="search-btn">Search Trains</button>
+                <button type="button" class="search-btn refresh-btn" onclick="fetchAndRenderSchedules()">Refresh Schedules</button>
             </div>
-            <button class="search-btn">Search Trains</button>
+        </div>
+    </section>
+
+    <section class="schedule-container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="today">Today's Schedule</button>
+        </div>
+
+        <div class="schedule-table-container">
+            <table class="schedule-table">
+                <thead>
+                <tr>
+                    <th>Train</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Duration</th>
+                    <th>Platform</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <!-- Today's schedules will be loaded here -->
+                </tbody>
+            </table>
         </div>
     </section>
 
@@ -488,6 +489,228 @@
             }, 300 + index * 100);
         });
     });
+// Add dynamic search to call backend
+document.addEventListener('DOMContentLoaded', () => {
+    // Find the main search button (not the refresh/clear buttons)
+    const searchBtn = document.querySelector('.button-group .search-btn:first-child');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent form submission
+            const from = document.getElementById('from')?.value.trim();
+            const to = document.getElementById('to')?.value.trim();
+            const userType = document.getElementById('userType')?.value || 'MEMBER';
+            console.log('=== SEARCH BUTTON CLICKED ===');
+            console.log('From:', from);
+            console.log('To:', to);
+            console.log('UserType:', userType);
+            // Search should filter the Today's Schedule table
+            fetchAndRenderSchedules({ routeFrom: from || null, routeTo: to || null, userType });
+        });
+    } else {
+        console.error('Search button not found!');
+    }
+    // initial load: show all schedules for member
+    fetchAndRenderSchedules({ userType: 'MEMBER' });
+
+    // auto-refresh every 10s to reflect admin changes using current filters
+    setInterval(() => {
+        const from = document.getElementById('from')?.value.trim();
+        const to = document.getElementById('to')?.value.trim();
+        const userType = document.getElementById('userType')?.value || 'MEMBER';
+        fetchAndRenderSchedules({ routeFrom: from || null, routeTo: to || null, userType });
+    }, 10000);
+});
+
+function fetchSchedules({ routeFrom = null, routeTo = null, userType = 'MEMBER' } = {}) {
+    const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+        ? 'http://localhost:8080'
+        : window.location.origin;
+    const base = userType === 'GUEST' ? `${ORIGIN}/api/guest/schedules` : `${ORIGIN}/api/member/schedules`;
+    const params = new URLSearchParams();
+    if (routeFrom) params.append('routeFrom', routeFrom);
+    if (routeTo) params.append('routeTo', routeTo);
+    const url = params.toString() ? `${base}/search?${params.toString()}` : base;
+    fetch(url)
+        .then(r => r.json())
+        .then(data => renderMemberResults(data))
+        .catch(e => console.error('Failed to fetch schedules', e));
+}
+
+function renderMemberResults(items) {
+    const container = document.querySelector('.train-results');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!items || items.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.padding = '1rem';
+        empty.textContent = 'No trains found for the given criteria.';
+        container.appendChild(empty);
+        return;
+    }
+    items.forEach(it => {
+        const card = document.createElement('div');
+        card.className = 'train-card';
+        card.innerHTML = `
+            <div class="train-header">
+                <div class="train-info">
+                    <div class="train-number">${it.trainName || ''}</div>
+                    <div class="train-type">${it.trainType || ''}</div>
+                </div>
+                <div class="train-pricing">
+                    <div class="price">From Rs.${it.economyPrice?.toFixed ? it.economyPrice.toFixed(2) : it.economyPrice}</div>
+                    <div class="save-tag">Save 15% as Member</div>
+                </div>
+            </div>
+            <div class="train-schedule">
+                <div class="departure">
+                    <div class="time">${(it.departureTime || '').toString().slice(0,5)}</div>
+                    <div class="station">From: ${it.routeFrom || ''}</div>
+                    <div class="platform">Platform ${it.platform ?? ''}</div>
+                </div>
+                <div class="duration">
+                    <div class="line"></div>
+                    <div class="time">${it.duration || ''}</div>
+                    <div class="direct">Direct</div>
+                </div>
+                <div class="arrival">
+                    <div class="time">${(it.arrivalTime || '').toString().slice(0,5)}</div>
+                    <div class="station">To: ${it.routeTo || ''}</div>
+                    <div class="platform">Platform ${it.platform ?? ''}</div>
+                </div>
+            </div>
+            <div class="train-actions">
+                <a href="../../IT24101525/HTML/seatallocation.html" class="select-btn">Book Now</a>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function fetchAndRenderSchedules({ routeFrom = null, routeTo = null, userType = 'MEMBER' } = {}) {
+    console.log('=== fetchAndRenderSchedules called ===');
+    console.log('routeFrom:', routeFrom);
+    console.log('routeTo:', routeTo);
+    console.log('userType:', userType);
+    
+    const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+        ? 'http://localhost:8080'
+        : window.location.origin;
+    // Use appropriate endpoint based on userType
+    const base = userType === 'GUEST' ? `${ORIGIN}/api/guest/schedules` : `${ORIGIN}/api/member/schedules`;
+    const params = new URLSearchParams();
+    if (routeFrom) params.append('routeFrom', routeFrom);
+    if (routeTo) params.append('routeTo', routeTo);
+    const url = params.toString() ? `${base}/search?${params.toString()}` : base;
+
+    console.log('ORIGIN:', ORIGIN);
+    console.log('Base URL:', base);
+    console.log('Search params:', params.toString());
+    console.log('Final URL:', url);
+    
+    fetch(url)
+        .then(res => {
+            console.log('Response status:', res.status);
+            console.log('Response ok:', res.ok);
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log('Schedules data received:', data);
+            console.log('Data type:', typeof data);
+            console.log('Data length:', Array.isArray(data) ? data.length : 'not an array');
+            renderTable(data);
+        })
+        .catch(err => {
+            console.error('Failed to fetch schedules', err);
+            console.error('Error details:', err.message);
+            const tbody = document.getElementById('schedule-body');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="9" style="color: red;">Error loading schedules. Check console for details.</td></tr>';
+            }
+        });
+}
+
+function renderTable(items) {
+    const tbody = document.getElementById('schedule-body');
+    console.log('renderTable called with:', items);
+    console.log('tbody element:', tbody);
+    
+    if (!tbody) {
+        console.error('schedule-body tbody not found!');
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    
+    if (!items || items.length === 0) {
+        console.log('No items to render, showing empty message');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 9;
+        td.textContent = 'No trains found for the given criteria.';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+    }
+    
+    console.log(`Rendering ${items.length} schedule items`);
+    items.forEach((it, index) => {
+        console.log(`Rendering item ${index}:`, it);
+        const tr = document.createElement('tr');
+        tr.className = 'schedule-row';
+        tr.style.setProperty('--delay', `${index * 0.1}s`);
+        // Force visibility
+        tr.style.opacity = '1';
+        tr.style.transform = 'translateY(0)';
+        
+        tr.innerHTML = `
+            <td class="train-name">${it.trainName || ''}</td>
+            <td class="from">${it.routeFrom || ''}</td>
+            <td class="to">${it.routeTo || ''}</td>
+            <td class="departure-time">${(it.departureTime || '').toString().slice(0,5)}</td>
+            <td class="arrival-time">${(it.arrivalTime || '').toString().slice(0,5)}</td>
+            <td class="duration">${it.duration || ''}</td>
+            <td class="platform">${it.platform ?? ''}</td>
+            <td class="status status-${(it.status || '').toString().toLowerCase()}">${it.status || ''}</td>
+            <td><a href="../../IT24101525/HTML/seatallocation.html" class="book-btn">Book</a></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Load schedules on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, fetching initial schedules...');
+    console.log('Current URL:', window.location.href);
+    console.log('Origin:', window.location.origin);
+    fetchAndRenderSchedules();
+    
+    // Auto-refresh every 10 seconds
+    setInterval(() => {
+        console.log('Auto-refreshing schedules...');
+        fetchAndRenderSchedules();
+    }, 10000);
+});
+
+// Also try to load immediately if DOM is already loaded
+if (document.readyState === 'loading') {
+    console.log('DOM still loading, waiting for DOMContentLoaded...');
+} else {
+    console.log('DOM already loaded, fetching schedules immediately...');
+    fetchAndRenderSchedules();
+}
+
+// Clear search function
+function clearSearch() {
+    console.log('Clearing search filters...');
+    document.getElementById('from').value = '';
+    document.getElementById('to').value = '';
+    document.getElementById('userType').value = 'MEMBER';
+    // Load all schedules without filters
+    fetchAndRenderSchedules();
+}
 </script>
 </body>
 </html>

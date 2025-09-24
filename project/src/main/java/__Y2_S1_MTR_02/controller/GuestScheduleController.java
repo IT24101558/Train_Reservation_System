@@ -18,8 +18,9 @@ public class GuestScheduleController {
     private TrainScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<List<TrainScheduleDTO>> getAllActiveSchedules() {
-        return ResponseEntity.ok(scheduleService.getActiveSchedules());
+    public ResponseEntity<List<TrainScheduleDTO>> getAllSchedulesForGuest() {
+        // Show all available schedules to guests on load
+        return ResponseEntity.ok(scheduleService.getAllSchedules());
     }
 
     @GetMapping("/search")
@@ -28,6 +29,7 @@ public class GuestScheduleController {
             @RequestParam(required = false) String routeFrom,
             @RequestParam(required = false) String routeTo) {
 
-        return ResponseEntity.ok(scheduleService.searchActiveSchedules(query, routeFrom, routeTo));
+        // Show all matching schedules (not only ACTIVE) for guest search
+        return ResponseEntity.ok(scheduleService.searchSchedules(query, routeFrom, routeTo));
     }
 }

@@ -199,6 +199,7 @@ body {
     display: flex;
     background-color: var(--bg-color);
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
 .tab-btn {
@@ -210,11 +211,12 @@ body {
     cursor: pointer;
     transition: var(--transition);
     position: relative;
+    color: var(--text-color);
 }
 
 .tab-btn.active {
     background-color: var(--white);
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .tab-btn.active::after {
