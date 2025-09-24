@@ -108,6 +108,30 @@
         </div>
     </section>
 
+    <!-- Feedback History -->
+    <section class="feedback-history-section">
+        <div class="card">
+            <div class="card-header">
+                <h3>Your Feedback History</h3>
+                <p>View and edit your previous feedback submissions.</p>
+            </div>
+            <div id="feedback-history-container">
+                <div id="feedback-history-empty" style="display:none; padding: 12px 0; color: #888;">No feedback submitted yet.</div>
+                <table class="feedback-history-table" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align:left; border-bottom: 1px solid #333;">
+                            <th style="padding: 8px;">Date & Time</th>
+                            <th style="padding: 8px;">Rating</th>
+                            <th style="padding: 8px;">Message</th>
+                            <th style="padding: 8px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedback-history-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <!-- Footer -->
@@ -155,6 +179,7 @@
 <script>
     let currentUserFullName = null;
     let currentUserEmail = null;
+    let editingFeedbackId = null; // if set, submit will update existing feedback
 
     document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -167,6 +192,9 @@
             passengerName: currentUserFullName,
             email: currentUserEmail
         };
+        if (editingFeedbackId) {
+            feedback.id = editingFeedbackId;
+        }
 
         try {
             const response = await fetch('/api/feedback', {
@@ -179,7 +207,10 @@
 
             if (response.ok) {
                 alert('Feedback submitted successfully!');
-                window.location.reload();
+                // reset editing state and reload history
+                editingFeedbackId = null;
+                document.getElementById('feedback-form').reset();
+                await loadFeedbackHistory();
             } else {
                 alert('Failed to submit feedback. Please try again.');
             }
@@ -267,7 +298,62 @@
             optionEl.textContent = 'Other';
             journeySelect.appendChild(optionEl);
         }
+
+        // After profile load, fetch history
+        await loadFeedbackHistory();
     });
+
+    async function loadFeedbackHistory() {
+        const body = document.getElementById('feedback-history-body');
+        const emptyEl = document.getElementById('feedback-history-empty');
+        if (!body) return;
+        body.innerHTML = '';
+        try {
+            const res = await fetch('/api/feedback');
+            if (!res.ok) throw new Error('Failed to load feedbacks');
+            const all = await res.json();
+            const mine = (currentUserEmail)
+                ? all.filter(f => (f.email || '').toLowerCase() === currentUserEmail.toLowerCase())
+                : [];
+            if (mine.length === 0) {
+                emptyEl && (emptyEl.style.display = 'block');
+                return;
+            }
+            emptyEl && (emptyEl.style.display = 'none');
+            mine.sort((a,b)=> new Date(b.dateTime||0) - new Date(a.dateTime||0));
+            mine.forEach(f => {
+                const tr = document.createElement('tr');
+                const dt = f.dateTime ? new Date(f.dateTime).toLocaleString() : '';
+                const stars = '⭐'.repeat(Number(f.rating||0));
+                tr.innerHTML = `
+                    <td style="padding:8px; white-space:nowrap;">${dt}</td>
+                    <td style="padding:8px;">${stars}</td>
+                    <td style="padding:8px; max-width:480px; overflow:hidden; text-overflow:ellipsis;">${(f.message||'')}</td>
+                    <td style="padding:8px;"><button class="edit-feedback-btn" data-id="${f.id}" data-rating="${f.rating}" data-message="${(f.message||'').replace(/"/g,'&quot;')}">Edit</button></td>
+                `;
+                body.appendChild(tr);
+            });
+
+            // wire edit buttons
+            document.querySelectorAll('.edit-feedback-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = Number(btn.getAttribute('data-id'));
+                    const rating = Number(btn.getAttribute('data-rating'));
+                    const message = btn.getAttribute('data-message') || '';
+                    // set form values
+                    const ratingInput = document.querySelector(`input[name="rating"][value="${rating}"]`);
+                    if (ratingInput) ratingInput.checked = true;
+                    document.getElementById('message').value = message;
+                    editingFeedbackId = id;
+                    // scroll to form
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        } catch (e) {
+            console.error('Failed to load feedback history', e);
+            emptyEl && (emptyEl.style.display = 'block');
+        }
+    }
 </script>
 </body>
 </html>
