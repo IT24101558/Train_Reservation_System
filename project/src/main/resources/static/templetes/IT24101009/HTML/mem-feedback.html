@@ -83,7 +83,7 @@
                 <!-- Date of Travel -->
                 <div class="form-group">
                     <label for="travel-date">Date of Travel</label>
-                    <input type="date" id="travel-date" name="travel-date" required />
+                    <input type="date" id="travel-date" name="travel-date" max="" required />
                 </div>
 
                 <!-- Feedback Message -->
@@ -230,6 +230,10 @@
             card.style.transform = 'translateY(0)';
             card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         }, 100);
+
+        // Set maximum date to today to prevent future date selection
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('travel-date').setAttribute('max', today);
 
         // Load logged-in user's name and email (if available)
         try {
