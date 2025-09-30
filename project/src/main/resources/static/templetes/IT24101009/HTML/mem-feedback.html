@@ -18,7 +18,7 @@
         <ul>
             <li><a href="../../IT24101525/HTML/userprofile.html">My Profile</a></li>
             <li><a href="../../IT24102460/HTML/mem_shedule.html">Schedule</a></li>
-            <li><a href="../../IT24101558/HTML/bookinghistory.html">Booking History</a></li>
+            <li><a href="#">Booking History</a></li>
             <li><a href="../../IT24300073/HTML/notification.html">Notifications</a></li>
             <li><a href="#" class="active">Feedback</a></li>
             <li><a href="../../IT24101525/HTML/usersettings.html">Settings</a></li>
@@ -45,6 +45,19 @@
             </div>
 
             <form id="feedback-form" class="feedback-form">
+                <div id="identity-fields">
+                    <!-- Passenger Name -->
+                    <div class="form-group">
+                        <label for="passenger-name">Your Name</label>
+                        <input type="text" id="passenger-name" name="passenger-name" placeholder="Enter your full name" />
+                    </div>
+
+                    <!-- Passenger Email -->
+                    <div class="form-group">
+                        <label for="passenger-email">Email</label>
+                        <input type="email" id="passenger-email" name="passenger-email" placeholder="name@example.com" />
+                    </div>
+                </div>
                 <!-- Rating -->
                 <div class="form-group">
                     <label for="rating">Overall Experience</label>
@@ -77,13 +90,17 @@
                     <label for="train-journey">Train Journey</label>
                     <select id="train-journey" name="train-journey" required>
                         <option value="">Select train journey</option>
+                        <option value="Mountain Route">Mountain Route (Colombo → Kandy)</option>
+                        <option value="Heritage Route">Heritage Route (Kandy → Ella)</option>
+                        <option value="Northern Route">Northern Route (Anuradapura → Jaffna)</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
                 <!-- Date of Travel -->
                 <div class="form-group">
                     <label for="travel-date">Date of Travel</label>
-                    <input type="date" id="travel-date" name="travel-date" max="" required />
+                    <input type="date" id="travel-date" name="travel-date" required />
                 </div>
 
                 <!-- Feedback Message -->
@@ -98,6 +115,32 @@
         </div>
     </section>
 
+    <!-- Feedback History -->
+    <section class="feedback-history-container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Your Feedback History</h3>
+                <p>View and edit the feedback you have submitted previously.</p>
+            </div>
+            <style>
+                .feedback-list{display:flex;flex-direction:column;gap:12px}
+                .feedback-card{display:flex;justify-content:space-between;align-items:flex-start;border:1px solid #e6e6e6;border-radius:10px;padding:14px 16px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+                .feedback-left{max-width:80%}
+                .feedback-header{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+                .stars{color:#f59e0b;font-size:16px}
+                .date{color:#6b7280;font-size:12px}
+                .message{margin:0;color:#111827}
+                .feedback-actions{display:flex;gap:8px}
+                .btn{border:none;border-radius:6px;padding:6px 10px;cursor:pointer}
+                .btn.edit{background:#2563eb;color:white}
+                .btn.delete{background:#dc2626;color:white}
+            </style>
+            <div id="feedback-history" class="feedback-history-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
     <!-- Confirmation Message -->
     <section class="confirmation-section" id="confirmation" style="display: none;">
         <div class="card">
@@ -105,30 +148,6 @@
             <h3>Thank You for Your Feedback!</h3>
             <p>We've received your input and will use it to improve our services.</p>
             <button class="back-btn" onclick="window.location.href='member-schedule.html'">Back to Schedule</button>
-        </div>
-    </section>
-
-    <!-- Feedback History -->
-    <section class="feedback-history-section">
-        <div class="card">
-            <div class="card-header">
-                <h3>Your Feedback History</h3>
-                <p>View and edit your previous feedback submissions.</p>
-            </div>
-            <div id="feedback-history-container">
-                <div id="feedback-history-empty" style="display:none; padding: 12px 0; color: #888;">No feedback submitted yet.</div>
-                <table class="feedback-history-table" style="width:100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="text-align:left; border-bottom: 1px solid #333;">
-                            <th style="padding: 8px;">Date & Time</th>
-                            <th style="padding: 8px;">Rating</th>
-                            <th style="padding: 8px;">Message</th>
-                            <th style="padding: 8px;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feedback-history-body"></tbody>
-                </table>
-            </div>
         </div>
     </section>
 
@@ -177,24 +196,194 @@
 </footer>
 
 <script>
-    let currentUserFullName = null;
-    let currentUserEmail = null;
-    let editingFeedbackId = null; // if set, submit will update existing feedback
+    // Attempt to derive current user's email and name from localStorage (set at login elsewhere)
+    function getCurrentUserEmail() {
+        return localStorage.getItem('userEmail') ||
+               localStorage.getItem('email') ||
+               localStorage.getItem('USER_EMAIL') || '';
+    }
+
+    function getCurrentUserName() {
+        return localStorage.getItem('userFullName') ||
+               localStorage.getItem('fullName') ||
+               localStorage.getItem('USER_FULL_NAME') || '';
+    }
+
+    async function fetchUserProfile(email) {
+        try {
+            const res = await fetch(`/api/auth/profile?email=${encodeURIComponent(email)}`);
+            if (!res.ok) return null;
+            return await res.json(); // { id, fullName, email, phone }
+        } catch (e) {
+            console.error('Failed to fetch user profile', e);
+            return null;
+        }
+    }
+
+    async function resolveCurrentUser() {
+        // Try localStorage first
+        let email = getCurrentUserEmail();
+        // Try URL param fallback if not set
+        if (!email) {
+            const params = new URLSearchParams(window.location.search);
+            const urlEmail = params.get('email');
+            if (urlEmail) {
+                email = urlEmail;
+                localStorage.setItem('userEmail', email);
+            }
+        }
+
+        if (!email) return null;
+
+        const profile = await fetchUserProfile(email);
+        if (profile && profile.email) {
+            localStorage.setItem('userEmail', profile.email);
+            if (profile.fullName) localStorage.setItem('userFullName', profile.fullName);
+
+            // Prefill inputs
+            const emailEl = document.getElementById('passenger-email');
+            if (emailEl) emailEl.value = profile.email;
+            const nameEl = document.getElementById('passenger-name');
+            if (nameEl && profile.fullName) nameEl.value = profile.fullName;
+
+            return profile;
+        }
+        return null;
+    }
+
+    async function loadFeedbackHistory() {
+        const historyContainer = document.getElementById('feedback-history');
+        historyContainer.innerHTML = '<p>Loading your feedback...</p>';
+
+        try {
+            const res = await fetch('/api/feedback');
+            if (!res.ok) throw new Error('Failed to load feedback');
+            const all = await res.json();
+
+            const userEmail = getCurrentUserEmail();
+            const mine = userEmail ? all.filter(f => (f.email || '').toLowerCase() === userEmail.toLowerCase()) : [];
+
+            if (!userEmail) {
+                historyContainer.innerHTML = '<p>Sign in to view your feedback history.</p>';
+                return;
+            }
+
+            if (!mine.length) {
+                historyContainer.innerHTML = '<p>No feedback found for your account yet.</p>';
+                return;
+            }
+
+            // Sort by dateTime desc if available
+            mine.sort((a, b) => {
+                const da = a.dateTime ? new Date(a.dateTime) : 0;
+                const db = b.dateTime ? new Date(b.dateTime) : 0;
+                return db - da;
+            });
+
+            const list = document.createElement('div');
+            list.className = 'feedback-list';
+            mine.forEach(item => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'feedback-card';
+                const dateText = item.dateTime ? new Date(item.dateTime).toLocaleString() : '—';
+                const stars = '★★★★★'.slice(0, Math.max(0, Math.min(5, item.rating || 0)));
+                wrapper.innerHTML = `
+                    <div class="feedback-left">
+                        <div class="feedback-header">
+                            <span class="stars" aria-label="${item.rating} stars">${stars}</span>
+                            <span class="date">${dateText}</span>
+                        </div>
+                        <p class="message">${(item.message || '').replace(/</g, '&lt;')}</p>
+                    </div>
+                    <div class="feedback-actions">
+                        <button class="btn edit edit-btn" data-id="${item.id}">Edit</button>
+                        <button class="btn delete delete-btn" data-id="${item.id}">Delete</button>
+                    </div>
+                `;
+                list.appendChild(wrapper);
+            });
+
+            historyContainer.innerHTML = '';
+            historyContainer.appendChild(list);
+
+            // Wire up actions
+            historyContainer.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    const item = mine.find(x => String(x.id) === String(id));
+                    if (item) populateFormForEdit(item);
+                });
+            });
+            historyContainer.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.getAttribute('data-id');
+                    if (!confirm('Delete this feedback?')) return;
+                    try {
+                        const delRes = await fetch(`/api/feedback/${id}`, { method: 'DELETE' });
+                        if (delRes.ok) {
+                            await loadFeedbackHistory();
+                        } else {
+                            alert('Failed to delete feedback.');
+                        }
+                    } catch (err) {
+                        console.error('Delete failed', err);
+                        alert('An error occurred while deleting.');
+                    }
+                });
+            });
+        } catch (err) {
+            console.error(err);
+            historyContainer.innerHTML = '<p>Failed to load your feedback. Please try again later.</p>';
+        }
+    }
+
+    function populateFormForEdit(item) {
+        // Hidden id field stored on the form element dataset
+        const form = document.getElementById('feedback-form');
+        form.dataset.editId = item.id;
+
+        // Rating
+        const ratingInput = document.querySelector(`input[name="rating"][value="${item.rating}"]`);
+        if (ratingInput) ratingInput.checked = true;
+
+        // Message
+        document.getElementById('message').value = item.message || '';
+
+        // Optional fields (may not persist server-side)
+        // Keep current selections; user can change if desired
+
+        // Scroll to form
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const feedback = {
-            rating: document.querySelector('input[name="rating"]:checked').value,
-            trainJourney: document.getElementById('train-journey').value,
-            travelDate: document.getElementById('travel-date').value,
-            message: document.getElementById('message').value,
-            passengerName: currentUserFullName,
-            email: currentUserEmail
-        };
-        if (editingFeedbackId) {
-            feedback.id = editingFeedbackId;
+        // Prefer resolved profile; fallback to inputs and then persist
+        let userEmail = getCurrentUserEmail();
+        let userName = getCurrentUserName();
+        if (!userEmail) {
+            const emailInput = document.getElementById('passenger-email').value.trim();
+            if (emailInput) {
+                userEmail = emailInput;
+                localStorage.setItem('userEmail', userEmail);
+            }
         }
+        if (!userName) {
+            const nameInput = document.getElementById('passenger-name').value.trim();
+            if (nameInput) {
+                userName = nameInput;
+                localStorage.setItem('userFullName', userName);
+            }
+        }
+
+        const payload = {
+            id: this.dataset.editId ? Number(this.dataset.editId) : undefined,
+            passengerName: userName || undefined,
+            email: userEmail || undefined,
+            rating: Number(document.querySelector('input[name="rating"]:checked').value),
+            message: document.getElementById('message').value
+        };
 
         try {
             const response = await fetch('/api/feedback', {
@@ -202,14 +391,14 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(feedback)
+                body: JSON.stringify(payload)
             });
 
             if (response.ok) {
-                alert('Feedback submitted successfully!');
-                // reset editing state and reload history
-                editingFeedbackId = null;
-                document.getElementById('feedback-form').reset();
+                alert(this.dataset.editId ? 'Feedback updated successfully!' : 'Feedback submitted successfully!');
+                // Clear edit mode and form fields (except journey/date which are optional)
+                delete this.dataset.editId;
+                this.reset();
                 await loadFeedbackHistory();
             } else {
                 alert('Failed to submit feedback. Please try again.');
@@ -220,144 +409,43 @@
         }
     });
 
-    // Add animation to card
-    document.addEventListener('DOMContentLoaded', async () => {
-        const card = document.querySelector('.card');
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        }, 100);
+    // Add animation to first card and load history
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstCard = document.querySelector('.feedback-form-container .card');
+        if (firstCard) {
+            firstCard.style.opacity = '0';
+            firstCard.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                firstCard.style.opacity = '1';
+                firstCard.style.transform = 'translateY(0)';
+                firstCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            }, 100);
+        }
 
-        // Set maximum date to today to prevent future date selection
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('travel-date').setAttribute('max', today);
-
-        // Load logged-in user's name and email (if available)
-        try {
-            const storedEmail = (localStorage.getItem('slraile_email') || '').trim();
-            if (storedEmail) {
-                const profileRes = await fetch(window.location.origin + '/api/auth/profile?email=' + encodeURIComponent(storedEmail));
-                if (profileRes.ok) {
-                    const profile = await profileRes.json();
-                    currentUserFullName = (profile.fullName || '').trim() || null;
-                    currentUserEmail = (profile.email || '').trim() || null;
-                } else {
-                    currentUserEmail = storedEmail; // at least include email if profile fetch fails
+        // Prefill via API; hide identity inputs if profile present; fallback to stored values
+        (async () => {
+            const prof = await resolveCurrentUser();
+            const identityWrap = document.getElementById('identity-fields');
+            if (prof) {
+                if (identityWrap) identityWrap.style.display = 'none';
+            } else {
+                const preEmail = getCurrentUserEmail();
+                const preName = getCurrentUserName();
+                if (preEmail) {
+                    const emailEl = document.getElementById('passenger-email');
+                    if (emailEl) emailEl.value = preEmail;
                 }
+                if (preName) {
+                    const nameEl = document.getElementById('passenger-name');
+                    if (nameEl) nameEl.value = preName;
+                }
+                if (preEmail && preName && identityWrap) identityWrap.style.display = 'none';
             }
-        } catch (e) {
-            // Non-fatal; allow anonymous feedback if profile not available
-        }
+            await loadFeedbackHistory();
+        })();
 
-        // Populate train journeys from backend schedules
-        const journeySelect = document.getElementById('train-journey');
-        try {
-            const res = await fetch('/api/member/schedules');
-            if (!res.ok) throw new Error('Failed to load schedules');
-            const schedules = await res.json();
-
-            // Build a unique list of journeys by train name + route
-            const seen = new Set();
-            const options = [];
-            schedules.forEach(s => {
-                const trainName = s.trainName || '';
-                const routeFrom = s.routeFrom || '';
-                const routeTo = s.routeTo || '';
-                if (!trainName) return;
-                const key = `${trainName}|${routeFrom}|${routeTo}`;
-                if (seen.has(key)) return;
-                seen.add(key);
-                const label = routeFrom && routeTo
-                    ? `${trainName} (${routeFrom} → ${routeTo})`
-                    : trainName;
-                options.push({ value: trainName, label });
-            });
-
-            // Sort options by label for nicer UX
-            options.sort((a, b) => a.label.localeCompare(b.label));
-
-            // Append to select
-            options.forEach(opt => {
-                const optionEl = document.createElement('option');
-                optionEl.value = opt.value;
-                optionEl.textContent = opt.label;
-                journeySelect.appendChild(optionEl);
-            });
-
-            // Fallback if no schedules
-            if (options.length === 0) {
-                const optionEl = document.createElement('option');
-                optionEl.value = 'Other';
-                optionEl.textContent = 'Other';
-                journeySelect.appendChild(optionEl);
-            }
-        } catch (err) {
-            console.error('Error loading train journeys:', err);
-            // Graceful fallback
-            const optionEl = document.createElement('option');
-            optionEl.value = 'Other';
-            optionEl.textContent = 'Other';
-            journeySelect.appendChild(optionEl);
-        }
-
-        // After profile load, fetch history
-        await loadFeedbackHistory();
+        // loadFeedbackHistory is invoked after profile resolution above
     });
-
-    async function loadFeedbackHistory() {
-        const body = document.getElementById('feedback-history-body');
-        const emptyEl = document.getElementById('feedback-history-empty');
-        if (!body) return;
-        body.innerHTML = '';
-        try {
-            const res = await fetch('/api/feedback');
-            if (!res.ok) throw new Error('Failed to load feedbacks');
-            const all = await res.json();
-            const mine = (currentUserEmail)
-                ? all.filter(f => (f.email || '').toLowerCase() === currentUserEmail.toLowerCase())
-                : [];
-            if (mine.length === 0) {
-                emptyEl && (emptyEl.style.display = 'block');
-                return;
-            }
-            emptyEl && (emptyEl.style.display = 'none');
-            mine.sort((a,b)=> new Date(b.dateTime||0) - new Date(a.dateTime||0));
-            mine.forEach(f => {
-                const tr = document.createElement('tr');
-                const dt = f.dateTime ? new Date(f.dateTime).toLocaleString() : '';
-                const stars = '⭐'.repeat(Number(f.rating||0));
-                tr.innerHTML = `
-                    <td style="padding:8px; white-space:nowrap;">${dt}</td>
-                    <td style="padding:8px;">${stars}</td>
-                    <td style="padding:8px; max-width:480px; overflow:hidden; text-overflow:ellipsis;">${(f.message||'')}</td>
-                    <td style="padding:8px;"><button class="edit-feedback-btn" data-id="${f.id}" data-rating="${f.rating}" data-message="${(f.message||'').replace(/"/g,'&quot;')}">Edit</button></td>
-                `;
-                body.appendChild(tr);
-            });
-
-            // wire edit buttons
-            document.querySelectorAll('.edit-feedback-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = Number(btn.getAttribute('data-id'));
-                    const rating = Number(btn.getAttribute('data-rating'));
-                    const message = btn.getAttribute('data-message') || '';
-                    // set form values
-                    const ratingInput = document.querySelector(`input[name="rating"][value="${rating}"]`);
-                    if (ratingInput) ratingInput.checked = true;
-                    document.getElementById('message').value = message;
-                    editingFeedbackId = id;
-                    // scroll to form
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            });
-        } catch (e) {
-            console.error('Failed to load feedback history', e);
-            emptyEl && (emptyEl.style.display = 'block');
-        }
-    }
 </script>
 </body>
 </html>
