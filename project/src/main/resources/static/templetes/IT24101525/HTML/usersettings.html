@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Settings - SLRailE</title>
     <link rel="stylesheet" href="../CSS/usersettings.css">
+    <script src="../JS/usersettings.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -30,14 +31,11 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="welcome-container">
-            <h1>Settings, <span class="member-name">Saman Perera</span></h1>
+            <h1>Settings, <span class="member-name">Loading...</span></h1>
 
         </div>
         <div class="quick-actions">
-            <button class="action-btn" data-action="edit-profile">
-                <div class="icon">👤</div>
-                <span>Edit Profile</span>
-            </button>
+
 
             <button class="action-btn" data-action="payments">
                 <div class="icon">💳</div>
@@ -67,21 +65,21 @@
                 <div class="form-row">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" value="Saman">
+                        <input type="text" id="firstName" placeholder="Enter first name">
                     </div>
                     <div class="input-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" value="Perera">
+                        <input type="text" id="lastName" placeholder="Enter last name">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="input-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" value="saman.perera@example.com">
+                        <input type="email" id="email" placeholder="Enter email address">
                     </div>
                     <div class="input-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" value="+94 77 123 4567">
+                        <input type="tel" id="phone" placeholder="Enter phone number">
                     </div>
                 </div>
                 <div class="form-row">
@@ -215,7 +213,7 @@
                 <div class="form-row">
                     <div class="input-group">
                         <label for="card-name">Name on Card</label>
-                        <input type="text" id="card-name" value="Saman Perera">
+                        <input type="text" id="card-name" value="">
                     </div>
                 </div>
                 <div class="form-row">
@@ -276,31 +274,9 @@
     </div>
 </footer>
 
-<!-- Script for Tab Switching -->
+<!-- Additional Scripts -->
 <script>
-    // Tab switching logic
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active from all tabs and content
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            // Activate selected
-            btn.classList.add('active');
-            const tabId = btn.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
-        });
-    });
-
-    // Form submission
-    document.querySelectorAll('.settings-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Settings saved successfully!');
-        });
-    });
-
-    // Remove card
+    // Remove card functionality
     document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             if (confirm('Are you sure you want to remove this card?')) {
