@@ -7,6 +7,7 @@ import __Y2_S1_MTR_02.repository.BookingRepository;
 import __Y2_S1_MTR_02.repository.TrainScheduleRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,18 @@ public class BookingService {
 
     public List<Booking> getBookingsForMember(String memberEmail) {
         return bookingRepository.findByMemberEmailOrderByCreatedAtDesc(memberEmail);
+    }
+
+    // For seat map: gather occupied seat numbers for a given schedule and date
+    public List<String> getOccupiedSeatNumbers(Long trainScheduleId, String travelDateIso) {
+        LocalDate date = LocalDate.parse(travelDateIso);
+        return bookingRepository.findByTrainSchedule_IdAndTravelDate(trainScheduleId, date)
+                .stream()
+                .flatMap(b -> Arrays.stream(b.getSeatNumbers().split(",")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .distinct()
+                .toList();
     }
 
     @Transactional
