@@ -125,11 +125,21 @@
       if (resp.ok && data.success) {
         // store logged-in email for profile fetch
         try { localStorage.setItem("slraile_email", email); } catch(_) {}
+
+        // Prefetch profile and cache for User Settings prefill
+        try {
+          const prof = await fetch(window.location.origin + "/api/profile?email=" + encodeURIComponent(email));
+          if (prof.ok) {
+            const profile = await prof.json();
+            try { localStorage.setItem('slraile_user', JSON.stringify(profile)); } catch(_) {}
+          }
+        } catch(_) {}
+
         if (data.role === "ADMIN") {
           window.location.href = window.location.origin + "/templetes/IT24101009/HTML/admin.html";
         } else {
-          const qp = "?email=" + encodeURIComponent(email);
-          window.location.href = window.location.origin + "/templetes/IT24101525/HTML/userprofile.html" + qp;
+          // Go to User Settings to edit details right away
+          window.location.href = window.location.origin + "/templetes/IT24101525/HTML/usersettings.html";
         }
       } else {
         alert(data.message || "Invalid credentials");
