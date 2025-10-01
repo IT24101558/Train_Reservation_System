@@ -32,6 +32,19 @@ public class AuthController {
         }
     }
 
+    // New endpoint: register and immediately return profile details for pre-filling user settings
+    @PostMapping("/register-return-profile")
+    public ResponseEntity<?> registerAndReturnProfile(@RequestBody RegisterRequest request) {
+        try {
+            UserAccount created = authService.registerPassenger(request);
+            return ResponseEntity.ok(new UserProfileResponse(
+                    created.getId(), created.getFullName(), created.getEmail(), created.getPhone()
+            ));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new AuthResponse(false, null, ex.getMessage()));
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return authService.authenticate(request)
