@@ -579,7 +579,7 @@ function renderMemberResults(items) {
                 </div>
             </div>
             <div class="train-actions">
-                <a href="../../IT24101525/HTML/seatallocation.html" class="select-btn">Book Now</a>
+                <a href="../../IT24101525/HTML/seatallocation.html" class="select-btn" data-book>Book Now</a>
             </div>
         `;
         container.appendChild(card);
@@ -674,7 +674,7 @@ function renderTable(items) {
             <td class="duration">${it.duration || ''}</td>
             <td class="platform">${it.platform ?? ''}</td>
             <td class="status status-${(it.status || '').toString().toLowerCase()}">${it.status || ''}</td>
-            <td><a href="../../IT24101525/HTML/seatallocation.html" class="book-btn">Book</a></td>
+            <td><a href="../../IT24101525/HTML/seatallocation.html" class="book-btn" data-book>Book</a></td>
         `;
         tbody.appendChild(tr);
     });
@@ -682,6 +682,48 @@ function renderTable(items) {
 
 // Load schedules on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Delegate click on any Book/Book Now button to capture schedule into storage
+    document.body.addEventListener('click', function(e) {
+        const link = e.target.closest('a[data-book]');
+        if (!link) return;
+
+        // Find closest card or row to extract data
+        const card = e.target.closest('.train-card');
+        const row = e.target.closest('tr');
+        let payload = {};
+        if (card) {
+            payload.trainName = card.querySelector('.train-number')?.textContent?.trim() || '';
+            payload.trainType = card.querySelector('.train-type')?.textContent?.trim() || '';
+            payload.routeFrom = card.querySelector('.departure .station')?.textContent?.replace('From:','').trim() || '';
+            payload.routeTo = card.querySelector('.arrival .station')?.textContent?.replace('To:','').trim() || '';
+            payload.departureTime = card.querySelector('.departure .time')?.textContent?.trim() || '';
+            payload.arrivalTime = card.querySelector('.arrival .time')?.textContent?.trim() || '';
+            payload.platform = card.querySelector('.platform')?.textContent?.replace('Platform','').trim() || '';
+        } else if (row) {
+            payload.trainName = row.querySelector('.train-name')?.textContent?.trim() || '';
+            payload.routeFrom = row.querySelector('.from')?.textContent?.trim() || '';
+            payload.routeTo = row.querySelector('.to')?.textContent?.trim() || '';
+            payload.departureTime = row.querySelector('.departure-time')?.textContent?.trim() || '';
+            payload.arrivalTime = row.querySelector('.arrival-time')?.textContent?.trim() || '';
+            payload.duration = row.querySelector('.duration')?.textContent?.trim() || '';
+            payload.platform = row.querySelector('.platform')?.textContent?.trim() || '';
+            payload.status = row.querySelector('.status')?.textContent?.trim() || '';
+        }
+        try {
+            localStorage.setItem('slraile_selected_schedule', JSON.stringify(payload));
+        } catch (_) {}
+
+        // Also pass via URL as a fallback in case storage is cleared
+        const params = new URLSearchParams();
+        if (payload.trainName) params.set('train', payload.trainName);
+        if (payload.routeFrom) params.set('from', payload.routeFrom);
+        if (payload.routeTo) params.set('to', payload.routeTo);
+        if (payload.departureTime) params.set('dep', payload.departureTime);
+        if (payload.arrivalTime) params.set('arr', payload.arrivalTime);
+        if (payload.platform) params.set('plat', payload.platform);
+        link.href = link.href.split('?')[0] + '?' + params.toString();
+        // allow navigation
+    }, true);
     console.log('Page loaded, fetching initial schedules...');
     console.log('Current URL:', window.location.href);
     console.log('Origin:', window.location.origin);
