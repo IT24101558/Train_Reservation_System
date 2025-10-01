@@ -42,4 +42,12 @@ public class AdminSeatController {
                 .orElseThrow(() -> new RuntimeException("No seat configuration found"));
         return ResponseEntity.ok(config);
     }
+
+    // Compatibility endpoint used by existing frontend
+    @GetMapping("/seats/current")
+    public ResponseEntity<SeatConfiguration> getCurrentSeatConfiguration() {
+        SeatConfiguration config = seatConfigRepo.findAll().stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("No seat configuration found"));
+        return ResponseEntity.ok(config);
+    }
 }
