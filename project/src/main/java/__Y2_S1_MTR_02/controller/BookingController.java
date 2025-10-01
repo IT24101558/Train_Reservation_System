@@ -24,6 +24,14 @@ public class BookingController {
         return bookingService.getBookingsForMember(memberEmail);
     }
 
+    // Seats reserved/occupied lookup for Select Your Seat page
+    @GetMapping("/occupied")
+    public ResponseEntity<List<String>> getOccupiedSeats(
+            @RequestParam("trainScheduleId") Long trainScheduleId,
+            @RequestParam("travelDate") String travelDateIso) {
+        return ResponseEntity.ok(bookingService.getOccupiedSeatNumbers(trainScheduleId, travelDateIso));
+    }
+
     public static class CreateBookingRequest {
         public String memberEmail;
         public Long trainScheduleId;
