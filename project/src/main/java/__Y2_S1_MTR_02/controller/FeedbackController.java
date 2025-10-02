@@ -16,7 +16,10 @@ public class FeedbackController {
     private FeedbackService feedbackService;
 
     @GetMapping
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacks() {
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacks(@RequestParam(required = false) String userEmail) {
+        if (userEmail != null && !userEmail.trim().isEmpty()) {
+            return ResponseEntity.ok(feedbackService.getFeedbacksByUserEmail(userEmail));
+        }
         return ResponseEntity.ok(feedbackService.getAllFeedbacks());
     }
 

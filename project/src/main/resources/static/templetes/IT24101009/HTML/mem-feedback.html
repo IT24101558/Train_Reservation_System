@@ -45,19 +45,6 @@
             </div>
 
             <form id="feedback-form" class="feedback-form">
-                <div id="identity-fields">
-                    <!-- Passenger Name -->
-                    <div class="form-group">
-                        <label for="passenger-name">Your Name</label>
-                        <input type="text" id="passenger-name" name="passenger-name" placeholder="Enter your full name" />
-                    </div>
-
-                    <!-- Passenger Email -->
-                    <div class="form-group">
-                        <label for="passenger-email">Email</label>
-                        <input type="email" id="passenger-email" name="passenger-email" placeholder="name@example.com" />
-                    </div>
-                </div>
                 <!-- Rating -->
                 <div class="form-group">
                     <label for="rating">Overall Experience</label>
@@ -196,77 +183,52 @@
 </footer>
 
 <script>
-    // Attempt to derive current user's email and name from localStorage (set at login elsewhere)
+    // Get current user's email and name from localStorage (set at login)
     function getCurrentUserEmail() {
-        return localStorage.getItem('userEmail') ||
-               localStorage.getItem('email') ||
-               localStorage.getItem('USER_EMAIL') || '';
+        return localStorage.getItem('slraile_email') || '';
     }
 
     function getCurrentUserName() {
-        return localStorage.getItem('userFullName') ||
-               localStorage.getItem('fullName') ||
-               localStorage.getItem('USER_FULL_NAME') || '';
-    }
-
-    async function fetchUserProfile(email) {
         try {
-            const res = await fetch(`/api/auth/profile?email=${encodeURIComponent(email)}`);
-            if (!res.ok) return null;
-            return await res.json(); // { id, fullName, email, phone }
+            const userProfile = localStorage.getItem('slraile_user');
+            if (userProfile) {
+                const profile = JSON.parse(userProfile);
+                return profile.fullName || '';
+            }
         } catch (e) {
-            console.error('Failed to fetch user profile', e);
-            return null;
+            console.error('Error parsing user profile from localStorage', e);
         }
+        return '';
     }
 
-    async function resolveCurrentUser() {
-        // Try localStorage first
-        let email = getCurrentUserEmail();
-        // Try URL param fallback if not set
-        if (!email) {
-            const params = new URLSearchParams(window.location.search);
-            const urlEmail = params.get('email');
-            if (urlEmail) {
-                email = urlEmail;
-                localStorage.setItem('userEmail', email);
+    function getCurrentUser() {
+        try {
+            const userProfile = localStorage.getItem('slraile_user');
+            if (userProfile) {
+                return JSON.parse(userProfile);
             }
-        }
-
-        if (!email) return null;
-
-        const profile = await fetchUserProfile(email);
-        if (profile && profile.email) {
-            localStorage.setItem('userEmail', profile.email);
-            if (profile.fullName) localStorage.setItem('userFullName', profile.fullName);
-
-            // Prefill inputs
-            const emailEl = document.getElementById('passenger-email');
-            if (emailEl) emailEl.value = profile.email;
-            const nameEl = document.getElementById('passenger-name');
-            if (nameEl && profile.fullName) nameEl.value = profile.fullName;
-
-            return profile;
+        } catch (e) {
+            console.error('Error parsing user profile from localStorage', e);
         }
         return null;
     }
+
 
     async function loadFeedbackHistory() {
         const historyContainer = document.getElementById('feedback-history');
         historyContainer.innerHTML = '<p>Loading your feedback...</p>';
 
+        const userEmail = getCurrentUserEmail();
+        if (!userEmail) {
+            historyContainer.innerHTML = '<p>Please sign in to view your feedback history.</p>';
+            return;
+        }
+
         try {
-            const res = await fetch('/api/feedback');
+            // Use the new backend endpoint with userEmail parameter
+            const res = await fetch(`/api/feedback?userEmail=${encodeURIComponent(userEmail)}`);
             if (!res.ok) throw new Error('Failed to load feedback');
-            const all = await res.json();
-
-            const userEmail = getCurrentUserEmail();
-            const mine = userEmail ? all.filter(f => (f.email || '').toLowerCase() === userEmail.toLowerCase()) : [];
-
-            if (!userEmail) {
-                historyContainer.innerHTML = '<p>Sign in to view your feedback history.</p>';
-                return;
-            }
+            const mine = await res.json();
 
             if (!mine.length) {
                 historyContainer.innerHTML = '<p>No feedback found for your account yet.</p>';
@@ -359,28 +321,20 @@
     document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Prefer resolved profile; fallback to inputs and then persist
-        let userEmail = getCurrentUserEmail();
-        let userName = getCurrentUserName();
-        if (!userEmail) {
-            const emailInput = document.getElementById('passenger-email').value.trim();
-            if (emailInput) {
-                userEmail = emailInput;
-                localStorage.setItem('userEmail', userEmail);
-            }
-        }
-        if (!userName) {
-            const nameInput = document.getElementById('passenger-name').value.trim();
-            if (nameInput) {
-                userName = nameInput;
-                localStorage.setItem('userFullName', userName);
-            }
+        // Get current logged-in user details
+        const userEmail = getCurrentUserEmail();
+        const userName = getCurrentUserName();
+        
+        // If user is not logged in, prompt for details or show error
+        if (!userEmail || !userName) {
+            alert('Please sign in first to submit feedback with your account details.');
+            return;
         }
 
         const payload = {
             id: this.dataset.editId ? Number(this.dataset.editId) : undefined,
-            passengerName: userName || undefined,
-            email: userEmail || undefined,
+            passengerName: userName,
+            email: userEmail,
             rating: Number(document.querySelector('input[name="rating"]:checked').value),
             message: document.getElementById('message').value
         };
@@ -422,25 +376,55 @@
             }, 100);
         }
 
-        // Prefill via API; hide identity inputs if profile present; fallback to stored values
+        // Check if user is logged in and fetch profile if needed
         (async () => {
-            const prof = await resolveCurrentUser();
-            const identityWrap = document.getElementById('identity-fields');
-            if (prof) {
-                if (identityWrap) identityWrap.style.display = 'none';
-            } else {
-                const preEmail = getCurrentUserEmail();
-                const preName = getCurrentUserName();
-                if (preEmail) {
-                    const emailEl = document.getElementById('passenger-email');
-                    if (emailEl) emailEl.value = preEmail;
+            let userEmail = getCurrentUserEmail();
+            let userName = getCurrentUserName();
+            
+            console.log('Initial - User email:', userEmail);
+            console.log('Initial - User name:', userName);
+            console.log('localStorage slraile_email:', localStorage.getItem('slraile_email'));
+            console.log('localStorage slraile_user:', localStorage.getItem('slraile_user'));
+            
+            // If we have email but no user profile, try to fetch it
+            if (userEmail && !userName) {
+                console.log('Attempting to fetch user profile...');
+                try {
+                    const response = await fetch(`/api/auth/profile?email=${encodeURIComponent(userEmail)}`);
+                    if (response.ok) {
+                        const profile = await response.json();
+                        console.log('Fetched profile:', profile);
+                        localStorage.setItem('slraile_user', JSON.stringify(profile));
+                        userName = profile.fullName;
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user profile:', error);
                 }
-                if (preName) {
-                    const nameEl = document.getElementById('passenger-name');
-                    if (nameEl) nameEl.value = preName;
-                }
-                if (preEmail && preName && identityWrap) identityWrap.style.display = 'none';
             }
+            
+            // Update variables after potential fetch
+            userEmail = getCurrentUserEmail();
+            userName = getCurrentUserName();
+            
+            console.log('Final - User email:', userEmail);
+            console.log('Final - User name:', userName);
+            
+            if (!userEmail) {
+                // Show message that user should be logged in for best experience
+                const mainContent = document.querySelector('.main-content');
+                const loginMessage = document.createElement('div');
+                loginMessage.style.cssText = 'background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:16px;margin:20px;text-align:center;';
+                loginMessage.innerHTML = '<p style="margin:0;color:#856404;"><strong>Note:</strong> Please sign in to automatically populate your details and view your feedback history.</p>';
+                mainContent.insertBefore(loginMessage, mainContent.firstChild.nextSibling);
+            } else if (userEmail && userName) {
+                // Show logged in user info
+                const mainContent = document.querySelector('.main-content');
+                const userInfo = document.createElement('div');
+                userInfo.style.cssText = 'background:#d4edda;border:1px solid #c3e6cb;border-radius:8px;padding:16px;margin:20px;text-align:center;';
+                userInfo.innerHTML = `<p style="margin:0;color:#155724;">✓ Logged in as <strong>${userName}</strong> (${userEmail})</p>`;
+                mainContent.insertBefore(userInfo, mainContent.firstChild.nextSibling);
+            }
+            
             await loadFeedbackHistory();
         })();
 

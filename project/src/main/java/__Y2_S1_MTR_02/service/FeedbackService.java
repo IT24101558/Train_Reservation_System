@@ -20,6 +20,11 @@ public class FeedbackService {
         return feedbackRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    public List<FeedbackDTO> getFeedbacksByUserEmail(String email) {
+        return feedbackRepository.findByEmailIgnoreCase(email).stream()
+                .map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     public FeedbackDTO saveFeedback(FeedbackDTO feedbackDTO) {
         Feedback feedback = convertToEntity(feedbackDTO);
         feedback.setDateTime(LocalDateTime.now());

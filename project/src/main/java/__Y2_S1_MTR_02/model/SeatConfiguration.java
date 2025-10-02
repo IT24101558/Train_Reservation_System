@@ -3,7 +3,6 @@
 package __Y2_S1_MTR_02.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "seat_configuration")
