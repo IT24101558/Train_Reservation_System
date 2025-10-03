@@ -3,6 +3,8 @@ package __Y2_S1_MTR_02.service;
 import __Y2_S1_MTR_02.dto.*;
 import __Y2_S1_MTR_02.model.*;
 import __Y2_S1_MTR_02.repository.UserAccountRepository;
+import __Y2_S1_MTR_02.repository.VerificationTokenRepository;
+import __Y2_S1_MTR_02.repository.PasswordResetTokenRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,7 +44,6 @@ public class UserService {
         this.resetRepo = resetRepo;
     }
 
-
     public void register(RegisterRequest req, String appUrl) {
         if (userRepo.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
@@ -57,26 +58,31 @@ public class UserService {
         userRepo.save(user);
 
         String token = UUID.randomUUID().toString();
-        VerificationToken v = new VerificationToken(token, user, Instant.now().plusSeconds(86400)); // 24h expiry
+        VerificationToken v = new VerificationToken(
+                token,
+                user,
+                Instant.now().plusSeconds(86400) // 24h expiry
+        );
         verificationRepo.save(v);
 
-        String link = appUrl + "/api/users/verify?token=" + token;
-        emailService.sendVerificationEmail(user.getEmail(), link);
+        emailService.sendVerificationEmail(user.getEmail(), token);
     }
 
 
     public void verifyEmail(String token) {
         VerificationToken v = verificationRepo.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+
         if (v.getExpiryDate().isBefore(Instant.now())) {
             throw new IllegalArgumentException("Token expired");
         }
+
         UserAccount user = v.getUser();
         user.setRole(UserRole.PASSENGER);
         userRepo.save(user);
+
         verificationRepo.delete(v);
     }
-
 
     public AuthResponse login(LoginRequest req) {
         try {
@@ -91,33 +97,38 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getId());
+
         return new AuthResponse(true, user.getRole().name(), token);
     }
-
 
     public void logout(String token) {
         // If using blacklist, save token in DB.
         // Otherwise, just rely on frontend to discard token.
     }
 
-
-    public void forgotPassword(String email, String appUrl) {
+     public void forgotPassword(String email, String appUrl) {
         Optional<UserAccount> opt = userRepo.findByEmail(email);
         if (opt.isEmpty()) return;
 
         UserAccount user = opt.get();
         String token = UUID.randomUUID().toString();
-        PasswordResetToken pr = new PasswordResetToken(token, user, Instant.now().plusSeconds(3600)); // 1h expiry
+
+        PasswordResetToken pr = new PasswordResetToken(
+                token,
+                user,
+                Instant.now().plusSeconds(3600) // 1h expiry
+        );
         resetRepo.save(pr);
 
-        String link = appUrl + "/api/users/reset-password?token=" + token;
-        emailService.sendPasswordResetEmail(user.getEmail(), link);
+
+        emailService.sendPasswordResetEmail(user.getEmail(), token);
     }
 
 
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken pr = resetRepo.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+
         if (pr.getExpiryDate().isBefore(Instant.now())) {
             throw new IllegalArgumentException("Token expired");
         }
@@ -125,6 +136,7 @@ public class UserService {
         UserAccount user = pr.getUser();
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepo.save(user);
+
         resetRepo.delete(pr);
     }
 }

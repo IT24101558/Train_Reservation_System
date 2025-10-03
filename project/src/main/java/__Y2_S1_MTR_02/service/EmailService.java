@@ -7,21 +7,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
     private final JavaMailSender mailSender;
-    public EmailService(JavaMailSender mailSender) { this.mailSender = mailSender; }
 
-    public void sendVerificationEmail(String to, String link) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(to);
-        msg.setSubject("Verify your email");
-        msg.setText("Click the link to verify: " + link);
-        mailSender.send(msg);
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
     }
 
-    public void sendPasswordResetEmail(String to, String link) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(to);
-        msg.setSubject("Reset your password");
-        msg.setText("Click the link to reset your password: " + link);
-        mailSender.send(msg);
+    private void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
+    public void sendVerificationEmail(String to, String token) {
+        String link = "http://localhost:8080/api/auth/verify?token=" + token;
+        sendEmail(to, "Verify your account", "Click the link to verify: " + link);
+    }
+
+    public void sendPasswordResetEmail(String to, String token) {
+        String link = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        sendEmail(to, "Password Reset", "Click the link to reset: " + link);
     }
 }

@@ -5,20 +5,22 @@ import java.time.Instant;
 
 @Entity
 public class VerificationToken {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String token;
 
-    @OneToOne
-    private User user;
+    @ManyToOne
+    private UserAccount user;
 
     private Instant expiryDate;
 
-
     public VerificationToken() {}
-    public VerificationToken(String token, User user, Instant expiry) {
-        this.token = token; this.user = user; this.expiryDate = expiry;
-    }
 
+    public VerificationToken(String token, UserAccount user, Instant expiryDate) {
+        this.token = token;
+        this.user = user;
+        this.expiryDate = expiryDate;
+    }
 }
