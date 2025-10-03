@@ -57,57 +57,8 @@
         <!-- Saved Payment Methods -->
         <div class="saved-methods">
             <h3>Your Saved Payment Methods</h3>
-            <div class="methods-grid">
-                <!-- Method 1 -->
-                <div class="payment-method-card active">
-                    <div class="method-header">
-                        <h4>Visa Card</h4>
-                        <div class="method-actions">
-                            <button class="edit-btn" title="Edit">✏️</button>
-                            <button class="delete-btn" title="Delete">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="card-details">
-                        <div class="card-number">**** **** **** 4567</div>
-                        <div class="card-expiry">Expires: 12/25</div>
-                        <div class="card-holder">John Doe</div>
-                    </div>
-                    <div class="method-footer">
-                        <span class="default-tag">Default</span>
-                    </div>
-                </div>
-
-                <!-- Method 2 -->
-                <div class="payment-method-card">
-                    <div class="method-header">
-                        <h4>MasterCard</h4>
-                        <div class="method-actions">
-                            <button class="edit-btn" title="Edit">✏️</button>
-                            <button class="delete-btn" title="Delete">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="card-details">
-                        <div class="card-number">**** **** **** 7890</div>
-                        <div class="card-expiry">Expires: 08/24</div>
-                        <div class="card-holder">Jane Smith</div>
-                    </div>
-                </div>
-
-                <!-- Method 3 -->
-                <div class="payment-method-card">
-                    <div class="method-header">
-                        <h4>Bank Transfer</h4>
-                        <div class="method-actions">
-                            <button class="edit-btn" title="Edit">✏️</button>
-                            <button class="delete-btn" title="Delete">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="card-details">
-                        <div class="card-number">Account: ****5678</div>
-                        <div class="card-expiry">Bank: Commercial Bank</div>
-                        <div class="card-holder">John Doe</div>
-                    </div>
-                </div>
+            <div class="methods-grid" id="methods-grid">
+                <!-- Payment methods will be dynamically inserted here -->
             </div>
         </div>
 
@@ -115,43 +66,25 @@
         <div class="payment-form-container" id="payment-form" style="display: none;">
             <h3 id="form-title">Add New Payment Method</h3>
             <form class="payment-form">
+                <input type="hidden" id="payment-method-id">
                 <div class="form-group">
-                    <label for="method-type">Payment Method Type</label>
-                    <select id="method-type" class="form-select">
-                        <option value="visa">Visa Card</option>
-                        <option value="mastercard">MasterCard</option>
-                        <option value="bank">Bank Transfer</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
+                    <label for="card-holder">Card Holder Name</label>
+                    <input type="text" id="card-holder" class="form-input" placeholder="Enter full name" required>
                 </div>
-
                 <div class="form-group">
-                    <label for="card-number">Card Number / Account Number</label>
-                    <input type="text" id="card-number" class="form-input" placeholder="Enter card or account number">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" class="form-input" placeholder="Enter card number" required>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label for="expiry-date">Expiry Date (MM/YY)</label>
-                        <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY">
+                        <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY" required>
                     </div>
-
                     <div class="form-group">
                         <label for="cvv">CVV</label>
-                        <input type="text" id="cvv" class="form-input" placeholder="CVV">
+                        <input type="text" id="cvv" class="form-input" placeholder="CVV" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="card-holder">Card/Account Holder Name</label>
-                    <input type="text" id="card-holder" class="form-input" placeholder="Enter full name">
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="set-default" class="form-checkbox">
-                    <label for="set-default">Set as default payment method</label>
-                </div>
-
                 <div class="form-actions">
                     <button type="button" class="btn cancel-form">Cancel</button>
                     <button type="submit" class="btn save-method">Save Method</button>
@@ -211,60 +144,183 @@
 
 <!-- Script -->
 <script>
-    // Show payment form when Add New Method button is clicked
-    document.querySelector('.add-method').addEventListener('click', function() {
-        document.getElementById('form-title').textContent = 'Add New Payment Method';
-        document.getElementById('payment-form').style.display = 'block';
-        window.scrollTo(0, document.getElementById('payment-form').offsetTop - 100);
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const userId = 1; // Hardcoded user ID
+        const methodsGrid = document.getElementById('methods-grid');
+        const paymentForm = document.getElementById('payment-form');
+        const formTitle = document.getElementById('form-title');
+        const paymentMethodId = document.getElementById('payment-method-id');
+        const cardHolderInput = document.getElementById('card-holder');
+        const cardNumberInput = document.getElementById('card-number');
+        const expiryDateInput = document.getElementById('expiry-date');
+        const cvvInput = document.getElementById('cvv');
 
-    // Hide payment form when Cancel button is clicked
-    document.querySelector('.cancel-form').addEventListener('click', function() {
-        document.getElementById('payment-form').style.display = 'none';
-    });
+        const fetchPaymentMethods = async () => {
+            try {
+                const response = await fetch(`/api/payment-methods/${userId}`);
+                const methods = await response.json();
+                renderPaymentMethods(methods);
+            } catch (error) {
+                console.error('Error fetching payment methods:', error);
+            }
+        };
 
-    // Edit payment method
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('form-title').textContent = 'Edit Payment Method';
-            document.getElementById('payment-form').style.display = 'block';
-            window.scrollTo(0, document.getElementById('payment-form').offsetTop - 100);
-        });
-    });
+        const renderPaymentMethods = (methods) => {
+            methodsGrid.innerHTML = '';
+            methods.forEach(method => {
+                const card = document.createElement('div');
+                card.classList.add('payment-method-card');
+                card.dataset.id = method.id;
+                card.innerHTML = `
+                    <div class="method-header">
+                        <h4>Visa Card</h4> <!-- You might want to determine card type dynamically -->
+                        <div class="method-actions">
+                            <button class="edit-btn" title="Edit">✏️</button>
+                            <button class="delete-btn" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-number">**** **** **** ${method.cardNumber ? method.cardNumber.slice(-4) : ''}</div>
+                        <div class="card-expiry">Expires: ${method.expiryDate}</div>
+                        <div class="card-holder">${method.cardholderName}</div>
+                    </div>
+                `;
+                methodsGrid.appendChild(card);
+            });
+        };
 
-    // Delete payment method with confirmation
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete this payment method?')) {
-                this.closest('.payment-method-card').remove();
-                alert('Payment method deleted successfully.');
+        methodsGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.payment-method-card');
+            if (!card) return;
+
+            if (e.target.classList.contains('edit-btn')) {
+                const methodId = card.dataset.id;
+                const method = {
+                    id: methodId,
+                    cardholderName: card.querySelector('.card-holder').textContent,
+                    cardNumber: card.querySelector('.card-number').textContent, // This is masked, so you might need to fetch full data
+                    expiryDate: card.querySelector('.card-expiry').textContent.replace('Expires: ', ''),
+                };
+                showForm(true, method);
+            } else if (e.target.classList.contains('delete-btn')) {
+                const methodId = card.dataset.id;
+                if (confirm('Are you sure you want to delete this payment method?')) {
+                    deletePaymentMethod(methodId);
+                }
+            } else {
+                document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
             }
         });
-    });
 
-    // Set active payment method
-    document.querySelectorAll('.payment-method-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('edit-btn') && !e.target.classList.contains('delete-btn')) {
-                document.querySelectorAll('.payment-method-card').forEach(c => {
-                    c.classList.remove('active');
+        const showForm = (isEdit = false, method = null) => {
+            formTitle.textContent = isEdit ? 'Edit Payment Method' : 'Add New Payment Method';
+            paymentMethodId.value = isEdit ? method.id : '';
+            cardHolderInput.value = isEdit ? method.cardholderName : '';
+            cardNumberInput.value = isEdit ? '' : ''; // Do not pre-fill card number for security
+            expiryDateInput.value = isEdit ? method.expiryDate : '';
+            cvvInput.value = '';
+            paymentForm.style.display = 'block';
+            window.scrollTo(0, paymentForm.offsetTop - 100);
+        };
+
+        const hideForm = () => {
+            paymentForm.style.display = 'none';
+            paymentForm.querySelector('form').reset();
+        };
+
+        document.querySelector('.add-method').addEventListener('click', () => showForm());
+        document.querySelector('.cancel-form').addEventListener('click', () => hideForm());
+
+        paymentForm.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Form submitted!');
+            
+            const methodId = paymentMethodId.value;
+            const methodData = {
+                user: { id: userId },
+                method: "VISA", // Default to VISA, could be made dynamic based on card number
+                cardholderName: cardHolderInput.value,
+                cardNumber: cardNumberInput.value,
+                expiryDate: expiryDateInput.value,
+                cvv: cvvInput.value,
+            };
+
+            console.log('Method data:', methodData);
+
+            if (methodId) {
+                console.log('Updating payment method:', methodId);
+                await updatePaymentMethod(methodId, methodData);
+            } else {
+                console.log('Adding new payment method');
+                await addPaymentMethod(methodData);
+            }
+        });
+
+        const addPaymentMethod = async (methodData) => {
+            try {
+                console.log('Sending request to:', '/api/payment-methods');
+                console.log('Request data:', JSON.stringify(methodData));
+                
+                const response = await fetch('/api/payment-methods', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(methodData),
                 });
-                this.classList.add('active');
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Success:', result);
+                    hideForm();
+                    fetchPaymentMethods();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error adding payment method:', errorText);
+                    alert('Error adding payment method: ' + errorText);
+                }
+            } catch (error) {
+                console.error('Error adding payment method:', error);
+                alert('Error adding payment method: ' + error.message);
             }
-        });
-    });
+        };
 
-    // Save payment method
-    document.querySelector('.payment-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Payment method saved successfully!');
-        document.getElementById('payment-form').style.display = 'none';
+        const updatePaymentMethod = async (id, methodData) => {
+            try {
+                const response = await fetch(`/api/payment-methods/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(methodData),
+                });
+                if (response.ok) {
+                    hideForm();
+                    fetchPaymentMethods();
+                } else {
+                    console.error('Error updating payment method');
+                }
+            } catch (error) {
+                console.error('Error updating payment method:', error);
+            }
+        };
 
-        // In a real application, you would add the new payment method to the UI here
-    });
-
-    // Proceed to payment
-    document.querySelector('.proceed-payment').addEventListener('click', function () {
+        const deletePaymentMethod = async (id) => {
+            try {
+                const response = await fetch(`/api/payment-methods/${id}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    fetchPaymentMethods();
+                } else {
+                    console.error('Error deleting payment method');
+                }
+            } catch (error) {
+                console.error('Error deleting payment method:', error);
+            }
+        };
+        
+        document.querySelector('.proceed-payment').addEventListener('click', function () {
         const activeMethod = document.querySelector('.payment-method-card.active');
         if (!activeMethod) {
             alert('Please select a payment method to proceed.');
@@ -287,6 +343,10 @@
             // Redirect to member schedule page
             window.location.href = '../../IT24102460/HTML/mem_shedule.html';
         }
+    });
+
+
+        fetchPaymentMethods();
     });
 </script>
 </body>

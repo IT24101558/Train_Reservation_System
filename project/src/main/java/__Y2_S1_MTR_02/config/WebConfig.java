@@ -17,6 +17,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/templetes/")
                 .setCacheControl(CacheControl.noCache().mustRevalidate())
                 .setCachePeriod(0);
+        
+        // Also serve static resources with /static prefix
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/")
+                .setCacheControl(CacheControl.noCache().mustRevalidate())
+                .setCachePeriod(0);
     }
 
     @Override

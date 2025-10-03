@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
+		<version>3.1.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>2025-Y2-S1-MTR-02</groupId>
-	<artifactId>project </artifactId>
+	<artifactId>project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Web Based Train Reservation System</name>
 	<description>2 year 1 sem group project </description>
@@ -43,12 +43,7 @@
 				<artifactId>spring-boot-starter-security</artifactId>
 			</dependency>
 
-		<dependency>
-    		<groupId>org.projectlombok</groupId>
-    		<artifactId>lombok</artifactId>
-    		<version>1.18.28</version>
-    		<scope>provided</scope>
-		</dependency>
+		<!-- Lombok removed: not used in codebase -->
 
 
 		<dependency>
@@ -61,6 +56,7 @@
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc11</artifactId>
+			<version>23.2.0.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -75,6 +71,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.12.1</version>
+				<configuration>
+					<release>17</release>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

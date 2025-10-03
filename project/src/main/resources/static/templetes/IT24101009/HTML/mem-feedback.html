@@ -331,6 +331,21 @@
             return;
         }
 
+        // Validate travel date is not in the future
+        const travelDateEl = document.getElementById('travel-date');
+        if (travelDateEl) {
+            const travelDateVal = travelDateEl.value;
+            if (travelDateVal) {
+                const selected = new Date(travelDateVal);
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                if (selected > today) {
+                    alert('Travel date cannot be in the future.');
+                    return;
+                }
+            }
+        }
+
         const payload = {
             id: this.dataset.editId ? Number(this.dataset.editId) : undefined,
             passengerName: userName,
@@ -375,6 +390,16 @@
                 firstCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             }, 100);
         }
+
+            // Prevent selecting future dates for the travel date field by setting max to today
+            const travelDateInput = document.getElementById('travel-date');
+            if (travelDateInput) {
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                travelDateInput.max = `${yyyy}-${mm}-${dd}`;
+            }
 
         // Check if user is logged in and fetch profile if needed
         (async () => {
