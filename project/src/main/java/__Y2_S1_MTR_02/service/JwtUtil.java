@@ -1,42 +1,55 @@
 package __Y2_S1_MTR_02.service;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private String secret = "secretkey";
+    private final String secret = "mySuperSecretKeyForJwtToken1234567890!";
+    private final Key secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
-    public String generateToken(String username, Long userId) {
+    private final long jwtExpiration = 1000 * 60 * 60;
+
+    public String generateToken(String email, Long userId) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim("userId", userId)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+    public String extractEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    public Long extractUserId(String token) {
+        return ((Number) Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId")).longValue();
     }
 
-    public boolean validateToken(String token, String username) {
+    public boolean validateToken(String token) {
         try {
-            return extractUsername(token).equals(username) && !isTokenExpired(token);
-        } catch (JwtException e) {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
     }
 }
