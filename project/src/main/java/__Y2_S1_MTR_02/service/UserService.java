@@ -77,7 +77,7 @@ public class UserService {
             throw new IllegalArgumentException("Token expired");
         }
 
-        UserAccount user = v.getUser();
+        UserAccount user = v.getUserAccount();
         user.setRole(UserRole.PASSENGER);
         userRepo.save(user);
 
@@ -133,7 +133,7 @@ public class UserService {
             throw new IllegalArgumentException("Token expired");
         }
 
-        UserAccount user = pr.getUser();
+        UserAccount user = pr.getUserAccount();
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepo.save(user);
 
