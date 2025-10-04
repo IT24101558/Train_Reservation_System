@@ -19,7 +19,6 @@ public class UserController {
         return req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
     }
 
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req, HttpServletRequest r) {
         userService.register(req, getAppUrl(r));
@@ -32,12 +31,10 @@ public class UserController {
         return ResponseEntity.ok("Email verified successfully.");
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest req) {
         return ResponseEntity.ok(userService.login(req));
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
@@ -48,13 +45,11 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully.");
     }
 
-
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam String email, HttpServletRequest r) {
         userService.forgotPassword(email, getAppUrl(r));
         return ResponseEntity.ok("If that email exists, a reset link was sent.");
     }
-
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {

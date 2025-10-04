@@ -32,7 +32,7 @@ public class AuthController {
         }
     }
 
-    // New endpoint: register and immediately return profile details for pre-filling user settings
+
     @PostMapping("/register-return-profile")
     public ResponseEntity<?> registerAndReturnProfile(@RequestBody RegisterRequest request) {
         try {
