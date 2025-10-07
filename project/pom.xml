@@ -84,12 +84,8 @@
 			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc11</artifactId>
-			<version>23.2.0.0</version>
-			<scope>runtime</scope>
-		</dependency>
+		<!-- Remove Oracle JDBC which requires credentials to download and breaks resolution -->
+		<!-- If needed later, configure a private repository or provide credentials -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,6 +93,25 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>spring-release</id>
+			<url>https://repo.spring.io/release</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-plugins</id>
+			<url>https://repo.spring.io/release</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<build>
 		<plugins>

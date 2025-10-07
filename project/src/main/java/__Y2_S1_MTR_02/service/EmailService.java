@@ -1,5 +1,6 @@
 package __Y2_S1_MTR_02.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -8,11 +9,22 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender mailSender;
 
+    @Autowired(required = false)
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     private void sendEmail(String to, String subject, String text) {
+        if (mailSender == null) {
+            // Log email instead of sending when mail sender is not configured
+            System.out.println("=== EMAIL NOTIFICATION ===");
+            System.out.println("To: " + to);
+            System.out.println("Subject: " + subject);
+            System.out.println("Body: " + text);
+            System.out.println("=========================");
+            return;
+        }
+        
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
