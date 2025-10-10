@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    List<Payment> findByBookingIdOrderByPaidAtDesc(Long bookingId);
+    @Query("select p from Payment p where p.booking.id = :bookingId order by p.paidAt desc")
+    List<Payment> findByBookingIdOrderByPaidAtDesc(@Param("bookingId") Long bookingId);
 
     @Query("select p from Payment p where p.payerEmail = :email order by p.paidAt desc")
     List<Payment> findByPayerEmailOrderByPaidAtDesc(@Param("email") String email);

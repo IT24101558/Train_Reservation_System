@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Methods - SLRailE</title>
-    <link rel="stylesheet" href="../CSS/payment.css">
+    <link rel="stylesheet" href="/templetes/IT24101558/CSS/payment.css">
 </head>
 <body>
 <!-- Header -->
@@ -31,19 +31,25 @@
     <section class="payment-summary">
         <h2>Payment Summary</h2>
         <div class="summary-row">
-            <strong>Train:</strong> <span>Mountain Route (101)</span>
+            <strong>Train:</strong> <span id="ps-train"></span>
         </div>
         <div class="summary-row">
-            <strong>Route:</strong> <span>Colombo → Kandy</span>
+            <strong>From:</strong> <span id="ps-from"></span>
         </div>
         <div class="summary-row">
-            <strong>Date:</strong> <span>December 15, 2023</span>
+            <strong>To:</strong> <span id="ps-to"></span>
         </div>
         <div class="summary-row">
-            <strong>Seats:</strong> <span>A1, B2, C3</span>
+            <strong>Departure:</strong> <span id="ps-dep"></span>
         </div>
         <div class="summary-row">
-            <strong>Total Amount:</strong> <span id="total-amount">Rs. 1,200.00</span>
+            <strong>Arrival:</strong> <span id="ps-arr"></span>
+        </div>
+        <div class="summary-row">
+            <strong>Seats:</strong> <span id="ps-seats"></span>
+        </div>
+        <div class="summary-row">
+            <strong>Total Amount:</strong> <span id="total-amount"></span>
         </div>
     </section>
 
@@ -145,8 +151,51 @@
 <!-- Script -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const userId = 1; // Hardcoded user ID
+        const userEmail = localStorage.getItem('slraile_member_email') || 'member@example.com';
+        const userId = 1; // TODO: replace when auth wired
         const methodsGrid = document.getElementById('methods-grid');
+
+        // Populate summary from booking
+        const qp = new URLSearchParams(window.location.search);
+        const bookingId = Number(qp.get('bookingId') || localStorage.getItem('slraile_current_booking_id'));
+        const cached = (() => { try { return JSON.parse(localStorage.getItem('slraile_current_booking_summary')); } catch(_) { return null; }})();
+
+        function renderSummary(obj) {
+            if (!obj) return;
+            document.getElementById('ps-train').textContent = obj.trainName || '';
+            document.getElementById('ps-from').textContent = obj.routeFrom || '';
+            document.getElementById('ps-to').textContent = obj.routeTo || '';
+            document.getElementById('ps-dep').textContent = obj.departureTime || '';
+            document.getElementById('ps-arr').textContent = obj.arrivalTime || '';
+            document.getElementById('ps-seats').textContent = obj.seatNumbers || '';
+            document.getElementById('total-amount').textContent = obj.totalAmount != null ? `Rs. ${Number(obj.totalAmount).toFixed(2)}` : '';
+        }
+
+        async function loadBooking() {
+            if (!bookingId) return renderSummary(cached);
+            try {
+                const res = await fetch(`/api/bookings/${bookingId}`);
+                if (res.ok) {
+                    const b = await res.json();
+                    const merged = cached || {};
+                    merged.seatNumbers = b.seatNumbers;
+                    merged.totalAmount = b.totalAmount;
+                    renderSummary(merged);
+                } else if (res.status === 404) {
+                    console.warn(`Booking ${bookingId} not found`);
+                    alert('Booking not found. Please create a new booking.');
+                    window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+                } else {
+                    console.error(`Failed to load booking ${bookingId}: ${res.status}`);
+                    renderSummary(cached);
+                }
+            } catch(error) { 
+                console.error('Error loading booking:', error);
+                renderSummary(cached); 
+            }
+        }
+        loadBooking();
+
         const paymentForm = document.getElementById('payment-form');
         const formTitle = document.getElementById('form-title');
         const paymentMethodId = document.getElementById('payment-method-id');
@@ -173,7 +222,7 @@
                 card.dataset.id = method.id;
                 card.innerHTML = `
                     <div class="method-header">
-                        <h4>Visa Card</h4> <!-- You might want to determine card type dynamically -->
+                        <h4>${method.method || 'Card'}</h4>
                         <div class="method-actions">
                             <button class="edit-btn" title="Edit">✏️</button>
                             <button class="delete-btn" title="Delete">🗑️</button>
@@ -181,8 +230,8 @@
                     </div>
                     <div class="card-details">
                         <div class="card-number">**** **** **** ${method.cardNumber ? method.cardNumber.slice(-4) : ''}</div>
-                        <div class="card-expiry">Expires: ${method.expiryDate}</div>
-                        <div class="card-holder">${method.cardholderName}</div>
+                        <div class="card-expiry">Expires: ${method.expiryDate || ''}</div>
+                        <div class="card-holder">${method.cardholderName || ''}</div>
                     </div>
                 `;
                 methodsGrid.appendChild(card);
@@ -192,13 +241,12 @@
         methodsGrid.addEventListener('click', (e) => {
             const card = e.target.closest('.payment-method-card');
             if (!card) return;
-
             if (e.target.classList.contains('edit-btn')) {
                 const methodId = card.dataset.id;
                 const method = {
                     id: methodId,
                     cardholderName: card.querySelector('.card-holder').textContent,
-                    cardNumber: card.querySelector('.card-number').textContent, // This is masked, so you might need to fetch full data
+                    cardNumber: '',
                     expiryDate: card.querySelector('.card-expiry').textContent.replace('Expires: ', ''),
                 };
                 showForm(true, method);
@@ -217,7 +265,7 @@
             formTitle.textContent = isEdit ? 'Edit Payment Method' : 'Add New Payment Method';
             paymentMethodId.value = isEdit ? method.id : '';
             cardHolderInput.value = isEdit ? method.cardholderName : '';
-            cardNumberInput.value = isEdit ? '' : ''; // Do not pre-fill card number for security
+            cardNumberInput.value = '';
             expiryDateInput.value = isEdit ? method.expiryDate : '';
             cvvInput.value = '';
             paymentForm.style.display = 'block';
@@ -234,55 +282,36 @@
 
         paymentForm.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('Form submitted!');
-            
             const methodId = paymentMethodId.value;
             const methodData = {
                 user: { id: userId },
-                method: "VISA", // Default to VISA, could be made dynamic based on card number
+                method: 'VISA',
                 cardholderName: cardHolderInput.value,
                 cardNumber: cardNumberInput.value,
                 expiryDate: expiryDateInput.value,
                 cvv: cvvInput.value,
             };
-
-            console.log('Method data:', methodData);
-
             if (methodId) {
-                console.log('Updating payment method:', methodId);
                 await updatePaymentMethod(methodId, methodData);
             } else {
-                console.log('Adding new payment method');
                 await addPaymentMethod(methodData);
             }
         });
 
         const addPaymentMethod = async (methodData) => {
             try {
-                console.log('Sending request to:', '/api/payment-methods');
-                console.log('Request data:', JSON.stringify(methodData));
-                
                 const response = await fetch('/api/payment-methods', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(methodData),
                 });
-                
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-                
                 if (response.ok) {
-                    const result = await response.json();
-                    console.log('Success:', result);
                     hideForm();
                     fetchPaymentMethods();
                 } else {
-                    const errorText = await response.text();
-                    console.error('Error adding payment method:', errorText);
-                    alert('Error adding payment method: ' + errorText);
+                    alert('Error adding payment method');
                 }
             } catch (error) {
-                console.error('Error adding payment method:', error);
                 alert('Error adding payment method: ' + error.message);
             }
         };
@@ -298,53 +327,145 @@
                     hideForm();
                     fetchPaymentMethods();
                 } else {
-                    console.error('Error updating payment method');
+                    alert('Error updating payment method');
                 }
             } catch (error) {
-                console.error('Error updating payment method:', error);
+                alert('Error updating payment method: ' + error.message);
             }
         };
 
         const deletePaymentMethod = async (id) => {
             try {
-                const response = await fetch(`/api/payment-methods/${id}`, {
-                    method: 'DELETE',
-                });
-                if (response.ok) {
-                    fetchPaymentMethods();
+                const response = await fetch(`/api/payment-methods/${id}`, { method: 'DELETE' });
+                if (response.ok) fetchPaymentMethods();
+            } catch (error) {}
+        };
+
+        document.querySelector('.proceed-payment').addEventListener('click', async function () {
+            const activeMethod = document.querySelector('.payment-method-card.active');
+            if (!activeMethod) {
+                alert('Please select a payment method to proceed.');
+                return;
+            }
+            
+            const summary = (() => { try { return JSON.parse(localStorage.getItem('slraile_current_booking_summary')); } catch(_) { return null; }})();
+            
+            console.log('Booking ID:', bookingId);
+            console.log('Summary:', summary);
+            
+            if (!bookingId) {
+                alert('Missing booking ID. Please go back and create a booking first.');
+                return;
+            }
+            
+            if (!summary) {
+                alert('Missing booking summary. Please go back and create a booking first.');
+                return;
+            }
+            
+            if (!summary.totalAmount || summary.totalAmount <= 0) {
+                alert('Invalid booking amount. Please go back and create a booking first.');
+                return;
+            }
+
+            // Check if booking is already paid before attempting payment
+            try {
+                const bookingRes = await fetch(`/api/bookings/${bookingId}`);
+                if (bookingRes.ok) {
+                    const booking = await bookingRes.json();
+                    if (booking.status === 'PAID') {
+                        alert('This booking has already been paid. Redirecting to booking history...');
+                        window.location.href = '../../IT24101558/HTML/bookinghistory.html';
+                        return;
+                    }
+                } else if (bookingRes.status === 404) {
+                    alert('Booking not found. Please create a new booking.');
+                    window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+                    return;
                 } else {
-                    console.error('Error deleting payment method');
+                    console.warn(`Failed to check booking status: ${bookingRes.status}`);
                 }
             } catch (error) {
-                console.error('Error deleting payment method:', error);
+                console.warn('Could not check booking status:', error);
+                // Continue with payment attempt if we can't check status
             }
-        };
-        
-        document.querySelector('.proceed-payment').addEventListener('click', function () {
-        const activeMethod = document.querySelector('.payment-method-card.active');
-        if (!activeMethod) {
-            alert('Please select a payment method to proceed.');
-            return;
-        }
-        // Show success message and redirect button
-        const mainContent = document.querySelector('.main-content');
-        mainContent.innerHTML = `
-      <section class="success-message">
-        <h2>Payment Successful!</h2>
-        <p>Your payment has been processed successfully.</p>
-        <button class="btn go-to-history" onclick="window.location.href='../../IT24101558/HTML/bookinghistory.html'">Go to Booking History</button>
-      </section>
-    `;
-    });
+            const req = {
+                bookingId: bookingId,
+                amount: Number(String(summary.totalAmount).replace(/[^0-9.]/g,'')) || 0,
+                method: 'VISA',
+                payerName: userEmail,
+                payerEmail: userEmail,
+                cardLast4: activeMethod.querySelector('.card-number').textContent.slice(-4),
+                transactionId: 'TX-' + Date.now()
+            };
+            try {
+                console.log('Payment request:', req);
+                
+                const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+                    ? 'http://localhost:8080'
+                    : window.location.origin;
+                
+                const res = await fetch(`${ORIGIN}/api/payments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(req)
+                });
+                
+                console.log('Payment response status:', res.status);
+                console.log('Payment response ok:', res.ok);
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error('Payment error response:', errorText);
+                    
+                    // Parse error message for better user feedback
+                    let errorMessage = 'Payment failed';
+                    try {
+                        const errorObj = JSON.parse(errorText);
+                        const errorString = typeof errorObj === 'string' ? errorObj : JSON.stringify(errorObj);
+                        
+                        if (errorString.includes('already paid')) {
+                            errorMessage = 'This booking has already been paid. Redirecting to booking history...';
+                            setTimeout(() => {
+                                window.location.href = '../../IT24101558/HTML/bookinghistory.html';
+                            }, 2000);
+                        } else if (errorString.includes('Booking not found')) {
+                            errorMessage = 'Booking not found. Please create a new booking.';
+                        } else {
+                            errorMessage = errorString;
+                        }
+                    } catch (e) {
+                        errorMessage = errorText || `Payment failed with status ${res.status}`;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+                
+                const paymentResult = await res.json();
+                console.log('Payment successful:', paymentResult);
+                
+                // Success UI and redirect to history
+                const mainContent = document.querySelector('.main-content');
+                mainContent.innerHTML = `
+                  <section class="success-message">
+                    <h2>Payment Successful!</h2>
+                    <p>Your payment has been processed successfully.</p>
+                    <p>Transaction ID: ${paymentResult.transactionId || req.transactionId}</p>
+                    <button class="btn go-to-history" onclick="window.location.href='../../IT24101558/HTML/bookinghistory.html'">Go to Booking History</button>
+                  </section>
+                `;
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment failed: ' + err.message);
+            }
+        });
 
-    // Cancel payment
-    document.querySelector('.cancel-payment').addEventListener('click', function() {
-        if (confirm('Are you sure you want to cancel this payment process?')) {
-            // Redirect to member schedule page
-            window.location.href = '../../IT24102460/HTML/mem_shedule.html';
-        }
-    });
-
+        // Cancel payment
+        document.querySelector('.cancel-payment').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel this payment process?')) {
+                window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+            }
+        });
 
         fetchPaymentMethods();
     });

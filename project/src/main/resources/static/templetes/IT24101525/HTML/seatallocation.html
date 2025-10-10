@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Your Seat - SLRailE</title>
-    <link rel="stylesheet" href="../CSS/seatallocation.css">
+    <link rel="stylesheet" href="/templetes/IT24101525/CSS/seatallocation.css">
+  <script src="/js/user-utils.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -34,7 +35,7 @@
             <strong>Train:</strong> <span id="bo-train">-</span>
         </div>
         <div class="summary-row">
-            <strong>Route:</strong> <span id="bo-route">-</span>
+            <strong>From:</strong> <span id="bo-route">-</span>
         </div>
         <div class="summary-row">
             <strong>Date:</strong> <span id="bo-date">-</span>
@@ -285,23 +286,58 @@
 </script>
 </body>
 <script>
-// Populate booking overview from stored schedule
+// Populate booking overview from stored schedule and prepare booking flow
 document.addEventListener('DOMContentLoaded', async function() {
+    let selectedSchedule = null;
     try {
-        // Prefer localStorage; fall back to URL query params
         const raw = localStorage.getItem('slraile_selected_schedule');
+        console.log('Raw localStorage data:', raw);
         let data = raw ? JSON.parse(raw) : null;
+        console.log('Parsed localStorage data:', data);
+        
         const qp = new URLSearchParams(window.location.search);
-        if (!data || !data.trainName) {
-            data = {
-                trainName: qp.get('train'),
-                routeFrom: qp.get('from'),
-                routeTo: qp.get('to'),
-                departureTime: qp.get('dep'),
-                arrivalTime: qp.get('arr'),
-                platform: qp.get('plat')
-            };
+        console.log('URL parameters:', qp.toString());
+        
+        // Always try to get data from URL parameters as primary source
+        const urlData = {
+            id: qp.get('id') ? Number(qp.get('id')) : null,
+            trainName: qp.get('train'),
+            routeFrom: qp.get('from'),
+            routeTo: qp.get('to'),
+            departureTime: qp.get('dep'),
+            arrivalTime: qp.get('arr'),
+            platform: qp.get('plat')
+        };
+        console.log('URL data:', urlData);
+        
+        // Use URL data if it has valid information, otherwise use localStorage data
+        if (urlData.id || urlData.trainName) {
+            data = urlData;
+            console.log('Using URL data as primary source');
+        } else if (data && data.trainName) {
+            console.log('Using localStorage data as fallback');
+        } else {
+            console.warn('No valid schedule data found in localStorage or URL');
+            // Show error message to user
+            document.getElementById('bo-train').textContent = 'No schedule selected';
+            document.getElementById('bo-route').textContent = 'Please go back and select a train';
+            document.getElementById('bo-departure').textContent = '-';
+            document.getElementById('bo-arrival').textContent = '-';
+            document.getElementById('bo-platform').textContent = '-';
+            const today = new Date();
+            document.getElementById('bo-date').textContent = today.toISOString().slice(0,10);
+            
+            // Show alert and redirect after a delay
+            alert('No train schedule selected. Redirecting to schedule page...');
+            setTimeout(() => {
+                window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+            }, 2000);
+            return;
         }
+        
+        selectedSchedule = data;
+        console.log('Final selected schedule:', selectedSchedule);
+        
         if (data) {
             document.getElementById('bo-train').textContent = data.trainName || '-';
             const route = `${data.routeFrom || ''} → ${data.routeTo || ''}`.trim();
@@ -309,40 +345,48 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('bo-departure').textContent = data.departureTime || '-';
             document.getElementById('bo-arrival').textContent = data.arrivalTime || '-';
             document.getElementById('bo-platform').textContent = data.platform || '-';
-            // Optional date if provided elsewhere
             const today = new Date();
             document.getElementById('bo-date').textContent = today.toISOString().slice(0,10);
         }
-    } catch (_) {}
+    } catch (err) {
+        console.error('Error loading schedule data:', err);
+        // Show error message
+        document.getElementById('bo-train').textContent = 'Error loading schedule';
+        document.getElementById('bo-route').textContent = 'Please refresh and try again';
+    }
 
     // Load seat configuration and render seat squares
-    let firstSeats = 0, secondSeats = 0, view360 = '';
+    let firstSeats = 0, secondSeats = 0;
     try {
-        const resp = await fetch('/api/admin/seats/current');
+        const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+            ? 'http://localhost:8080'
+            : window.location.origin;
+        const resp = await fetch(`${ORIGIN}/api/admin/seats/current`);
         if (resp.ok) {
             const cfg = await resp.json();
             firstSeats = cfg.firstClassSeats || 0;
             secondSeats = cfg.secondClassSeats || 0;
-            view360 = cfg.view360Link || '';
         }
-    } catch (_) {}
+    } catch (err) {
+        console.warn('Could not load seat configuration, using defaults:', err);
+        // Use default seat counts if API fails
+        firstSeats = 8; // Default first class seats
+        secondSeats = 50; // Default second class seats
+    }
 
     const seatMap = document.getElementById('seat-map');
     const classButtons = document.querySelectorAll('.class-btn');
     const selectedClassEl = document.getElementById('selected-class');
 
-    // Selection state (shared for this renderer)
     let selectedSeats = [];
     const maxSelections = 6;
 
-    // Pricing fallbacks if not defined in earlier script
     const priceMap = (typeof prices !== 'undefined') ? prices : { second: 400, firstclass: 1200 };
 
     function updateSelectionSummary() {
         const list = document.getElementById('selected-seats-list');
         const priceEl = document.getElementById('total-price');
         if (!list || !priceEl) return;
-
         if (selectedSeats.length === 0) {
             list.innerHTML = '<p>No seats selected.</p>';
             priceEl.textContent = `Rs. 0.00`;
@@ -361,16 +405,31 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
         list.innerHTML = '';
         list.appendChild(ul);
-
         const clsKey = (selectedClassEl.textContent.toLowerCase() === 'first') ? 'firstclass' : 'second';
         const total = (selectedSeats.length * (priceMap[clsKey] || 0)).toFixed(2);
         priceEl.textContent = `Rs. ${total}`;
     }
 
-    function renderSeats(total) {
+    async function renderSeats(total) {
         seatMap.innerHTML = '';
-        // exactly 5 seats per horizontal line as requested
         const seatsPerRow = 5;
+        // fetch occupied seats for the day if schedule id exists
+        let occupied = new Set();
+        try {
+            if (selectedSchedule?.id) {
+                const dateStr = document.getElementById('bo-date').textContent;
+                const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+                    ? 'http://localhost:8080'
+                    : window.location.origin;
+                const r = await fetch(`${ORIGIN}/api/bookings/occupied?trainScheduleId=${selectedSchedule.id}&travelDate=${dateStr}`);
+                if (r.ok) {
+                    const arr = await r.json();
+                    occupied = new Set(arr);
+                }
+            }
+        } catch (err) {
+            console.warn('Could not load occupied seats:', err);
+        }
         let rowEl = null;
         for (let i = 0; i < total; i++) {
             if (i % seatsPerRow === 0) {
@@ -384,22 +443,27 @@ document.addEventListener('DOMContentLoaded', async function() {
             const seatId = `${clsPrefix}${i+1}`;
             seat.dataset.id = seatId;
             seat.textContent = i+1;
-            seat.addEventListener('click', () => {
-                if (seat.classList.contains('occupied')) return;
-                const idx = selectedSeats.indexOf(seatId);
-                if (idx > -1) {
-                    seat.classList.remove('selected');
-                    selectedSeats.splice(idx, 1);
-                } else {
-                    if (selectedSeats.length >= maxSelections) {
-                        alert(`You can select up to ${maxSelections} seats.`);
-                        return;
+            if (occupied.has(seatId)) {
+                seat.classList.remove('available');
+                seat.classList.add('occupied');
+            } else {
+                seat.addEventListener('click', () => {
+                    if (seat.classList.contains('occupied')) return;
+                    const idx = selectedSeats.indexOf(seatId);
+                    if (idx > -1) {
+                        seat.classList.remove('selected');
+                        selectedSeats.splice(idx, 1);
+                    } else {
+                        if (selectedSeats.length >= maxSelections) {
+                            alert(`You can select up to ${maxSelections} seats.`);
+                            return;
+                        }
+                        seat.classList.add('selected');
+                        selectedSeats.push(seatId);
                     }
-                    seat.classList.add('selected');
-                    selectedSeats.push(seatId);
-                }
-                updateSelectionSummary();
-            });
+                    updateSelectionSummary();
+                });
+            }
             rowEl.appendChild(seat);
         }
     }
@@ -407,7 +471,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     function activateClass(cls) {
         classButtons.forEach(b => b.classList.toggle('active', b.dataset.class === cls));
         selectedClassEl.textContent = cls === 'firstclass' ? 'First' : 'Second';
-        // reset any previous selections when switching class
         selectedSeats = [];
         updateSelectionSummary();
         renderSeats(cls === 'firstclass' ? firstSeats : secondSeats);
@@ -420,6 +483,99 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // initial render for second class
     activateClass('second');
+
+    // Hook Confirm & Continue to create booking
+    const confirmLink = document.querySelector('a.confirm');
+    if (confirmLink) {
+        confirmLink.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            // Debug logging
+            console.log('Selected schedule:', selectedSchedule);
+            console.log('Schedule ID:', selectedSchedule?.id);
+            
+            if (!selectedSchedule?.id) {
+                alert('Missing schedule information. Please go back and select a train again.');
+                console.error('No schedule ID found. Selected schedule:', selectedSchedule);
+                // Redirect back to schedule page
+                window.location.href = '../../IT24102460/HTML/mem_shedule.html';
+                return;
+            }
+            if (selectedSeats.length === 0) {
+                alert('Please select at least one seat.');
+                return;
+            }
+            const dateStr = document.getElementById('bo-date').textContent;
+            const clsKey = (selectedClassEl.textContent.toLowerCase() === 'first') ? 'firstclass' : 'second';
+            const total = (selectedSeats.length * (priceMap[clsKey] || 0));
+            // Get member email using utility function
+            const memberEmail = getCurrentUserEmail() || 'test@example.com';
+            console.log('Using member email:', memberEmail);
+            
+            // Debug user state
+            if (typeof debugUserState === 'function') {
+                debugUserState();
+            } else {
+                console.log('Available localStorage keys:', Object.keys(localStorage));
+                console.log('slraile_member_email:', localStorage.getItem('slraile_member_email'));
+                console.log('slraile_email:', localStorage.getItem('slraile_email'));
+                console.log('user_email:', localStorage.getItem('user_email'));
+            }
+            
+            const payload = {
+                memberEmail: memberEmail,
+                trainScheduleId: selectedSchedule.id,
+                travelDate: dateStr,
+                seatNumbers: selectedSeats.join(','),
+                totalAmount: total
+            };
+            
+            console.log('Booking payload:', payload);
+            
+            try {
+                const ORIGIN = (window.location.origin.startsWith('file:') || window.location.origin === 'null')
+                    ? 'http://localhost:8080'
+                    : window.location.origin;
+                
+                console.log('Making booking request to:', `${ORIGIN}/api/bookings`);
+                console.log('Request payload:', JSON.stringify(payload, null, 2));
+                
+                const res = await fetch(`${ORIGIN}/api/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('Response status:', res.status);
+                console.log('Response ok:', res.ok);
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`Server error: ${res.status} - ${errorText}`);
+                }
+                
+                const booking = await res.json();
+                console.log('Booking created successfully:', booking);
+                // persist for payment page
+                localStorage.setItem('slraile_current_booking_id', booking.id);
+                localStorage.setItem('slraile_current_booking_summary', JSON.stringify({
+                    bookingId: booking.id,
+                    trainName: selectedSchedule.trainName,
+                    routeFrom: selectedSchedule.routeFrom,
+                    routeTo: selectedSchedule.routeTo,
+                    departureTime: selectedSchedule.departureTime,
+                    arrivalTime: selectedSchedule.arrivalTime,
+                    seatNumbers: booking.seatNumbers,
+                    totalAmount: booking.totalAmount
+                }));
+                window.location.href = '../../IT24101558/HTML/payment.html?bookingId=' + booking.id;
+            } catch (err) {
+                alert('Failed to create booking: ' + err.message);
+                console.error('Booking error:', err);
+            }
+        });
+    }
 });
 </script>
 </html>

@@ -25,7 +25,21 @@ public class BookingService {
     }
 
     public List<Booking> getBookingsForMember(String memberEmail) {
-        return bookingRepository.findByMemberEmailOrderByCreatedAtDesc(memberEmail);
+        System.out.println("BookingService.getBookingsForMember called with email: " + memberEmail);
+        try {
+            List<Booking> bookings = bookingRepository.findByMemberEmailOrderByCreatedAtDesc(memberEmail);
+            System.out.println("Repository returned " + bookings.size() + " bookings for email: " + memberEmail);
+            if (!bookings.isEmpty()) {
+                System.out.println("First booking details: ID=" + bookings.get(0).getId() + 
+                                 ", Status=" + bookings.get(0).getStatus() + 
+                                 ", Email=" + bookings.get(0).getMemberEmail());
+            }
+            return bookings;
+        } catch (Exception e) {
+            System.err.println("Error in BookingService.getBookingsForMember for email " + memberEmail + ": " + e.getMessage());
+            e.printStackTrace();
+            return List.of();
+        }
     }
 
     // For seat map: gather occupied seat numbers for a given schedule and date
@@ -46,6 +60,13 @@ public class BookingService {
                                  LocalDate travelDate,
                                  String seatNumbers,
                                  BigDecimal totalAmount) {
+        System.out.println("BookingService.createBooking called with:");
+        System.out.println("  memberEmail: " + memberEmail);
+        System.out.println("  trainScheduleId: " + trainScheduleId);
+        System.out.println("  travelDate: " + travelDate);
+        System.out.println("  seatNumbers: " + seatNumbers);
+        System.out.println("  totalAmount: " + totalAmount);
+        
         TrainSchedule schedule = trainScheduleRepository.findById(trainScheduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Train schedule not found: " + trainScheduleId));
 
@@ -56,11 +77,23 @@ public class BookingService {
         booking.setSeatNumbers(seatNumbers);
         booking.setTotalAmount(totalAmount);
         booking.setStatus(BookingStatus.PENDING_PAYMENT);
-        return bookingRepository.save(booking);
+        
+        Booking saved = bookingRepository.save(booking);
+        System.out.println("Booking created successfully with ID: " + saved.getId());
+        System.out.println("Saved booking email: " + saved.getMemberEmail());
+        System.out.println("Saved booking status: " + saved.getStatus());
+        
+        return saved;
     }
 
     public Optional<Booking> getBooking(Long id) {
-        return bookingRepository.findById(id);
+        try {
+            return bookingRepository.findById(id);
+        } catch (Exception e) {
+            System.err.println("Error retrieving booking with ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     @Transactional
@@ -69,6 +102,10 @@ public class BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
         booking.setStatus(BookingStatus.PAID);
         bookingRepository.save(booking);
+    }
+
+    public TrainScheduleRepository getTrainScheduleRepository() {
+        return trainScheduleRepository;
     }
 }
 

@@ -5,5 +5,6 @@ public enum TrainType {
     EXPRESS,
     REGIONAL,
     COMMUTER,
+    INTERCITY,
     HIGH_SPEED
 }

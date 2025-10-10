@@ -123,8 +123,12 @@
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
-        // store logged-in email for profile fetch
-        try { localStorage.setItem("slraile_email", email); } catch(_) {}
+        // store logged-in email for profile fetch - set multiple keys for compatibility
+        try { 
+          localStorage.setItem("slraile_email", email);
+          localStorage.setItem("slraile_member_email", email);
+          localStorage.setItem("user_email", email);
+        } catch(_) {}
 
         // Prefetch profile and cache for User Settings prefill
         try {
