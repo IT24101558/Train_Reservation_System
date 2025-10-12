@@ -77,10 +77,7 @@
                     <label for="train-journey">Train Journey</label>
                     <select id="train-journey" name="train-journey" required>
                         <option value="">Select train journey</option>
-                        <option value="Mountain Route">Mountain Route (Colombo → Kandy)</option>
-                        <option value="Heritage Route">Heritage Route (Kandy → Ella)</option>
-                        <option value="Northern Route">Northern Route (Anuradapura → Jaffna)</option>
-                        <option value="Other">Other</option>
+                        <!-- Options will be populated dynamically from API -->
                     </select>
                 </div>
 
@@ -183,6 +180,76 @@
 </footer>
 
 <script>
+    // Function to fetch and populate train schedules
+    async function loadTrainSchedules() {
+        const trainJourneySelect = document.getElementById('train-journey');
+        if (!trainJourneySelect) return;
+
+        try {
+            // Show loading state
+            trainJourneySelect.innerHTML = '<option value="">Loading train schedules...</option>';
+            
+            // Fetch train schedules from the member API
+            const response = await fetch('/api/member/schedules');
+            if (!response.ok) {
+                throw new Error('Failed to load train schedules');
+            }
+            
+            const schedules = await response.json();
+            
+            // Clear loading state and add default option
+            trainJourneySelect.innerHTML = '<option value="">Select train journey</option>';
+            
+            // Add "Other" option for custom journeys
+            const otherOption = document.createElement('option');
+            otherOption.value = 'Other';
+            otherOption.textContent = 'Other (Custom Journey)';
+            trainJourneySelect.appendChild(otherOption);
+            
+            // Group schedules by route for better organization
+            const routeGroups = {};
+            schedules.forEach(schedule => {
+                const routeKey = `${schedule.routeFrom} → ${schedule.routeTo}`;
+                if (!routeGroups[routeKey]) {
+                    routeGroups[routeKey] = [];
+                }
+                routeGroups[routeKey].push(schedule);
+            });
+            
+            // Add route groups to dropdown
+            Object.keys(routeGroups).sort().forEach(routeKey => {
+                const schedules = routeGroups[routeKey];
+                
+                // Create optgroup for this route
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = routeKey;
+                
+                // Add individual train options within this route
+                schedules.forEach(schedule => {
+                    const option = document.createElement('option');
+                    option.value = `${schedule.trainName} (${schedule.routeFrom} → ${schedule.routeTo})`;
+                    option.textContent = `${schedule.trainName} - ${schedule.departureTime} (${schedule.trainType})`;
+                    optgroup.appendChild(option);
+                });
+                
+                trainJourneySelect.appendChild(optgroup);
+            });
+            
+        } catch (error) {
+            console.error('Error loading train schedules:', error);
+            trainJourneySelect.innerHTML = `
+                <option value="">Select train journey</option>
+                <option value="Other">Other (Custom Journey)</option>
+            `;
+            
+            // Show error message to user
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'background:#f8d7da;border:1px solid #f5c6cb;border-radius:8px;padding:12px;margin:10px 0;color:#721c24;font-size:14px;';
+            errorDiv.innerHTML = '<strong>Note:</strong> Unable to load train schedules. You can still select "Other" for custom journeys.';
+            trainJourneySelect.parentNode.insertBefore(errorDiv, trainJourneySelect.nextSibling);
+        }
+    }
+
     // Get current user's email and name from localStorage (set at login)
     function getCurrentUserEmail() {
         return localStorage.getItem('slraile_email') || '';
@@ -390,6 +457,9 @@
                 firstCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             }, 100);
         }
+
+        // Load train schedules for the dropdown
+        loadTrainSchedules();
 
             // Prevent selecting future dates for the travel date field by setting max to today
             const travelDateInput = document.getElementById('travel-date');

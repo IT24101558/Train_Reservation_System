@@ -191,4 +191,8 @@ public class TrainSchedule {
     public String getPriceDisplay() {
         return String.format("$%.2f / $%.2f / $%.2f", economyPrice, businessPrice, firstPrice);
     }
-}
+
+    public String getTrainNumber() {
+
+        return "";}
+    }

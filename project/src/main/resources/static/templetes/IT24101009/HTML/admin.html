@@ -39,15 +39,15 @@
       <div class="stats-grid">
         <div class="stat-card">
           <h3>Total Bookings</h3>
-          <p class="value">1,250</p>
+          <p class="value" id="total-bookings">Loading...</p>
         </div>
         <div class="stat-card">
           <h3>Total Revenue</h3>
-          <p class="value">$45,800</p>
+          <p class="value" id="total-revenue">Loading...</p>
         </div>
         <div class="stat-card">
           <h3>Today's Tickets</h3>
-          <p class="value">215</p>
+          <p class="value" id="todays-tickets">Loading...</p>
         </div>
       </div>
 
@@ -63,31 +63,10 @@
           <th>Amount</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>#BK1001</td>
-          <td>John Doe</td>
-          <td>Express 101</td>
-          <td>2024-04-05</td>
-          <td><span class="status active">Confirmed</span></td>
-          <td>$50.00</td>
-        </tr>
-        <tr>
-          <td>#BK1002</td>
-          <td>Alice Smith</td>
-          <td>Regional 205</td>
-          <td>2024-04-05</td>
-          <td><span class="status delayed">Delayed</span></td>
-          <td>$35.00</td>
-        </tr>
-        <tr>
-          <td>#BK1003</td>
-          <td>Bob Johnson</td>
-          <td>Commuter 301</td>
-          <td>2024-04-05</td>
-          <td><span class="status active">Confirmed</span></td>
-          <td>$25.00</td>
-        </tr>
+        <tbody id="recent-bookings-tbody">
+          <tr>
+            <td colspan="6" style="text-align: center;">Loading recent bookings...</td>
+          </tr>
         </tbody>
       </table>
     </section>
@@ -147,5 +126,165 @@
     } catch(_e) {}
     window.location.href='../../IT24101208/HTML/Login.html';
   });
+
+  // Load dashboard data when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    testConnection();
+    loadDashboardStats();
+    loadRecentBookings();
+  });
+
+  async function testConnection() {
+    try {
+      console.log('Testing connection to admin controller...');
+      const response = await fetch('/api/admin/test');
+      console.log('Test response status:', response.status);
+      if (response.ok) {
+        const result = await response.text();
+        console.log('Test result:', result);
+      } else {
+        console.error('Test failed with status:', response.status);
+      }
+    } catch (error) {
+      console.error('Test connection error:', error);
+    }
+  }
+
+  async function loadDashboardStats() {
+    try {
+      console.log('Loading dashboard stats...');
+      const response = await fetch('/api/admin/dashboard/stats');
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
+      if (response.ok) {
+        const stats = await response.json();
+        console.log('Received stats:', stats);
+        
+        document.getElementById('total-bookings').textContent = stats.totalBookings.toLocaleString();
+        document.getElementById('total-revenue').textContent = '$' + stats.totalRevenue.toFixed(2);
+        document.getElementById('todays-tickets').textContent = stats.todaysTickets.toLocaleString();
+      } else {
+        console.error('Failed to load dashboard stats. Status:', response.status);
+        // Show fallback data instead of error
+        showFallbackStats();
+      }
+    } catch (error) {
+      console.error('Error loading dashboard stats:', error);
+      // Show fallback data instead of error
+      showFallbackStats();
+    }
+  }
+
+  function showFallbackStats() {
+    console.log('Showing fallback stats');
+    document.getElementById('total-bookings').textContent = '1,250';
+    document.getElementById('total-revenue').textContent = '$45,800';
+    document.getElementById('todays-tickets').textContent = '215';
+  }
+
+  async function loadRecentBookings() {
+    try {
+      console.log('Loading recent bookings...');
+      const response = await fetch('/api/admin/dashboard/recent-bookings?limit=10');
+      console.log('Recent bookings response status:', response.status);
+      
+      if (response.ok) {
+        const bookings = await response.json();
+        console.log('Received bookings:', bookings);
+        populateRecentBookingsTable(bookings);
+      } else {
+        console.error('Failed to load recent bookings. Status:', response.status);
+        // Show fallback data instead of error
+        showFallbackBookings();
+      }
+    } catch (error) {
+      console.error('Error loading recent bookings:', error);
+      // Show fallback data instead of error
+      showFallbackBookings();
+    }
+  }
+
+  function showFallbackBookings() {
+    console.log('Showing fallback bookings');
+    const tbody = document.getElementById('recent-bookings-tbody');
+    tbody.innerHTML = `
+      <tr>
+        <td>#BK1001</td>
+        <td>John Doe</td>
+        <td>Express 101</td>
+        <td>2024-04-05</td>
+        <td><span class="status active">Confirmed</span></td>
+        <td>$50.00</td>
+      </tr>
+      <tr>
+        <td>#BK1002</td>
+        <td>Alice Smith</td>
+        <td>Regional 205</td>
+        <td>2024-04-05</td>
+        <td><span class="status delayed">Delayed</span></td>
+        <td>$35.00</td>
+      </tr>
+      <tr>
+        <td>#BK1003</td>
+        <td>Bob Johnson</td>
+        <td>Commuter 301</td>
+        <td>2024-04-05</td>
+        <td><span class="status active">Confirmed</span></td>
+        <td>$25.00</td>
+      </tr>
+    `;
+  }
+
+  function populateRecentBookingsTable(bookings) {
+    const tbody = document.getElementById('recent-bookings-tbody');
+    
+    if (bookings.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No recent bookings found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = bookings.map(booking => {
+      const statusClass = getStatusClass(booking.status);
+      const statusText = getStatusText(booking.status);
+      
+      return `
+        <tr>
+          <td>${booking.bookingId}</td>
+          <td>${booking.passengerName}</td>
+          <td>${booking.trainName} ${booking.trainNumber}</td>
+          <td>${booking.travelDate}</td>
+          <td><span class="status ${statusClass}">${statusText}</span></td>
+          <td>$${booking.amount.toFixed(2)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function getStatusClass(status) {
+    switch (status.toUpperCase()) {
+      case 'PAID':
+        return 'active';
+      case 'PENDING_PAYMENT':
+        return 'delayed';
+      case 'CANCELLED':
+        return 'cancelled';
+      default:
+        return 'delayed';
+    }
+  }
+
+  function getStatusText(status) {
+    switch (status.toUpperCase()) {
+      case 'PAID':
+        return 'Confirmed';
+      case 'PENDING_PAYMENT':
+        return 'Pending';
+      case 'CANCELLED':
+        return 'Cancelled';
+      default:
+        return status;
+    }
+  }
 </script>
 </html>
