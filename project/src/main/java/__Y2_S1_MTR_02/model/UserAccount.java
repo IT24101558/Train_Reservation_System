@@ -26,6 +26,10 @@ public class UserAccount {
     @Column(nullable = false)
     private UserRole role = UserRole.PASSENGER;
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+
     public Long getId() {
         return id;
     }
@@ -73,6 +77,13 @@ public class UserAccount {
     public void setRole(UserRole role) {
         this.role = role;
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
 }
-
-

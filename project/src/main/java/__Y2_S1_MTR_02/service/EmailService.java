@@ -16,7 +16,6 @@ public class EmailService {
 
     private void sendEmail(String to, String subject, String text) {
         if (mailSender == null) {
-            // Log email instead of sending when mail sender is not configured
             System.out.println("=== EMAIL NOTIFICATION ===");
             System.out.println("To: " + to);
             System.out.println("Subject: " + subject);

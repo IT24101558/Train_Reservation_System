@@ -3,7 +3,6 @@ package __Y2_S1_MTR_02.service;
 import __Y2_S1_MTR_02.dto.*;
 import __Y2_S1_MTR_02.model.*;
 import __Y2_S1_MTR_02.repository.UserAccountRepository;
-import __Y2_S1_MTR_02.repository.VerificationTokenRepository;
 import __Y2_S1_MTR_02.repository.PasswordResetTokenRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,27 +23,25 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
-    private final EmailService emailService;
-    private final VerificationTokenRepository verificationRepo;
     private final PasswordResetTokenRepository resetRepo;
+    private final EmailService emailService; // still needed for password reset
 
     public UserService(UserAccountRepository userRepo,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authManager,
                        JwtUtil jwtUtil,
                        EmailService emailService,
-                       VerificationTokenRepository verificationRepo,
                        PasswordResetTokenRepository resetRepo) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
         this.emailService = emailService;
-        this.verificationRepo = verificationRepo;
         this.resetRepo = resetRepo;
     }
 
-    public void register(RegisterRequest req, String appUrl) {
+
+    public void register(RegisterRequest req) {
         if (userRepo.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
@@ -55,34 +52,12 @@ public class UserService {
         user.setPhone(req.getPhone());
         user.setPasswordHash(passwordEncoder.encode(req.getPassword()));
         user.setRole(UserRole.PASSENGER);
+
+        user.setEnabled(true);
+
         userRepo.save(user);
-
-        String token = UUID.randomUUID().toString();
-        VerificationToken v = new VerificationToken(
-                token,
-                user,
-                Instant.now().plusSeconds(86400) // 24h expiry
-        );
-        verificationRepo.save(v);
-
-        emailService.sendVerificationEmail(user.getEmail(), token);
     }
 
-
-    public void verifyEmail(String token) {
-        VerificationToken v = verificationRepo.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
-
-        if (v.getExpiryDate().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Token expired");
-        }
-
-        UserAccount user = v.getUserAccount();
-        user.setRole(UserRole.PASSENGER);
-        userRepo.save(user);
-
-        verificationRepo.delete(v);
-    }
 
     public AuthResponse login(LoginRequest req) {
         try {
@@ -101,12 +76,14 @@ public class UserService {
         return new AuthResponse(true, user.getRole().name(), token);
     }
 
+
     public void logout(String token) {
-        // If using blacklist, save token in DB.
-        // Otherwise, just rely on frontend to discard token.
+        // Optional: if using a token blacklist, implement here
+        // Otherwise, frontend discards the token
     }
 
-     public void forgotPassword(String email, String appUrl) {
+
+    public void forgotPassword(String email) {
         Optional<UserAccount> opt = userRepo.findByEmail(email);
         if (opt.isEmpty()) return;
 
@@ -116,7 +93,7 @@ public class UserService {
         PasswordResetToken pr = new PasswordResetToken(
                 token,
                 user,
-                Instant.now().plusSeconds(3600) // 1h expiry
+                Instant.now().plusSeconds(3600) // 1 hour expiry
         );
         resetRepo.save(pr);
 
