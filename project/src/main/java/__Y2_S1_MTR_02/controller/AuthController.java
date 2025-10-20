@@ -6,9 +6,10 @@ import __Y2_S1_MTR_02.dto.UserProfileResponse;
 import __Y2_S1_MTR_02.dto.RegisterRequest;
 import __Y2_S1_MTR_02.model.UserAccount;
 import __Y2_S1_MTR_02.service.AuthService;
+import __Y2_S1_MTR_02.repository.UserAccountRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import __Y2_S1_MTR_02.repository.UserAccountRepository;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,30 +24,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        try {
-            UserAccount created = authService.registerPassenger(request);
-            return ResponseEntity.ok(new AuthResponse(true, created.getRole().name(), "Registered"));
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(new AuthResponse(false, null, ex.getMessage()));
-        }
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        UserAccount created = authService.registerPassenger(request);
+        return ResponseEntity.ok(new AuthResponse(true, created.getRole().name(), "Registered"));
     }
 
-
     @PostMapping("/register-return-profile")
-    public ResponseEntity<?> registerAndReturnProfile(@RequestBody RegisterRequest request) {
-        try {
-            UserAccount created = authService.registerPassenger(request);
-            return ResponseEntity.ok(new UserProfileResponse(
-                    created.getId(), created.getFullName(), created.getEmail(), created.getPhone()
-            ));
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(new AuthResponse(false, null, ex.getMessage()));
-        }
+    public ResponseEntity<?> registerAndReturnProfile(@Valid @RequestBody RegisterRequest request) {
+        UserAccount created = authService.registerPassenger(request);
+        return ResponseEntity.ok(new UserProfileResponse(
+                created.getId(), created.getFullName(), created.getEmail(), created.getPhone()
+        ));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         return authService.authenticate(request)
                 .<ResponseEntity<?>>map(user -> ResponseEntity.ok(new AuthResponse(true, user.getRole().name(), "OK")))
                 .orElseGet(() -> ResponseEntity.status(401).body(new AuthResponse(false, null, "Invalid credentials")));
@@ -61,5 +53,3 @@ public class AuthController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
-
-

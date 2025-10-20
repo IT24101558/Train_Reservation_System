@@ -1,6 +1,7 @@
 package __Y2_S1_MTR_02.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.Instant;
 
 @Entity
@@ -10,12 +11,18 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Reset token cannot be empty")
+    @Column(nullable = false, unique = true)
     private String token;
 
+    @NotNull(message = "Expiry date is required")
+    @Future(message = "Expiry date must be in the future")
+    @Column(nullable = false)
     private Instant expiryDate;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
+    @NotNull(message = "Associated user cannot be null")
     private UserAccount userAccount;
 
     public PasswordResetToken() {}
